@@ -1,3 +1,5 @@
+export type Role = 'USER' | 'ADMIN';
+
 export interface UserCreateDTO {
     name: string;
     lastname: string;
@@ -12,4 +14,5 @@ export interface UserResponseDTO {
     lastname: string;
     username: string;
     color: string;
+    role: Role;
 }

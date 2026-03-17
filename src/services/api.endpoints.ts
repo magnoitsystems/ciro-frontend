@@ -85,7 +85,8 @@ export const API_ENDPOINTS = {
     },
     USERS: {
         BASE: '/api/v1/users',
-        BY_ID: (id: number) => `/api/v1/users/${id}`
+        BY_ID: (id: number) => `/api/v1/users/${id}`,
+        TOGGLE_ROLE: (id: number) => `/api/v1/users/${id}/role`
     },
     VOUCHERS: {
         BASE: '/api/v1/vouchers',

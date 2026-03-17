@@ -2,6 +2,7 @@ import type { UserCreateDTO, UserResponseDTO } from '../types/users.types';
 import { api } from './api';
 import { API_ENDPOINTS } from './api.endpoints';
 
+// SOLO APTO USUARIOS DE TIPO ADMIN
 export const userService = {
     
     /**
@@ -38,6 +39,19 @@ export const userService = {
             await api.delete(API_ENDPOINTS.USERS.BY_ID(id));
         } catch (error) {
             console.error(`Error al eliminar el usuario con ID ${id}:`, error);
+            throw error;
+        }
+    },
+
+    /**
+     * Alterna el rol de un usuario (de USER a ADMIN y viceversa).
+     */
+    toggleUserRole: async (id: number): Promise<UserResponseDTO> => {
+        try {
+            const response = await api.patch<UserResponseDTO>(API_ENDPOINTS.USERS.TOGGLE_ROLE(id));
+            return response.data;
+        } catch (error) {
+            console.error(`Error al cambiar el rol del usuario con ID ${id}:`, error);
             throw error;
         }
     }
