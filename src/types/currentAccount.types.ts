@@ -37,6 +37,7 @@ export interface ReceiptCreateDTO {
     userId: number;
     exchangeRate?: number;
     paymentMethod: PaymentMethod;
+    payDollarDebtWithPesos: boolean; 
 }
 
 export interface ReceiptResponseDTO {
@@ -53,7 +54,6 @@ export interface ReceiptResponseDTO {
 export interface VoucherDetailDTO {
     detail: string;
     unitPrice: number;
-    currency: CurrencyType;
     amount: number; 
 }
 
@@ -62,6 +62,7 @@ export interface VoucherCreateDTO {
     userId: number;
     voucherDate?: string;
     observations?: string;
+    currencyType: CurrencyType; 
     details: VoucherDetailDTO[];
 }
 
@@ -72,14 +73,13 @@ export interface VoucherDTO {
     voucherDate: string;
     currency: CurrencyType;
     observations?: string;
-    totalAmountPesos: number;
-    totalAmountDollars: number;
+    totalAmount: number; 
     details: VoucherDetailDTO[];
 }
 
 export interface VoucherResponseDTO {
     voucherId: number;
     date: string;
-    totalAmountPesos: number;
-    totalAmountDollars: number;
+    totalAmount: number;
+    currencyType: CurrencyType; 
 }

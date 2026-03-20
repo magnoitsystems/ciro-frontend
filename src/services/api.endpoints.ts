@@ -51,8 +51,6 @@ export const API_ENDPOINTS = {
         BASE: '/api/v1/patients',
         BY_ID: (id: number) => `/api/v1/patients/${id}`,
         SEARCH: '/api/v1/patients/search',
-        ADD_LABEL: (patientId: number, labelId: number) => `/api/v1/patients/${patientId}/labels/${labelId}`,
-        STATISTICS: (label: string) => `/api/v1/patients/statistics/${label}`,
         DEBTORS: '/api/v1/patients/debtors',
     },
     PRACTICES: {
