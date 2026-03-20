@@ -1,0 +1,24 @@
+.lightStyle, .darkStyle {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+
+    gap: var(--5px);
+}
+ /*for light background*/
+.lightStyle h6 {
+    color: var(--blue-1);
+}
+
+.lightStyle h3 {
+    color: var(--blue-3);
+}
+
+/*for dark background*/
+.darkStyle h6 {
+    color: var(--neutral-4);
+}
+
+.darkStyle h3 {
+    color: var(--neutral-1);
+}

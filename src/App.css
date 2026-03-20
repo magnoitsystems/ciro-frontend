@@ -4,5 +4,6 @@
 
 .content {
     flex: 1;
-    padding: 20px;
+    padding: var(--30px);
+    padding-inline: var(--40px);
 }

@@ -12,7 +12,7 @@ export default function NavBar() {
                 <NavItem
                     sectionName={'Panel principal'}
                     image={'/icons/panel.png'}
-                    to={'/panel'}
+                    to={'/'}
                 />
             </div>
 
