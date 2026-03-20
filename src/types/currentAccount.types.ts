@@ -46,6 +46,8 @@ export interface ReceiptResponseDTO {
     currencyType: CurrencyType;
     exchangeRate?: number;
     convertedAmount?: number;
+    patientFullName: string; 
+    patientDni: string;
 }
 
 export interface VoucherDetailDTO {
