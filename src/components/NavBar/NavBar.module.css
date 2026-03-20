@@ -1,0 +1,62 @@
+.navContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 17%;
+    height: 100vh;
+
+    padding: var(--40px);
+    padding-inline: 0;
+    gap: var(--40px);
+
+    background-color: var(--blue-4);
+    color: var(--neutral-1);
+}
+
+.sectionsGroup {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+
+    width: 100%;
+
+    gap: var(--10px);
+
+    font-size: 14px;
+    color: var(--neutral-2);
+}
+.sectionsGroup p {
+    padding-inline: var(--40px);
+}
+
+.navItems {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+
+    gap: var(--10px);
+}
+
+/*navItem properties*/
+.navItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+
+    width: 100%;
+    height: fit-content;
+
+    padding: var(--5px);
+    padding-inline: var(--40px);
+    gap: var(--15px);
+
+    font-weight: bold;
+}
+
+.active {
+    background-color: var(--blue-2);
+    border-right: 5px solid var(--neutral-4);
+    color: white;
+}
