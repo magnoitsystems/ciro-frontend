@@ -1,0 +1,194 @@
+.main {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+/*FIRST WIDGETS ROW*/
+.firstWidgetsRow {
+    display: flex;
+    flex-display: row;
+    justify-content: space-between;
+
+    width: 100%;
+
+    margin-top: var(--40px);
+
+    color: var(--blue-4);
+}
+
+.totalPacients,.totalMoney, .totalAppointments {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+
+    height: 140px;
+
+    padding: var(--15px);
+
+    background-color: var(--neutral-2);
+    border-radius: var(--5px);
+}
+
+.totalPacients h5,.totalMoney h5, .totalAppointments h5 {
+    color: var(--blue-1);
+    font-style: italic;
+}
+
+.totalPacients h1,.totalMoney h1, .totalAppointments h1 {
+    color: var(--blue-3);
+    font-size: var(--40px);
+    font-style: italic;
+}
+
+/*total pacients and total money widget*/
+.totalPacients, .totalMoney {
+    width: 25%;
+
+    gap: var(--10px);
+}
+
+/*all apointments widget*/
+.totalAppointments {
+    flex-direction: row;
+
+    width: 45%;
+}
+
+.totalAppointments div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+
+    width: 50%;
+}
+
+.totalAppointments div p {
+    font-size: 70px;
+    font-weight: bolder;
+}
+
+.totalAppointments div h5 {
+    font-style: normal;
+}
+
+.totalAppointments div div {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+.appoInfo {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    gap: var(--20px);
+}
+
+.appoInfo h3 {
+    font-weight: bold;
+}
+
+/*SECOND WIDGETS ROW*/
+.secondWidgetsRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    width: 100%;
+
+    margin-top: var(--15px);
+
+    color: var(--blue-4);
+}
+
+.totalTasks, .tasksSummery, .seeTasks {
+    display: flex;
+    flex-direction: row;
+
+    height: 190px;
+
+    padding: var(--20px);
+
+    background-color: var(--neutral-2);
+}
+
+.totalTasks, .seeTasks {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    width: 20%;
+}
+
+.totalTasks {
+    border-radius: var(--5px) 0 0 var(--5px);
+}
+.totalTasks p {
+    font-size: 70px;
+}
+
+.seeTasks {
+    border-radius: 0 var(--5px) var(--5px) 0;
+}
+
+.tasksSummery {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 60%;
+
+    gap: var(--10px);
+
+    border-inline: 1px solid var(--neutral-1);
+}
+
+/*THIRD WIDGETS ROW*/
+.thirdWidgetsRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    width: 100%;
+
+    margin-top: var(--15px);
+
+    color: var(--blue-4);
+}
+
+.thirdWidgetsRow div {
+    width: 49%;
+    height: 140px;
+
+    padding: var(--15px);
+
+    border-radius: var(--5px);
+}
+
+.saldos, .estadistics {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    background-color: var(--neutral-2);
+}
+
+.saldos div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.saldosList h6 {
+    margin-bottom: var(--15px);
+    font-style: italic;
+}
+.saldosList h5 {
+    font-weight: bold;
+}
