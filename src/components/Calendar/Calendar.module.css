@@ -103,7 +103,7 @@ body{
     justify-content: space-between;
 }
 
-.buttonsSectionProperties{
+.buttonsSectionProperties, .mainInfoProperties{
     display: flex;
     flex-direction: column;
     gap: 10px;

@@ -14,6 +14,8 @@ export default function CalendarioMedico() {
 
   const [showForm, setShowForm] = useState(false);
 
+  const [iconoSeleccionado, setIconoSeleccionado] = useState<'info' | 'setting'>('info')
+
   const [mostrarInformacionDeAyuda, setMostrarInformacionDeAyuda] = useState(false);
 
   const turnos = [
@@ -25,25 +27,25 @@ export default function CalendarioMedico() {
   return (
     <div className={styles.calendarProperties}>
       {mostrarMiniCalendario && (
-          <div className={styles.miniCalendarProperties}>
-            <DatePicker
-              selected={fechaSeleccionada}
-              onChange={(fecha: Date | null) => {
-                if (fecha) {
-                  setFechaSeleccionada(fecha)
-                  setMostrarMiniCalendario(false)
-                }
-              }}
-              inline
-            />
-          </div>
-        )}
-      {mostrarInformacionDeAyuda && (
         <div className={styles.miniCalendarProperties}>
-           <Help></Help>
+          <DatePicker
+            selected={fechaSeleccionada}
+            onChange={(fecha: Date | null) => {
+              if (fecha) {
+                setFechaSeleccionada(fecha)
+                setMostrarMiniCalendario(false)
+              }
+            }}
+            inline
+          />
         </div>
       )}
-      
+      {mostrarInformacionDeAyuda && (
+        <div className={styles.miniCalendarProperties}>
+          <Help type={iconoSeleccionado}></Help>
+        </div>
+      )}
+
       {showForm && (
         <div>
           <CreateAppointment name='Ana' onClose={() => setShowForm(false)}></CreateAppointment>
@@ -85,8 +87,14 @@ export default function CalendarioMedico() {
             <div className={styles.buttonsSectionProperties}>
               <button><img src='/icons/label.png'></img></button>
               <button onClick={() => setMostrarMiniCalendario(!mostrarMiniCalendario)}><img src='/icons/calendar.png'></img></button>
-              <button><img src='/icons/settings.png'></img></button>
-              <button onClick={() => setMostrarInformacionDeAyuda(!mostrarInformacionDeAyuda)}><img src='/icons/info.png'></img></button>
+              <button onClick={() => {
+                setIconoSeleccionado('info')
+                setMostrarInformacionDeAyuda(!mostrarInformacionDeAyuda)
+              }}><img src='/icons/settings.png'></img></button>
+              <button onClick={() => {
+                setMostrarInformacionDeAyuda(!mostrarInformacionDeAyuda)
+                setIconoSeleccionado('setting')
+              }}><img src='/icons/info.png'></img></button>
             </div>
           </div>
         </div>

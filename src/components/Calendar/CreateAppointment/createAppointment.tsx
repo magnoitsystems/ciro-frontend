@@ -20,6 +20,7 @@ export default function CreateAppointment({ name, onClose }: Props) {
                         <select>
                 // me llega la lista de pacientes y los recorro. Por cada uno, se arma un option.
                             <option>Seleccione un paciente</option>
+                            <option><button>Crear nuevo paciente +</button></option>
                         </select>
                     </div>
                     <div className={styles.labelAndInputProperties}>
