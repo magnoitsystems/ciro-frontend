@@ -1,4 +1,4 @@
-import style from '/Panel.module.css'
+import style from './Panel.module.css'
 import PanelButton from '../../components/Buttons/PanelButton/panelButton'
 import TaskSummery from '../../components/TaskSummery/taskSummery'
 import WelcomeText from '../../components/WelcomeText/welcomeText'

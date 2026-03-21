@@ -2,21 +2,6 @@ body{
     background-color: #171620;
 }
 
-.calendarProperties{
-    display: flex;
-    flex-direction: row;
-    margin: 20px;
-}
-
-.calendarContainerProperties {
-    display: flex;
-    flex-direction: column;
-    width: 1080px;
-    height: 600px;
-    margin-top: 90px; 
-    margin-left: 20px;
-}
-
 /* Para estilos internos del calendario */
 :global(.fc-toolbar-title) {
     font-size: 1.2rem; 
@@ -81,6 +66,45 @@ body{
   border-color: #292831 !important;
 }
 
+.calendarAndButtonsContainerProperties {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+}
+
+.calendarContainerProperties {
+    flex: 1;  
+    min-width: 0;
+}
+
+.buttonsContainerProperties {
+    width: 60px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.buttonsSectionProperties{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.buttonsSectionProperties button{
+    background-color: transparent;
+    border: none;
+}
+
+.newAppointment button{
+    background-color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    border: none;
+    font-size: 30px;
+}
+
 .mainInfoProperties, .buttonsProperties{
     display: flex;
     flex-direction: column;
@@ -92,39 +116,4 @@ body{
     border: none;
     cursor: pointer;
     color: white;
-}
-
-.buttonsContainerProperties, .buttonsSectionProperties{
-    display: flex;
-    flex-direction: column;
-}
-
-.buttonsContainerProperties{
-    margin-left: 50px;
-    justify-content: flex-end;
-}
-
-.buttonsSectionProperties{
-    gap: 20px;
-    height: 70%;
-    justify-content: flex-end;
-    padding-bottom: 50px;
-}
-
-.buttonsSectionProperties button, .newAppointment button{
-    border: none;
-    cursor: pointer;
-}
-
-.buttonsContainerProperties button{
-    background-color: transparent;
-}
-
-.newAppointment button{
-    width: 50px;
-    height: 50px;
-    border-radius: 100%;
-    background-color: white;
-    color: black;
-    font-size: 30px;
 }
