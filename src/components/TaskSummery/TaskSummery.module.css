@@ -1,0 +1,22 @@
+.task {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    width: 90%;
+
+    gap: var(--10px);
+}
+
+.state {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    padding: var(--5px);
+    padding-inline: var(--15px);
+
+    background-color: var(--red);
+    border-radius: var(--5px);
+}
