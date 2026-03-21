@@ -1,5 +1,6 @@
 import './App.css'
 import NavBar from "./components/NavBar/navBar.tsx";
+import Calendar from "./components/Calendar/calendar.tsx"
 import { Routes, Route } from "react-router-dom";
 import Panel from "./pages/panel/Panel.tsx";
 import Sueldos from "./pages/sueldos/Sueldos.tsx";
@@ -16,6 +17,8 @@ function App() {
   return (
       <div className="appContainer">
           <NavBar/>
+          <Calendar/>
+
 
           <div className="content">
               <Routes>
