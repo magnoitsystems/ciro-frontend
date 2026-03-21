@@ -1,0 +1,16 @@
+.main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    padding: var(--10px);
+    padding-inline: var(--30px);
+
+    background-color: var(--neutral-4);
+    border-radius: var(--50px);
+    color: var(--neutral-1);
+    font-style: italic;
+}
