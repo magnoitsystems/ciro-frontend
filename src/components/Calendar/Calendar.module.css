@@ -2,6 +2,8 @@ body{
     background-color: #171620;
 }
 
+/* CALENDAR
+
 /* Para estilos internos del calendario */
 :global(.fc-toolbar-title) {
     font-size: 1.2rem; 
@@ -66,6 +68,21 @@ body{
   border-color: #292831 !important;
 }
 
+.buttonsProperties{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.buttonsProperties button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+/* CALENDAR AND BUTTONS */
+
 .calendarAndButtonsContainerProperties {
     display: flex;
     flex-direction: row;
@@ -76,6 +93,7 @@ body{
 .calendarContainerProperties {
     flex: 1;  
     min-width: 0;
+    position: relative;
 }
 
 .buttonsContainerProperties {
@@ -93,7 +111,6 @@ body{
 
 .buttonsSectionProperties button{
     background-color: transparent;
-    border: none;
 }
 
 .newAppointment button{
@@ -101,19 +118,19 @@ body{
     width: 50px;
     height: 50px;
     border-radius: 100%;
-    border: none;
     font-size: 30px;
 }
 
-.mainInfoProperties, .buttonsProperties{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.buttonsProperties button{
-    background-color: transparent;
+.buttonsSectionProperties button, .newAppointment button{
     border: none;
     cursor: pointer;
-    color: white;
+}
+
+.miniCalendarProperties{
+    display: flex;
+    position: absolute;
+    z-index: 999;
+    bottom: 15%;
+    right: 10%;
+
 }

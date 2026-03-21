@@ -1,0 +1,15 @@
+.helpContainerProperties{
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+    height: 180px;
+    background-color: rgba(54, 53, 67, 1);
+    border-radius: 5px;
+    color: white;
+    justify-content: center;
+    text-align: left;
+    padding: 20px;
+    align-content: center;
+    gap: 20px;
+    border-radius: 5px;
+}
