@@ -2,9 +2,9 @@
 import type { CashMovementType, CurrencyType, PaymentMethod } from './enums.types';
 
 export interface PercentageSplitDTO {
-    doctorId: number;
-    percentage: number;
-    amount: number;
+    label: string;          
+    doctorAmount: number; 
+    clinicAmount: number;   
 }
 
 export interface CashMovementDetailDTO {
