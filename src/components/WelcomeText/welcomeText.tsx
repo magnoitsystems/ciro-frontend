@@ -2,7 +2,7 @@ import style from './WelcomeText.module.css';
 
 type Props = {
     sectionText: string;
-    className:string;
+    className: string;
 }
 
 export default function WelcomeText({sectionText, className}: Props) {

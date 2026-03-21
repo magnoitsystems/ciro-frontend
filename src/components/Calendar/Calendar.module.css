@@ -1,0 +1,136 @@
+body{
+    background-color: #171620;
+}
+
+/* CALENDAR
+
+/* Para estilos internos del calendario */
+:global(.fc-toolbar-title) {
+    font-size: 1.2rem; 
+}
+
+:global(.fc) {
+    color: white;
+    border-radius: 10px;
+}
+
+/* Texto del día (ej: "lun. 20/3") */
+:global(.fc-col-header-cell-cushion) {
+    display: flex;
+    align-content: center;
+    text-transform: uppercase;
+    flex-direction: row;
+    width: 100%;
+    height: 70px;
+    background-color: #1E1D26;
+    color: #989291;
+}
+
+/* Contenedor del evento */
+.evento{
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    flex-direction: row;
+    border-top: #4CAF50 10px solid !important;
+    border-bottom: #4CAF50 10px solid !important;
+    height: 100px;
+    border-radius: 6px !important;
+    background-color:#171620;
+    margin-top: 5px;
+    border: none;
+}
+
+/* Título del evento */
+:global(.fc-event-title) {
+    background-color: blue !important;
+}
+
+:global(.fc-timegrid-slot) {
+    height: 60px !important;
+}
+
+/* Hora del evento */
+:global(.fc-event-time) {
+  font-size: 0.75rem !important;
+  display: flex;
+  align-content: center;
+
+}
+
+:global(.fc-event) {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+:global(.fc-scrollgrid th), :global(.fc-scrollgrid td), :global(.fc-scrollgrid-section-header th), :global(.fc-scrollgrid), :global(.fc-col-header-cell), :global(.fc-timegrid-col), :global(.fc-timegrid-slot), .calendarContainerPropertiess :global(.fc-event)
+.calendarContainerProperties :global(.fc-toolbar-title) {
+  border-color: #292831 !important;
+}
+
+.buttonsProperties{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.buttonsProperties button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+/* CALENDAR AND BUTTONS */
+
+.calendarAndButtonsContainerProperties {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+}
+
+.calendarContainerProperties {
+    flex: 1;  
+    min-width: 0;
+    position: relative;
+}
+
+.buttonsContainerProperties {
+    width: 60px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.buttonsSectionProperties{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.buttonsSectionProperties button{
+    background-color: transparent;
+}
+
+.newAppointment button{
+    background-color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    font-size: 30px;
+}
+
+.buttonsSectionProperties button, .newAppointment button{
+    border: none;
+    cursor: pointer;
+}
+
+.miniCalendarProperties{
+    display: flex;
+    position: absolute;
+    z-index: 999;
+    bottom: 15%;
+    right: 10%;
+
+}

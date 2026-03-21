@@ -1,7 +1,7 @@
-import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
-import style from './Panel.module.css';
-import PanelButton from "../../components/Buttons/PanelButton/panelButton.tsx";
-import TaskSummery from "../../components/TaskSummery/taskSummery.tsx";
+import style from './Panel.module.css'
+import PanelButton from '../../components/Buttons/PanelButton/panelButton'
+import TaskSummery from '../../components/TaskSummery/taskSummery'
+import WelcomeText from '../../components/WelcomeText/welcomeText'
 
 export default function Panel() {
     return(
