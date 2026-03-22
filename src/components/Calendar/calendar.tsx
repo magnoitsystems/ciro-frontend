@@ -7,9 +7,11 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import CreateAppointment from './CreateAppointment/createAppointment'
 import Help from './Help/help'
+import Appointment from './Appointment/appointment'
 
 export default function CalendarioMedico() {
   const [mostrarMiniCalendario, setMostrarMiniCalendario] = useState(false);
+
   const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(new Date());
 
   const [showForm, setShowForm] = useState(false);
@@ -17,6 +19,10 @@ export default function CalendarioMedico() {
   const [iconoSeleccionado, setIconoSeleccionado] = useState<'info' | 'setting'>('info')
 
   const [mostrarInformacionDeAyuda, setMostrarInformacionDeAyuda] = useState(false);
+
+  const [tipo, setTipo] = useState<'view' | 'confirm'>('view')
+
+  const [mostarInfoTurno, setInfoTurno] = useState(false);
 
   const turnos = [
     { title: 'Dro. Juan Pérez', start: '2026-03-20T09:00:00' },
@@ -51,6 +57,13 @@ export default function CalendarioMedico() {
           <CreateAppointment name='Ana' onClose={() => setShowForm(false)}></CreateAppointment>
         </div>
       )}
+
+      {mostarInfoTurno && (
+        <div>
+          <Appointment onClose={() => setInfoTurno(false)} type={tipo}></Appointment>
+        </div>
+      )}
+
       <div className={styles.calendarContainerProperties}>
         <WelcomeText sectionText='Aca el calendario de la semana' className='darkStyle'></WelcomeText>
         <div className={styles.calendarAndButtonsContainerProperties}>
@@ -72,7 +85,10 @@ export default function CalendarioMedico() {
                     <span>{eventInfo.event.title}</span>
                   </div>
                   <div className={styles.buttonsProperties}>
-                    <button><img src='/icons/seeMoreIcon.png'></img></button>
+                    <button onClick={() => {
+                      setTipo('view')
+                      setInfoTurno(!mostarInfoTurno)
+                    }}><img src='/icons/seeMoreIcon.png'></img></button>
                     <button><img src='/icons/editIcon.png'></img></button>
                     <button><img src='/icons/refreshIcon.png'></img></button>
                   </div>

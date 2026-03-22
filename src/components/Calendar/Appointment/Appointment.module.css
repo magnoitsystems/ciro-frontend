@@ -1,0 +1,65 @@
+.mainContainerProperties{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(23, 22, 32, 0.7);
+    position: absolute;
+    z-index: 999;
+    padding-left: 15%;
+    padding-top: 15%;
+}
+
+.infoContainerProperties{
+    display: flex;
+    flex-direction: column;
+    border: white 2px solid;
+    border-radius: 5px;
+    background-color: rgba(23, 22, 32, 1);
+    color: white;
+    width: 650px;
+    height: 300px;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 30px;
+}
+
+.infoContainerProperties h3{
+    font-size: 22px;
+}
+
+.infoAppointmentProperties{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding-left: 30px;
+    padding-top: 20px;
+
+    font-size: 18px;
+}
+
+.infoAppointmentProperties span{
+    font-weight: bold;
+}
+
+.buttonsProperties{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.buttonsProperties button{
+    width: 46px;
+    height: 33px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.cancelButton{
+    background-color: rgba(235, 12, 12, 1);
+}
+
+.editButton{
+    background-color: rgba(255, 254, 251, 1);
+}
