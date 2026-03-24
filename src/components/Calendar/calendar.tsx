@@ -22,6 +22,8 @@ export default function CalendarioMedico() {
 
   const [tipo, setTipo] = useState<'view' | 'confirm'>('view')
 
+  const [tipoForm, setTipoForm] = useState<'create' | 'edit'>('create')
+
   const [mostarInfoTurno, setInfoTurno] = useState(false);
 
   const turnos = [
@@ -54,7 +56,7 @@ export default function CalendarioMedico() {
 
       {showForm && (
         <div>
-          <CreateAppointment name='Ana' onClose={() => setShowForm(false)}></CreateAppointment>
+          <CreateAppointment turnos={turnos[1]} type={tipoForm} name='Ana' onClose={() => setShowForm(false)}></CreateAppointment>
         </div>
       )}
 
@@ -89,7 +91,9 @@ export default function CalendarioMedico() {
                       setTipo('view')
                       setInfoTurno(!mostarInfoTurno)
                     }}><img src='/icons/seeMoreIcon.png'></img></button>
-                    <button><img src='/icons/editIcon.png'></img></button>
+                    <button onClick={() => {setShowForm(!showForm)
+                      setTipoForm('edit')
+                    }}><img src='/icons/editIcon.png'></img></button>
                     <button><img src='/icons/refreshIcon.png'></img></button>
                   </div>
                 </div>
@@ -98,7 +102,9 @@ export default function CalendarioMedico() {
           </div>
           <div className={styles.buttonsContainerProperties}>
             <div className={styles.newAppointment}>
-              <button onClick={() => setShowForm(true)}>+</button>
+              <button onClick={() => {setShowForm(!showForm)
+                setTipoForm('create')
+              }}>+</button>
             </div>
             <div className={styles.buttonsSectionProperties}>
               <button><img src='/icons/label.png'></img></button>

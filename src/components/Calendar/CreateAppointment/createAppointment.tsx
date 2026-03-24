@@ -1,19 +1,31 @@
 import styles from './CreateAppointment.module.css';
 
 type Props = {
-    name: string
-    onClose: () => void
+    name: string;
+    onClose: () => void;
+    type: 'create' | 'edit';
+    turnos?: {
+        title: string;
+        start: string | Date;
+    };
 }
 
-export default function CreateAppointment({ name, onClose }: Props) {
+export default function CreateAppointment({ name, onClose, type, turnos }: Props) {
+    const startValue = turnos?.start instanceof Date
+        ? turnos.start.toISOString().slice(0, 16)
+        : turnos?.start ?? ''
     return (
         <div className={styles.backgroundTransparents}>
             <form className={styles.formContainerProperties}>
-                <h3>{name}, complete los siguientes datos para crear el turno</h3>
+                {type === 'create' ? (
+                    <h3>{name}, complete los siguientes datos para crear el turno</h3>
+                ) : (
+                    <h3>{name}, complete los siguientes datos necesario para modificar el turno</h3>
+                )}
                 <div className={styles.campsContainerProperties}>
                     <div className={styles.labelAndInputProperties}>
                         <label>Fecha</label>
-                        <input type='date' name='date' placeholder='Seleccione una fecha' />
+                        <input type='date' name='date' value={type === 'create' ? '' : startValue} />
                     </div>
                     <div className={styles.labelAndInputProperties}>
                         <label>Paciente</label>
@@ -25,7 +37,9 @@ export default function CreateAppointment({ name, onClose }: Props) {
                     </div>
                     <div className={styles.labelAndInputProperties}>
                         <label>Horario</label>
-                        <input type='datetime-local' name='hour' />
+                       
+
+                        <input type='datetime-local' name='hour' value={type === 'create' ? '' : startValue} />
                     </div>
 
                     <div className={styles.buttonsContainerProperties}>
