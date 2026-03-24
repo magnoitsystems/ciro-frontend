@@ -7,14 +7,22 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import CreateAppointment from './CreateAppointment/createAppointment'
 import Help from './Help/help'
+import Appointment from './Appointment/appointment'
 
 export default function CalendarioMedico() {
   const [mostrarMiniCalendario, setMostrarMiniCalendario] = useState(false);
+
   const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(new Date());
 
   const [showForm, setShowForm] = useState(false);
 
+  const [iconoSeleccionado, setIconoSeleccionado] = useState<'info' | 'setting'>('info')
+
   const [mostrarInformacionDeAyuda, setMostrarInformacionDeAyuda] = useState(false);
+
+  const [tipo, setTipo] = useState<'view' | 'confirm'>('view')
+
+  const [mostarInfoTurno, setInfoTurno] = useState(false);
 
   const turnos = [
     { title: 'Dro. Juan Pérez', start: '2026-03-20T09:00:00' },
@@ -25,30 +33,37 @@ export default function CalendarioMedico() {
   return (
     <div className={styles.calendarProperties}>
       {mostrarMiniCalendario && (
-          <div className={styles.miniCalendarProperties}>
-            <DatePicker
-              selected={fechaSeleccionada}
-              onChange={(fecha: Date | null) => {
-                if (fecha) {
-                  setFechaSeleccionada(fecha)
-                  setMostrarMiniCalendario(false)
-                }
-              }}
-              inline
-            />
-          </div>
-        )}
-      {mostrarInformacionDeAyuda && (
         <div className={styles.miniCalendarProperties}>
-           <Help></Help>
+          <DatePicker
+            selected={fechaSeleccionada}
+            onChange={(fecha: Date | null) => {
+              if (fecha) {
+                setFechaSeleccionada(fecha)
+                setMostrarMiniCalendario(false)
+              }
+            }}
+            inline
+          />
         </div>
       )}
-      
+      {mostrarInformacionDeAyuda && (
+        <div className={styles.miniCalendarProperties}>
+          <Help type={iconoSeleccionado}></Help>
+        </div>
+      )}
+
       {showForm && (
         <div>
           <CreateAppointment name='Ana' onClose={() => setShowForm(false)}></CreateAppointment>
         </div>
       )}
+
+      {mostarInfoTurno && (
+        <div>
+          <Appointment onClose={() => setInfoTurno(false)} type={tipo}></Appointment>
+        </div>
+      )}
+
       <div className={styles.calendarContainerProperties}>
         <WelcomeText sectionText='Aca el calendario de la semana' className='darkStyle'></WelcomeText>
         <div className={styles.calendarAndButtonsContainerProperties}>
@@ -70,7 +85,10 @@ export default function CalendarioMedico() {
                     <span>{eventInfo.event.title}</span>
                   </div>
                   <div className={styles.buttonsProperties}>
-                    <button><img src='/icons/seeMoreIcon.png'></img></button>
+                    <button onClick={() => {
+                      setTipo('view')
+                      setInfoTurno(!mostarInfoTurno)
+                    }}><img src='/icons/seeMoreIcon.png'></img></button>
                     <button><img src='/icons/editIcon.png'></img></button>
                     <button><img src='/icons/refreshIcon.png'></img></button>
                   </div>
@@ -85,8 +103,14 @@ export default function CalendarioMedico() {
             <div className={styles.buttonsSectionProperties}>
               <button><img src='/icons/label.png'></img></button>
               <button onClick={() => setMostrarMiniCalendario(!mostrarMiniCalendario)}><img src='/icons/calendar.png'></img></button>
-              <button><img src='/icons/settings.png'></img></button>
-              <button onClick={() => setMostrarInformacionDeAyuda(!mostrarInformacionDeAyuda)}><img src='/icons/info.png'></img></button>
+              <button onClick={() => {
+                setIconoSeleccionado('info')
+                setMostrarInformacionDeAyuda(!mostrarInformacionDeAyuda)
+              }}><img src='/icons/settings.png'></img></button>
+              <button onClick={() => {
+                setMostrarInformacionDeAyuda(!mostrarInformacionDeAyuda)
+                setIconoSeleccionado('setting')
+              }}><img src='/icons/info.png'></img></button>
             </div>
           </div>
         </div>
