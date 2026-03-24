@@ -11,6 +11,7 @@ import Deudas from "./pages/deudas/Deudas.tsx";
 import Caja from "./pages/caja/Caja.tsx";
 import Calendario from "./pages/calendario/Calendario.tsx";
 import Tareas from "./pages/tareas/Tareas.tsx";
+import CuentaCorriente from "./pages/cuentacorriente/CuentaCorriente.tsx";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
                   <Route path="/proveedores" element={<Proveedores/>}/>
                   <Route path="/sueldos" element={<Sueldos/>}/>
                   <Route path="/tareas" element={<Tareas/>}/>
+                  <Route path="/cuentacorriente" element={<CuentaCorriente/>}/>
               </Routes>
           </div>
       </div>

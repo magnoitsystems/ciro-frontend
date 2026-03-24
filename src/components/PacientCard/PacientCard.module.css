@@ -1,0 +1,55 @@
+.main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    min-width: 300px;
+    max-width: 545px;
+    width: 100%;
+
+    padding: var(--10px);
+    padding-inline: var(--20px);
+
+    background-color: var(--blue-2);
+    border-radius: var(--5px);
+    color: var(--neutral-1);
+}
+
+.profileImage {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    width: 70px;
+    height: 70px;
+
+    border-radius: var(--50px);
+    background-color: var(--neutral-2);
+    color: var(--blue-4);
+}
+
+.information {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    gap: var(--20px);
+}
+
+.information div {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--5px);
+}
+
+.attachments {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    gap: var(--20px);
+}
