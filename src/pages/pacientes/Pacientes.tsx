@@ -1,13 +1,15 @@
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import style from './Pacientes.module.css';
 import SearchBar from "../../components/SearchBar/searchBar.tsx";
+import FilterButton from "../../components/Buttons/FilterButton/filterButton.tsx";
+import PacientCard from "../../components/PacientCard/pacientCards.tsx";
 
 export default function Pacientes() {
     return(
         <main className={style.main}>
             <WelcomeText
                 sectionText={'Acá el listado de los pacientes existentes.'}
-                className={'lightStyle'}
+                className={'darkStyle'}
             />
 
             <div className={style.functionalities}>
@@ -27,9 +29,23 @@ export default function Pacientes() {
                     </div>
 
                     <div className={style.filter}>
+                        <FilterButton/>
                     </div>
 
                 </div>
+            </div>
+
+            <div className={style.pacientCards}>
+                <PacientCard/>
+                <PacientCard/>
+                <PacientCard/>
+                <PacientCard/>
+                <PacientCard/>
+                <PacientCard/>
+                <PacientCard/>
+                <PacientCard/>
+                <PacientCard/>
+                <PacientCard/>
             </div>
         </main>
     )

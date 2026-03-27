@@ -26,11 +26,21 @@
     gap: var(--30px);
 }
 
-.estadistics, .newPacient {
+.estadistics, .newPacient, .filter {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 
+    padding-inline: var(--20px);
 
+    background-color: var(--neutral-4);
+    border-radius: var(--50px);
+}
+
+.pacientCards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    row-gap: var(--20px);
 }

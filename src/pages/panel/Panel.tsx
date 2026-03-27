@@ -8,7 +8,7 @@ export default function Panel() {
         <main className={style.main}>
             <WelcomeText
                 sectionText={'Acá el resumen del día de hoy.'}
-                className={'lightStyle'}
+                className={'darkStyle'}
             />
 
             <div className={style.firstWidgetsRow}>
