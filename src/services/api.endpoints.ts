@@ -57,8 +57,7 @@ export const API_ENDPOINTS = {
     PRACTICES: {
         BASE: '/api/v1/practices',
         BY_ID: (id: number) => `/api/v1/practices/${id}`,
-        BY_DOCTOR: (doctorId: number) => `/api/v1/practices/doctor/${doctorId}`,
-        BY_PATIENT: (patientId: number) => `/api/v1/practices/patient/${patientId}`,
+        BY_TYPE: `/api/v1/practices/type`
     },
     RECEIPTS: {
         BASE: '/api/v1/receipts',

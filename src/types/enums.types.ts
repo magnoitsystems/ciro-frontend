@@ -16,15 +16,11 @@ export type DocumentType = 'DNI' | 'CUIT' | 'CUIL' | 'CDI' | 'LE' | 'LC' | 'PASA
 
 export type HealthInsurance = 'PARTICULAR' | 'OSDE' | 'SWISS_MEDICAL' | 'GALENO' | 'SANCOR_SALUD' | 'IOMA' | 'PAMI' | 'OMINT' | 'OTRA';
 
-export type ImplantType = 'CORONA' | 'ORTODONCIA';
-
 export type PatientFrom = 'RECOMMENDATION' | 'FACEBOOK' | 'INSTAGRAM' | 'TIKTOK' | 'WEBSITE' | 'ANOTHER';
 
 export type ReportPeriod = 'DAY' | 'WEEK' | 'MONTH';
 
 export type ShiftStatus = 'REQUIRED' | 'ASSIGNED';
-
-export type SurgeryType = 'MAXILAR' | 'CORONARIA';
 
 export type TaskPriority = 'HIGH' | 'MEDIUM' | 'LOW';
 
