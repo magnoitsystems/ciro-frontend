@@ -1,0 +1,46 @@
+.main, .procedimientosContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    width: 100%;
+
+    gap: var(--20px);
+}
+
+.filters {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+
+    width: 100%;
+    height: var(--40px);
+}
+
+.procedimientosContainer {
+    align-items: center;
+
+    width: 100%;
+
+    padding: var(--40px);
+    padding-inline: var(--20px);
+    gap: var(--10px);
+
+    background-color: var(--blue-2);
+    border-radius: var(--5px);
+}
+
+.columnNames {
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+    justify-content: space-between;
+
+    width: 95%;
+
+    font-size: 14px;
+    color: var(--neutral-4);
+}

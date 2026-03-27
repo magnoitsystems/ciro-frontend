@@ -1,0 +1,15 @@
+.main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 95%;
+
+    padding: var(--5px);
+    padding-inline: var(--20px);
+
+    background-color: var(--blue-4);
+    color: var(--neutral-1);
+    border-radius: var(--50px);
+}

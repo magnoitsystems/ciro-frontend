@@ -1,0 +1,20 @@
+.main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 95%;
+
+    padding: var(--5px);
+    padding-inline: var(--40px);
+    margin-inline: auto;
+
+    border-radius: var(--50px);
+    color: var(--neutral-1);
+}
+
+.debt {
+    color: var(--red);
+    font-weight: bold;
+}

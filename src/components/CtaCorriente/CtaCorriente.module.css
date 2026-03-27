@@ -1,3 +1,4 @@
+/*SALDOS RESUME*/
 .saldosResume {
     display: flex;
     flex-direction: row;
@@ -8,7 +9,6 @@
 
     padding: var(--10px);
     padding-inline: var(--20px);
-    margin-top: var(--20px);
 
     background-color: var(--blue-2);
     border-radius: var(--5px);
@@ -32,3 +32,27 @@
     color: var(--neutral-1);
 }
 
+/*REGISTERS*/
+.register {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 95%;
+
+    padding: var(--5px);
+    padding-inline: var(--20px);
+
+    background-color: var(--blue-4);
+    border-radius: var(--50px);
+    color: var(--neutral-1);
+}
+
+.referenceColor {
+    width: 90px;
+
+    border-radius: var(--50px);
+    background-color: var(--neutral-1);
+    color: var(--neutral-1);
+}
