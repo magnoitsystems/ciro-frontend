@@ -36,8 +36,6 @@ export default function Sueldos() {
                     <SueldoCard/>
                     <SueldoCard/>
                     <SueldoCard/>
-                    <SueldoCard/>
-                    <SueldoCard/>
                 </div>
             </div>
         </main>
