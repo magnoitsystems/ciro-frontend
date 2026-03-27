@@ -1,0 +1,39 @@
+.main, .seeMore {
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+
+    width: 100%;
+
+    gap: var(--30px);
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    height: 490px;
+
+    gap: var(--30px);
+}
+
+.newProvForm {
+    width: 75%;
+}
+
+.seeMore {
+    align-items: center;
+    justify-content: center;
+
+    width: 25%;
+
+    padding: var(--30px);
+    gap: var(--30px);
+
+    background-color: var(--blue-2);
+    text-align: center;
+    color: var(--neutral-4  );
+}

@@ -1,13 +1,84 @@
-.main {
+.main, .allInformation, .registerContainer, .createRegisters, .createRegisters div {
     display: flex;
     flex-direction: column;
+}
+.columnNames, .content {
+    display: flex;
+    flex-direction: row;
+}
 
+
+.main {
     gap: var(--20px);
 }
 
-.allInformation {
-    display: flex;
-    flex-direction: column;
+.main p {
+    width: 100%;
 
+    text-align: right;
+    color: var(--neutral-4);
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.content {
+    justify-content: space-between;
+
+    width: 100%;
+    height: 490px;
+}
+
+.allInformation {
     width: 75%;
+    height: 100%;
+
+    gap: var(--10px);
+}
+
+.registerContainer {
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    padding: var(--40px);
+    padding-inline: 0;
+    gap: var(--10px);
+
+    background-color: var(--blue-2);
+    border-radius: var(--5px);
+}
+
+.columnNames {
+    align-items: center;
+    justify-content: space-between;
+
+    width: 90%;
+
+    font-size: 14px;
+    color: var(--neutral-4);
+}
+
+.createRegisters {
+    align-items: center;
+    justify-content: center;
+
+    width: 23%;
+    height: 100%;
+
+    padding: var(--50px);
+    padding-inline: var(--20px);
+    gap: var(--50px);
+
+    background-color: var(--blue-2);
+    border-radius: var(--5px);
+    color: var(--neutral-4);
+}
+
+.createRegisters div {
+    align-items: center;
+}
+
+.createRegisters p, .columnNames p {
+    text-decoration: none;
 }

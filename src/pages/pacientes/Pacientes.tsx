@@ -31,7 +31,6 @@ export default function Pacientes() {
                     <div className={style.filter}>
                         <FilterButton/>
                     </div>
-
                 </div>
             </div>
 
