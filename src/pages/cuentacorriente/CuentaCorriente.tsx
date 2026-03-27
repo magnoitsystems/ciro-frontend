@@ -3,6 +3,7 @@ import style from './CuentaCorriente.module.css';
 import SaldosResume from "../../components/CtaCorriente/saldosResume.tsx";
 import Register from "../../components/CtaCorriente/Register.tsx";
 import DebtButton from "../../components/Buttons/CancelDebtButton/cancelDebtButton.tsx";
+import {NavLink} from "react-router-dom";
 
 export default function CuentaCorriente() {
     return(
@@ -11,6 +12,10 @@ export default function CuentaCorriente() {
                 sectionText={'Acá la Cta. Corriente de Milagros Alvarez'}
                 className={'darkStyle'}
             />
+
+            <NavLink to={'/pacientes'}>
+                <p> Volver a la sección pacientes</p>
+            </NavLink>
 
             <div className={style.content}>
                 <div className={style.allInformation}>

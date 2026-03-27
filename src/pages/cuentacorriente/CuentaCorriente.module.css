@@ -12,6 +12,15 @@
     gap: var(--20px);
 }
 
+.main p {
+    width: 100%;
+
+    text-align: right;
+    color: var(--neutral-4);
+    font-size: 14px;
+    text-decoration: underline;
+}
+
 .content {
     justify-content: space-between;
 
@@ -68,4 +77,8 @@
 
 .createRegisters div {
     align-items: center;
+}
+
+.createRegisters p, .columnNames p {
+    text-decoration: none;
 }
