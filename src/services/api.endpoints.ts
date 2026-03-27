@@ -72,6 +72,9 @@ export const API_ENDPOINTS = {
         BY_DOCTOR: (doctorId: number) => `/api/v1/shifts/doctor/${doctorId}`,
         BY_PATIENT_DNI: (dni: string) => `/api/v1/shifts/patient/${dni}`,
     },
+    STATISTICS: {
+        DASHBOARD: '/api/v1/statistics/dashboard',
+    },
     SUPPLIERS: {
         BASE: '/api/v1/suppliers',
         BY_ID: (id: number) => `/api/v1/suppliers/${id}`,
