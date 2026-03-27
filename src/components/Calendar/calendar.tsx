@@ -27,9 +27,8 @@ export default function CalendarioMedico() {
   const [mostarInfoTurno, setInfoTurno] = useState(false);
 
   const turnos = [
-    { title: 'Dro. Juan Pérez', start: '2026-03-20T09:00:00' },
-    { title: 'Dro. Ana García', start: '2026-03-20T10:00:00' },
-    { title: 'Dro. Ana García', start: '2026-03-19T08:00:00' },
+    { title: 'Dro. Juan Pérez', start: '2026-03-20T09:00:00', extendedProps: { barColor: '#FF00FF' }, comment: 'hola, este es un comentario' },
+    { title: 'Dro. Ana García', start: '2026-03-20T10:00:00', extendedProps: { barColor: '#22ff00' }, comment: 'hola, este es otro comentario' },
   ]
 
   return (
@@ -82,27 +81,31 @@ export default function CalendarioMedico() {
               slotDuration="00:30:00"
               eventContent={(eventInfo) => (
                 <div className={styles.evento}>
-                  <div className={styles.mainInfoProperties}>
-                    <span>{eventInfo.timeText}</span>
-                    <span>{eventInfo.event.title}</span>
+                  <div className={styles.barraColor} style={{ backgroundColor: eventInfo.event.extendedProps.barColor }}></div>
+                  <div className={styles.container}>
+                    <div className={styles.mainInfoProperties}>
+                      <span>{eventInfo.timeText}</span>
+                      <span>{eventInfo.event.title}</span>
+                    </div>
+                    <div className={styles.buttonsProperties}>
+                      <button onClick={() => { setTipo('view'); setInfoTurno(!mostarInfoTurno) }}>
+                        <img src='/icons/seeMoreIcon.png' />
+                      </button>
+                      <button onClick={() => { setShowForm(!showForm); setTipoForm('edit') }}>
+                        <img src='/icons/editIcon.png' />
+                      </button>
+                      <button><img src='/icons/refreshIcon.png' /></button>
+                    </div>
                   </div>
-                  <div className={styles.buttonsProperties}>
-                    <button onClick={() => {
-                      setTipo('view')
-                      setInfoTurno(!mostarInfoTurno)
-                    }}><img src='/icons/seeMoreIcon.png'></img></button>
-                    <button onClick={() => {setShowForm(!showForm)
-                      setTipoForm('edit')
-                    }}><img src='/icons/editIcon.png'></img></button>
-                    <button><img src='/icons/refreshIcon.png'></img></button>
-                  </div>
+                  <div className={styles.barraColor} style={{ backgroundColor: eventInfo.event.extendedProps.barColor }}></div>
                 </div>
               )}
             />
           </div>
           <div className={styles.buttonsContainerProperties}>
             <div className={styles.newAppointment}>
-              <button onClick={() => {setShowForm(!showForm)
+              <button onClick={() => {
+                setShowForm(!showForm)
                 setTipoForm('create')
               }}>+</button>
             </div>

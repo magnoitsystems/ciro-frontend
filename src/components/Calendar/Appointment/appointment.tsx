@@ -21,6 +21,7 @@ export default function Appointment({ type , onClose}: Prop) {
                     {type == 'view' && (
                         <h4>Como nos conocio? <span>Instagram</span></h4>
                     )}
+                    <h4>Comentario: <span>este es un comentario</span></h4>
                 </div>
                 <div className={styles.buttonsProperties}>
                     <button onClick={onClose} className={styles.cancelButton}><img src='./icons/cancelIcon.png'></img></button>

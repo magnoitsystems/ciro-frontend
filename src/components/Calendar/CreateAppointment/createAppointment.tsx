@@ -7,6 +7,7 @@ type Props = {
     turnos?: {
         title: string;
         start: string | Date;
+        comment: string;
     };
 }
 
@@ -37,9 +38,12 @@ export default function CreateAppointment({ name, onClose, type, turnos }: Props
                     </div>
                     <div className={styles.labelAndInputProperties}>
                         <label>Horario</label>
-                       
-
                         <input type='datetime-local' name='hour' value={type === 'create' ? '' : startValue} />
+                    </div>
+
+                    <div className={styles.labelAndInputProperties}>
+                        <label>Comentario</label>
+                        <input type='text' name='comment' value={type === 'create' ? 'Comentario' : turnos?.comment} />
                     </div>
 
                     <div className={styles.buttonsContainerProperties}>

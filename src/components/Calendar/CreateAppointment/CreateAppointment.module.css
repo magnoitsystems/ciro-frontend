@@ -13,15 +13,20 @@
     display: flex;
     flex-direction: column;
     width: 585px;
-    height: 225px;
+    height: fit-content;
+    padding: 20px;
     border: white 2px solid;
     border-radius: 5px;
     color: white;
     justify-content: center;
     align-items: center;
     font-size: 20px;
-    gap: 50px;
+    gap: 30px;
     background-color: rgba(23, 22, 32, 1);
+}
+
+.formContainerProperties h3{
+   text-align: center;
 }
 
 .campsContainerProperties{
