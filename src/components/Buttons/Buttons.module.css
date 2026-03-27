@@ -1,4 +1,4 @@
-.panelButton, .filterButton, .debtButton {
+.panelButton, .filterButton, .debtButton, .greenFormButton {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6,13 +6,13 @@
     height: fit-content;
     width: 100%;
 
+    border-radius: var(--50px);
     border: none;
 }
 
 .panelButton {
     background-color: var(--blue-4);
     color: var(--neutral-1);
-    border-radius: var(--50px);
     font-style: italic;
 }
 
@@ -22,7 +22,6 @@
 
     background-color: var(--neutral-4);
     color: var(--neutral-1);
-    border-radius: var(--50px);
 
     padding-inline: var(--30px);
 }
@@ -34,11 +33,18 @@
     padding: var(--10px);
 
     background-color: var(--blue-4);
-    border-radius: var(--50px);
     color: var(--neutral-4);
     border: 2px solid var(--neutral-4);
 
     transition: ease-in 0.3s;
+}
+
+.greenFormButton {
+    width: 330px;
+    height: 40px;
+
+    background-color: var(--green);
+    color: var(--neutral-1);
 }
 
 /*HOVERS*/
