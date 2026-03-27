@@ -1,0 +1,51 @@
+.main, .container, .content {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+.pages, .columnNames {
+    display: flex;
+    flex-direction: row;
+}
+
+.main {
+    gap: var(--30px);
+}
+
+.pages {
+    justify-content: space-between;
+
+    width: 60%;
+}
+
+.pages h4 {
+    width: 33%;
+
+    padding: var(--5px);
+    padding-inline: var(--30px);
+
+    background-color: var(--blue-4);
+    color: var(--neutral-1);
+    border-radius: var(--20px) var(--20px) 0 0;
+}
+
+.content {
+    padding: var(--30px);
+    padding-inline: var(--20px);
+    margin-inline: auto;
+    gap: var(--15px);
+
+    background-color: var(--blue-3);
+}
+
+.columnNames {
+    align-items: center;
+    justify-content: space-between;
+
+    width: 90%;
+
+    font-size: 14px;
+    color: var(--neutral-4);
+}
