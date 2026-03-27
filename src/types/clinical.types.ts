@@ -1,29 +1,27 @@
-import type { ImplantType, ShiftStatus, SurgeryType } from "./enums.types";
-import type { Patient } from "./patients.types";
-import type { User } from "./users.types";
+import type { ShiftStatus } from "./enums.types";
+import type { PatientResponseDTO } from "./patients.types";
+import type { UserResponseDTO } from "./users.types";
 
 export interface Shift {
-    id?: number;
-    patient: Patient;
-    doctor: User;
-    shiftDate: string; 
-    status: ShiftStatus;
+  id?: number;
+  patient: PatientResponseDTO;
+  doctor: UserResponseDTO;
+  shiftDate: string;
+  status: ShiftStatus;
 }
 
 export interface Practice {
     id?: number;
-    patient: Patient;
-    doctor: User;
     practiceDate: string;
-    surgeryType?: SurgeryType;
-    implantType?: ImplantType;
-    reimplantation?: boolean;
-    amount?: number;
+    practiceType: string;
+    amountDollars?: number;
+    amountPesos?: number;
+    tc: number;
 }
 
 export interface Budget {
     id?: number;
     uploadedDate: string;
-    patient: Patient;
+    patient: PatientResponseDTO;
     file_url?: string;
 }
