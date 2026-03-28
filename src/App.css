@@ -1,9 +1,19 @@
+html, body {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
 .appContainer {
     display: flex;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .content {
-    flex: 1;
+     flex: 1;
     padding: var(--30px);
     padding-inline: var(--40px);
+    overflow: visible; /* sacale el scroll */
 }

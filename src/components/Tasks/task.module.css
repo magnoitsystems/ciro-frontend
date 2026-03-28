@@ -1,13 +1,41 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
+body {
+    overflow: hidden;
+}
+
+.mainContainerProperties {
+    display: flex;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.buttonsRodContainerProperties {
+    position: sticky;
+    top: 0;
+    height: 95vh;
+    align-self: flex-start; /* esto también es necesario */
+}
 
 .containerProperties{
     display: flex;
     flex-direction: column;
+    color: white;
+    height: 100vh;
     gap: 30px;
+    color: white;
 }
 
 .taskContainerProperties{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 30px;
+    color: black;
+    padding-bottom: var(--50px);
+    padding-right: var(--10px);
 }

@@ -1,0 +1,38 @@
+.buttonsContainerProperties {
+    width: 60px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.buttonsSectionProperties, .mainInfoProperties{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.buttonsSectionProperties button{
+    background-color: transparent;
+}
+
+.newAppointment button{
+    background-color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    font-size: 30px;
+}
+
+.buttonsSectionProperties button, .newAppointment button{
+    border: none;
+    cursor: pointer;
+}
+
+.miniCalendarProperties{
+    display: flex;
+    position: absolute;
+    z-index: 999;
+    bottom: 15%;
+    right: 10%;
+}

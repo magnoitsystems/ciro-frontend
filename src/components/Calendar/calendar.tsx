@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import CreateAppointment from './CreateAppointment/createAppointment'
 import Help from './Help/help'
 import Appointment from './Appointment/appointment'
+import ButtonsRod from '../Buttons/ButtonsRod/buttonsRod'
 
 export default function CalendarioMedico() {
   const [mostrarMiniCalendario, setMostrarMiniCalendario] = useState(false);
@@ -102,25 +103,8 @@ export default function CalendarioMedico() {
               )}
             />
           </div>
-          <div className={styles.buttonsContainerProperties}>
-            <div className={styles.newAppointment}>
-              <button onClick={() => {
-                setShowForm(!showForm)
-                setTipoForm('create')
-              }}>+</button>
-            </div>
-            <div className={styles.buttonsSectionProperties}>
-              <button><img src='/icons/label.png'></img></button>
-              <button onClick={() => setMostrarMiniCalendario(!mostrarMiniCalendario)}><img src='/icons/calendar.png'></img></button>
-              <button onClick={() => {
-                setIconoSeleccionado('info')
-                setMostrarInformacionDeAyuda(!mostrarInformacionDeAyuda)
-              }}><img src='/icons/settings.png'></img></button>
-              <button onClick={() => {
-                setMostrarInformacionDeAyuda(!mostrarInformacionDeAyuda)
-                setIconoSeleccionado('setting')
-              }}><img src='/icons/info.png'></img></button>
-            </div>
+          <div>
+            <ButtonsRod></ButtonsRod>
           </div>
         </div>
       </div>
