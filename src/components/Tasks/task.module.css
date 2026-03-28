@@ -1,0 +1,13 @@
+
+
+.containerProperties{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.taskContainerProperties{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px;
+}

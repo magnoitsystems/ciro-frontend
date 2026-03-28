@@ -1,0 +1,48 @@
+.cardContainerProperties{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 350px;
+    height: fit-content;
+    border-top: red 20px solid;
+    border-bottom: red 20px solid;
+    border-radius: 5px;
+    background-color: rgba(212, 212, 212, 1);
+    font-size: 18px;
+    gap: 20px;
+    padding: 10px;
+}
+
+.infoContainerProperties{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+.buttonsContainerProperties{
+    display: flex;
+    flex-direction: row;
+    gap: 30px
+}
+.buttonsContainerProperties button{
+    background-color: transparent;
+    border: none;
+}
+
+.buttonsProperties{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.selectProperties select{
+    width: 190px;
+    border-radius: 20px;
+    height: 21px;
+    text-align: center;
+    background-color: rgba(38, 38, 38, 1);
+    color: white;
+}
