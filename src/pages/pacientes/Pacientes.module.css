@@ -2,6 +2,8 @@
     display: flex;
     flex-direction: column;
 
+    height: 100vh;
+
     gap: var(--30px);
 }
 
@@ -41,8 +43,58 @@
 .pacientCards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    flex: 1;
+    overflow-y: auto;
+    align-content: start;
 
     width: 100%;
 
+    margin-bottom: var(--50px);
     row-gap: var(--20px);
+}
+
+
+/*NEW PACIENT box*/
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.4);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 35%;
+    height: 80%;
+
+    gap: var(--20px);
+    padding: var(--50px);
+    padding-inline: var(--20px);
+    border-radius: var(--5px);
+
+    background-color: var(--blue-4);
+    color: var(--neutral-1);
+}
+
+.modal input {
+    width: 80%;
+    min-width: 400px;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
