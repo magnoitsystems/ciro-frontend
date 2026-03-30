@@ -54,10 +54,9 @@ export const API_ENDPOINTS = {
         SEARCH: '/api/v1/patients/search',
         DEBTORS: '/api/v1/patients/debtors',
     },
-    PRACTICES: {
-        BASE: '/api/v1/practices',
-        BY_ID: (id: number) => `/api/v1/practices/${id}`,
-        BY_TYPE: `/api/v1/practices/type`
+    TARIFFS: {
+        BASE: '/api/v1/tariffs',
+        BY_ID: (id: number) => `/api/v1/tariffs/${id}`,
     },
     RECEIPTS: {
         BASE: '/api/v1/receipts',
