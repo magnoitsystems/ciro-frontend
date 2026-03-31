@@ -10,11 +10,24 @@ type Props = {
 }
 
 export default function PacientCard({ nombre, dni, onDelete, onView, onEdit }: Props) {
+    const getInitials = (nombreCompleto: string) => {
+        const partes = nombreCompleto.trim().split(" ");
+
+        if (partes.length === 1) {
+            return partes[0][0].toUpperCase();
+        }
+
+        const primera = partes[0][0];
+        const ultima = partes[partes.length - 1][0];
+
+        return (primera + ultima).toUpperCase();
+    };
+
     return(
         <main className={style.main}>
             <div className={style.information}>
                 <div className={style.profileImage}>
-                    <h1>AB</h1>
+                    <h1>{getInitials(nombre)}</h1>
                 </div>
 
                 <div>

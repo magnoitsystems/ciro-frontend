@@ -1,7 +1,6 @@
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import style from './Pacientes.module.css';
 import SearchBar from "../../components/SearchBar/searchBar.tsx";
-import FilterButton from "../../components/Buttons/FilterButton/filterButton.tsx";
 import PacientCard from "../../components/PacientCard/pacientCards.tsx";
 import { useState } from "react";
 import ProvInput from "../../components/Forms/NewProvForm/ProvInput.tsx";
@@ -113,12 +112,15 @@ export default function Pacientes() {
 
     const [pacientesState, setPacientesState] = useState<Paciente[]>(pacientes);
 
+    const normalize = (text: string) => text.replace(/\D/g, "");
+
     const filteredPacientes = pacientesState.filter((p) => {
-        const query = search.toLowerCase();
+        const query = normalize(search);
 
         return (
-            p.nombre.toLowerCase().includes(query) ||
-            p.numeroDocumento.includes(query)
+            p.nombre.toLowerCase().includes(search.toLowerCase()) ||
+            p.numeroDocumento.includes(query) ||
+            normalize(p.telefono).includes(query)
         );
     });
 
@@ -197,10 +199,6 @@ export default function Pacientes() {
                         onClick={() => setOpenModal(true)}
                     >
                         <img src={'/icons/plus.png'} alt={'plus image'}/>
-                    </div>
-
-                    <div className={style.filter}>
-                        <FilterButton/>
                     </div>
                 </div>
             </div>
@@ -563,8 +561,7 @@ export default function Pacientes() {
                         {editStep === 1 && (
                             <>
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Nombre completo</span>
-                                    <span className={style.currentValue}>{editData.nombre}</span>
+                                    <span className={style.label}>Nombre completo:  {editData.nombre}</span>
 
                                     <ProvInput
                                         placeholder="Nombre completo"
@@ -578,10 +575,7 @@ export default function Pacientes() {
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Documento</span>
-                                    <span className={style.currentValue}>
-                                        {editData.tipoDocumento} {editData.numeroDocumento}
-                                    </span>
+                                    <span className={style.label}>Documento: {editData.tipoDocumento}</span>
 
                                     <ProvInput
                                         placeholder="Tipo de documento"
@@ -600,8 +594,7 @@ export default function Pacientes() {
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Número de documento</span>
-                                    <span className={style.currentValue}>{editData.numeroDocumento}</span>
+                                    <span className={style.label}>Número de documento: {editData.numeroDocumento}</span>
 
                                     <ProvInput
                                         placeholder="Número de documento"
@@ -615,8 +608,7 @@ export default function Pacientes() {
                                 </div>
 
                                 <div>
-                                    <span className={style.label}>Fecha de nacimiento</span>
-                                    <span className={style.currentValue}>{editData.fechaNacimiento}</span>
+                                    <span className={style.label}>Fecha de nacimiento: {editData.fechaNacimiento}</span>
 
                                     <ProvInput
                                         placeholder="Fecha de nacimiento"
@@ -634,8 +626,7 @@ export default function Pacientes() {
                         {editStep === 2 && (
                             <>
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Teléfono</span>
-                                    <span className={style.currentValue}>{editData.telefono}</span>
+                                    <span className={style.label}>Teléfono: {editData.telefono}</span>
 
                                     <ProvInput
                                         placeholder="Teléfono"
@@ -649,8 +640,7 @@ export default function Pacientes() {
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Dirección</span>
-                                    <span className={style.currentValue}>{editData.direccion}</span>
+                                    <span className={style.label}>Dirección: {editData.direccion}</span>
 
                                     <ProvInput
                                         placeholder="Dirección"
@@ -664,8 +654,7 @@ export default function Pacientes() {
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Localidad</span>
-                                    <span className={style.currentValue}>{editData.localidad}</span>
+                                    <span className={style.label}>Localidad: {editData.localidad}</span>
 
                                     <ProvInput
                                         placeholder="Localidad"
@@ -679,8 +668,7 @@ export default function Pacientes() {
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Obra Social</span>
-                                    <span className={style.currentValue}>{editData.obraSocial}</span>
+                                    <span className={style.label}>Obra Social: {editData.obraSocial}</span>
 
                                     <ProvInput
                                         placeholder="Obra social"
@@ -704,8 +692,7 @@ export default function Pacientes() {
                         {editStep === 3 && (
                             <>
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Secretaria a cargo del registro</span>
-                                    <span className={style.currentValue}>{editData.secretaria}</span>
+                                    <span className={style.label}>Secretaria a cargo del registro: {editData.secretaria}</span>
 
                                     <ProvInput
                                         placeholder="Secretaria"
@@ -719,8 +706,7 @@ export default function Pacientes() {
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Observaciones</span>
-                                    <span className={style.currentValue}>{editData.observaciones}</span>
+                                    <span className={style.label}>Observaciones: {editData.observaciones}</span>
 
                                     <ProvInput
                                         placeholder="Observaciones"
@@ -734,8 +720,7 @@ export default function Pacientes() {
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>¿Cómo nos conoció?</span>
-                                    <span className={style.currentValue}>{editData.comoNosConocio}</span>
+                                    <span className={style.label}>¿Cómo nos conoció?: {editData.comoNosConocio}</span>
 
                                     <ProvInput
                                         placeholder="¿Cómo nos conoció?"

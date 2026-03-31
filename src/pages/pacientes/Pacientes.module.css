@@ -51,6 +51,7 @@
 
     margin-bottom: var(--50px);
     row-gap: var(--20px);
+    column-gap: var(--30px);
 }
 
 
@@ -207,4 +208,22 @@
     background-color: var(--blue-3);
     border-radius: 8px;
     font-size: 14px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.label {
+    font-size: 12px;
+    color: #888;
+}
+
+.currentValue {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
 }
