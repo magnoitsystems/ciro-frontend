@@ -83,3 +83,7 @@
 .back {
     color: var(--neutral-4);
 }
+
+.holeInput select {
+    width: 400px;
+}

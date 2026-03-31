@@ -4,9 +4,12 @@ import {NavLink} from "react-router-dom";
 type Props = {
     nombre: string;
     dni: string;
+    onDelete: () => void;
+    onView: () => void;
+    onEdit: () => void;
 }
 
-export default function PacientCard({ nombre, dni }: Props) {
+export default function PacientCard({ nombre, dni, onDelete, onView, onEdit }: Props) {
     return(
         <main className={style.main}>
             <div className={style.information}>
@@ -25,9 +28,32 @@ export default function PacientCard({ nombre, dni }: Props) {
                     <img src={'/icons/cash.png'} alt={'cash image'}/>
                 </NavLink>
 
-                <img src={'/icons/trash.png'} alt={'trash image'}/>
-                <img src={'/icons/editGrey.png'} alt={'editGrey image'}/>
-                <img src={'/icons/eye.png'} alt={'eye image'}/>
+                <img
+                    src={'/icons/trash.png'}
+                    alt={'trash image'}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete();
+                    }}
+                />
+
+                <img
+                    src={'/icons/editGrey.png'}
+                    alt={'editGrey image'}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit();
+                    }}
+                />
+
+                <img
+                    src={'/icons/eye.png'}
+                    alt={'eye image'}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onView();
+                    }}
+                />
             </div>
         </main>
     )

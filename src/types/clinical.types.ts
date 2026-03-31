@@ -8,7 +8,7 @@ export interface Shift {
   doctor: UserResponseDTO;
   shiftDate: string;
   status: ShiftStatus;
-}
+}   
 
 export interface Budget {
     id?: number;
