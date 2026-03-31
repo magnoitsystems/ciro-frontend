@@ -1,6 +1,7 @@
 // src/services/auth.service.ts
 
 import type { AuthResponseDTO, LoginRequestDTO, RefreshTokenRequestDTO } from '../types/auth.types';
+import type {Role} from '../types/enums.types'
 import { api } from './api';
 import { API_ENDPOINTS } from './api.endpoints';
 
@@ -14,7 +15,7 @@ export const authService = {
         const authData = response.data;
         localStorage.setItem('accessToken', authData.accessToken);
         localStorage.setItem('refreshToken', authData.refreshToken);
-        
+        localStorage.setItem('userRole', authData.role);
         localStorage.setItem('userId', authData.userId.toString());
         localStorage.setItem('userName', authData.name);
         if (authData.color) {
@@ -51,6 +52,7 @@ export const authService = {
             localStorage.removeItem('userId');
             localStorage.removeItem('userName');
             localStorage.removeItem('userColor');
+            localStorage.removeItem('userRole');
         }
     },
 
@@ -59,5 +61,13 @@ export const authService = {
      */
     isAuthenticated: (): boolean => {
         return !!localStorage.getItem('accessToken');
+    },
+
+    /**
+     * Helper para saber si el usuario actual es ADMIN
+     */
+    isAdmin: (): boolean => {
+        const role = localStorage.getItem('userRole');
+        return role === 'ADMIN'; 
     }
 };

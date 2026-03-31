@@ -8,16 +8,7 @@ export interface Shift {
   doctor: UserResponseDTO;
   shiftDate: string;
   status: ShiftStatus;
-}
-
-export interface Practice {
-    id?: number;
-    practiceDate: string;
-    practiceType: string;
-    amountDollars?: number;
-    amountPesos?: number;
-    tc: number;
-}
+}   
 
 export interface Budget {
     id?: number;

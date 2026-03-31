@@ -2,13 +2,21 @@ import style from './SearchBar.module.css';
 
 type Props = {
     text: string;
+    value: string;
+    onChange: (value: string) => void;
 }
 
-export default function SearchBar({text}: Props) {
+export default function SearchBar({ text, value, onChange }: Props) {
     return (
-        <main className={style.main}>
-            <h6>{text}</h6>
-            <img src={'/icons/search.png'}/>
-        </main>
+        <div className={style.main}>
+            <input
+                type="text"
+                placeholder={text}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                className={style.input}
+            />
+            <img src={'/icons/search.png'} />
+        </div>
     )
 }

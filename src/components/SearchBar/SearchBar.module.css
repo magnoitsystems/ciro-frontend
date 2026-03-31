@@ -14,3 +14,10 @@
     color: var(--neutral-1);
     font-style: italic;
 }
+
+.main input {
+    width: 100%;
+
+    background-color: transparent;
+    border: none;
+}

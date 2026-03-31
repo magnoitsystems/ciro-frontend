@@ -1,6 +1,6 @@
 import { useState } from "react";
 import style from './NewProvForm.module.css';
-import ProvInput from "./ProvInput";
+import ProvInput from "./ProvInput.tsx";
 import GreenFormButton from "../../Buttons/GreenFormButton/greenFormButton";
 
 export default function NewProvForm() {
