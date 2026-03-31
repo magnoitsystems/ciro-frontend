@@ -10,6 +10,11 @@ import Help from './Help/help'
 import Appointment from './Appointment/appointment'
 import ButtonsRod from '../Buttons/ButtonsRod/buttonsRod'
 
+  type BotonInfo = {
+    tipo: string;
+    subtipo?: string; // opcional, solo para los botones que lo necesiten
+  }
+
 export default function CalendarioMedico() {
   const [mostrarMiniCalendario, setMostrarMiniCalendario] = useState(false);
 
@@ -17,9 +22,7 @@ export default function CalendarioMedico() {
 
   const [showForm, setShowForm] = useState(false);
 
-  const [iconoSeleccionado, setIconoSeleccionado] = useState<'info' | 'setting'>('info')
-
-  const [mostrarInformacionDeAyuda, setMostrarInformacionDeAyuda] = useState(false);
+  const [iconoSeleccionado, setIconoSeleccionado] = useState<'info' | 'setting' | 'label' | 'calendar'>('info')
 
   const [tipo, setTipo] = useState<'view' | 'confirm'>('view')
 
@@ -31,6 +34,8 @@ export default function CalendarioMedico() {
     { title: 'Dro. Juan Pérez', start: '2026-03-20T09:00:00', extendedProps: { barColor: '#FF00FF' }, comment: 'hola, este es un comentario' },
     { title: 'Dro. Ana García', start: '2026-03-20T10:00:00', extendedProps: { barColor: '#22ff00' }, comment: 'hola, este es otro comentario' },
   ]
+
+  const [botonActivo, setBotonActivo] = useState<BotonInfo | null>(null)
 
   return (
     <div className={styles.calendarProperties}>
@@ -48,21 +53,17 @@ export default function CalendarioMedico() {
           />
         </div>
       )}
-      {mostrarInformacionDeAyuda && (
-        <div className={styles.miniCalendarProperties}>
-          <Help type={iconoSeleccionado}></Help>
+   
+
+      {botonActivo?.tipo === 'info' && botonActivo.subtipo === 'setting' && (
+        <div>
+          <Help type={botonActivo.subtipo}></Help>
         </div>
       )}
 
       {showForm && (
         <div>
           <CreateAppointment turnos={turnos[1]} type={tipoForm} name='Ana' onClose={() => setShowForm(false)}></CreateAppointment>
-        </div>
-      )}
-
-      {mostarInfoTurno && (
-        <div>
-          <Appointment onClose={() => setInfoTurno(false)} type={tipo}></Appointment>
         </div>
       )}
 
@@ -104,7 +105,7 @@ export default function CalendarioMedico() {
             />
           </div>
           <div>
-            <ButtonsRod></ButtonsRod>
+            <ButtonsRod onBotonClick={(boton:any) => setBotonActivo(boton)} />
           </div>
         </div>
       </div>

@@ -34,7 +34,7 @@ export default function Task() {
                 </div>
             </div>
             <div className={styles.buttonsRodContainerProperties}>
-                <ButtonsRod></ButtonsRod>
+                <ButtonsRod onBotonClick={(boton) => console.log(boton)} />
             </div>
         </section>
     );
