@@ -12,6 +12,11 @@
     align-content: center;
     gap: 20px;
     border-radius: 5px;
+    position: absolute;
+    z-index: 1000;
+    justify-self: center;
+    bottom: 70px;
+    right: 100px;
 }
 
 .formContainerProperties{

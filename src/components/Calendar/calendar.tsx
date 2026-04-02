@@ -16,13 +16,10 @@ import ButtonsRod from '../Buttons/ButtonsRod/buttonsRod'
   }
 
 export default function CalendarioMedico() {
-  const [mostrarMiniCalendario, setMostrarMiniCalendario] = useState(false);
 
   const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(new Date());
 
   const [showForm, setShowForm] = useState(false);
-
-  const [iconoSeleccionado, setIconoSeleccionado] = useState<'info' | 'setting' | 'label' | 'calendar'>('info')
 
   const [tipo, setTipo] = useState<'view' | 'confirm'>('view')
 
@@ -39,31 +36,43 @@ export default function CalendarioMedico() {
 
   return (
     <div className={styles.calendarProperties}>
-      {mostrarMiniCalendario && (
-        <div className={styles.miniCalendarProperties}>
+
+      {botonActivo?.tipo === 'info' && botonActivo.subtipo === 'setting' ? (
+        <div>
+          <Help type={botonActivo.subtipo}></Help>
+        </div>
+      ): botonActivo?.tipo === 'info' && botonActivo.subtipo === 'info' ? (
+        <div>
+          <Help type={botonActivo.subtipo}></Help>
+        </div>
+      ) : botonActivo?.tipo === 'calendar' && botonActivo.subtipo === 'calendar' ? (
+         <div className={styles.miniCalendarProperties}>
           <DatePicker
             selected={fechaSeleccionada}
             onChange={(fecha: Date | null) => {
               if (fecha) {
                 setFechaSeleccionada(fecha)
-                setMostrarMiniCalendario(false)
+                setBotonActivo(null) // Cerrar el calendario después de seleccionar una fecha
               }
             }}
             inline
           />
         </div>
-      )}
-   
-
-      {botonActivo?.tipo === 'info' && botonActivo.subtipo === 'setting' && (
+      ) : botonActivo?.tipo === 'label' && botonActivo.subtipo === 'label' ? (
         <div>
-          <Help type={botonActivo.subtipo}></Help>
+          <CreateAppointment turnos={turnos[1]} type={'create'} name='Ana' onClose={() => setBotonActivo(null)}></CreateAppointment>
         </div>
-      )}
+      ) : null}
 
       {showForm && (
         <div>
           <CreateAppointment turnos={turnos[1]} type={tipoForm} name='Ana' onClose={() => setShowForm(false)}></CreateAppointment>
+        </div>
+      )}
+
+      {tipo === 'view' && mostarInfoTurno && (
+        <div>
+          <Appointment type='view' onClose={() => setInfoTurno(false)}></Appointment>
         </div>
       )}
 
