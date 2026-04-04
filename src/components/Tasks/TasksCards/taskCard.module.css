@@ -1,4 +1,4 @@
-.cardContainerProperties{
+.cardContainerProperties {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -7,17 +7,17 @@
     border-radius: 5px;
     background-color: rgba(212, 212, 212, 1);
     font-size: 18px;
- 
+
 }
 
-.containerProperties{
+.containerProperties {
     display: flex;
     flex-direction: column;
     gap: var(--20px);
     padding: var(--20px);
 }
 
-.infoContainerProperties{
+.infoContainerProperties {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -26,23 +26,28 @@
     align-items: center;
 }
 
-.buttonsContainerProperties{
+.buttonsContainerProperties {
     display: flex;
     flex-direction: row;
     gap: 30px
 }
-.buttonsContainerProperties button{
+
+.buttonsContainerProperties button {
     background-color: transparent;
     border: none;
 }
 
-.buttonsProperties{
+.buttonsProperties {
     display: flex;
     flex-direction: row;
     gap: 10px;
 }
 
-.selectProperties select{
+.buttonsProperties button {
+    cursor: pointer;
+}
+
+.selectProperties select {
     width: 190px;
     border-radius: 20px;
     height: var(--30px);
@@ -51,7 +56,11 @@
     color: white;
 }
 
-.barraColor{
+.barraColor {
     width: 100%;
     height: 20px;
+}
+
+.formContainerProperties{
+    background-color: rosybrown;
 }

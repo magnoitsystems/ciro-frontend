@@ -35,15 +35,15 @@ export default function CalendarioMedico() {
   const [botonActivo, setBotonActivo] = useState<BotonInfo | null>(null)
 
   return (
-    <div className={styles.calendarProperties}>
+    <div>
 
       {botonActivo?.tipo === 'info' && botonActivo.subtipo === 'setting' ? (
         <div>
-          <Help type={botonActivo.subtipo}></Help>
+          <Help type={botonActivo.subtipo} component={'calendar'}></Help>
         </div>
       ): botonActivo?.tipo === 'info' && botonActivo.subtipo === 'info' ? (
         <div>
-          <Help type={botonActivo.subtipo}></Help>
+          <Help type={botonActivo.subtipo} component={'calendar'}></Help>
         </div>
       ) : botonActivo?.tipo === 'calendar' && botonActivo.subtipo === 'calendar' ? (
          <div className={styles.miniCalendarProperties}>
@@ -60,19 +60,19 @@ export default function CalendarioMedico() {
         </div>
       ) : botonActivo?.tipo === 'label' && botonActivo.subtipo === 'label' ? (
         <div>
-          <CreateAppointment turnos={turnos[1]} type={'create'} name='Ana' onClose={() => setBotonActivo(null)}></CreateAppointment>
+          <CreateAppointment turnos={turnos[1]} type={'create'} component='calendar' name='Ana' onClose={() => setBotonActivo(null)}></CreateAppointment>
         </div>
       ) : null}
 
       {showForm && (
         <div>
-          <CreateAppointment turnos={turnos[1]} type={tipoForm} name='Ana' onClose={() => setShowForm(false)}></CreateAppointment>
+          <CreateAppointment turnos={turnos[1]} type={tipoForm} component='calendar' name='Ana' onClose={() => setShowForm(false)}></CreateAppointment>
         </div>
       )}
 
       {tipo === 'view' && mostarInfoTurno && (
         <div>
-          <Appointment type='view' onClose={() => setInfoTurno(false)}></Appointment>
+          <Appointment component='calendar' turnos = {turnos[1]} type='view' onClose={() => setInfoTurno(false)}></Appointment>
         </div>
       )}
 
