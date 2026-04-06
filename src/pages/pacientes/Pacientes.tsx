@@ -23,6 +23,15 @@ type Paciente = {
     comoNosConocio: string;
 };
 
+type HistoriaClinica = {
+    id: number;
+    fecha: string;
+    evaluacion: string;
+    archivo?: string;
+    pacienteId: number;
+    doctorId: number;
+};
+
 export default function Pacientes() {
 
     const [search, setSearch] = useState("");
@@ -143,6 +152,27 @@ export default function Pacientes() {
     const [editModal, setEditModal] = useState(false);
     const [editData, setEditData] = useState<Paciente | null>(null);
     const [editStep, setEditStep] = useState(1);
+
+    const [historiasModal, setHistoriasModal] = useState(false);
+    const [historias, setHistorias] = useState<HistoriaClinica[]>([
+        {
+            id: 1,
+            fecha: "2026-05-20",
+            evaluacion: "Paciente con evolución favorable. Se indica continuar tratamiento actual.",
+            archivo: "estudio_lab.pdf",
+            pacienteId: 1,
+            doctorId: 1
+        },
+        {
+            id: 2,
+            fecha: "2026-06-10",
+            evaluacion: "Control general. Sin complicaciones.",
+            pacienteId: 1,
+            doctorId: 2
+        }
+    ]);
+    const [newHistoria, setNewHistoria] = useState<Partial<HistoriaClinica>>({});
+    const [creatingHistoria, setCreatingHistoria] = useState(false);
 
     const handleDelete = () => {
         if (!selectedPaciente) return;
@@ -473,10 +503,10 @@ export default function Pacientes() {
                         </div>
                         <div className={style.modalFooter}>
                             <LightGreyButton
-                                text="Ver historial de turnos"
+                                text="Ver historias clínicas"
                                 onClick={() => {
                                     setViewModal(false);
-                                    setTurnosModal(true);
+                                    setHistoriasModal(true);
                                 }}
                                 variant="primary"
                             />
@@ -759,6 +789,163 @@ export default function Pacientes() {
                     </span>
                             )}
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {historiasModal && selectedPaciente && (
+                <div
+                    className={style.overlay}
+                    onClick={() => setHistoriasModal(false)}
+                >
+                    <div
+                        className={style.modal}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className={style.close}
+                            onClick={() => setHistoriasModal(false)}
+                        >
+                            ✕
+                        </button>
+
+                        <h3>Historias clínicas de {selectedPaciente.nombre}</h3>
+
+                        {!creatingHistoria ? (
+                            <>
+                                <div className={style.turnosList}>
+                                    {historias
+                                        .filter(h => h.pacienteId === selectedPaciente.id)
+                                        .map(h => (
+                                            <div key={h.id} className={style.turnoItem}>
+
+                                                <div>
+                                                    <strong>Fecha:</strong> {h.fecha}
+                                                </div>
+
+                                                <div>
+                                                    <strong>Evaluación:</strong> {h.evaluacion}
+                                                </div>
+
+                                                <div>
+                                                    <strong>Doctor:</strong> {h.doctorId === 1 ? "Dr. Pérez" : "Dra. Gómez"}
+                                                </div>
+
+                                                {h.archivo && (
+                                                    <div>
+                                                        <strong>Archivo:</strong> {h.archivo}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                </div>
+
+                                <LightGreyButton
+                                    text="Nueva historia clínica"
+                                    onClick={() => setCreatingHistoria(true)}
+                                    variant="primary"
+                                />
+                            </>
+                        ) : (
+                            <div className={style.formModal}>
+
+                                <ProvInput
+                                    placeholder="Fecha (opcional)"
+                                    type="date"
+                                    className="inputBoxDefault"
+                                    value={newHistoria.fecha || ""}
+                                    onChange={(e) =>
+                                        setNewHistoria({...newHistoria, fecha: e.target.value})
+                                    }
+                                />
+
+                                <ProvInput
+                                    placeholder="Evaluación"
+                                    type="text"
+                                    className="inputBoxBig"
+                                    value={newHistoria.evaluacion || ""}
+                                    onChange={(e) =>
+                                        setNewHistoria({...newHistoria, evaluacion: e.target.value})
+                                    }
+                                />
+
+                                <div className={style.fileUpload}>
+                                    <label className={style.fileLabel}>
+                                        <input
+                                            type="file"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (file) {
+                                                    setNewHistoria({
+                                                        ...newHistoria,
+                                                        archivo: file.name
+                                                    });
+                                                }
+                                            }}
+                                        />
+                                        📎 Subir archivo
+                                    </label>
+
+                                    {newHistoria.archivo && (
+                                        <span className={style.fileName}>
+                                            {newHistoria.archivo}
+                                        </span>
+                                    )}
+                                </div>
+
+                                <ProvInput
+                                    placeholder="Doctor"
+                                    as="select"
+                                    className="inputBoxDefault"
+                                    value={newHistoria.doctorId || ""}
+                                    onChange={(e) =>
+                                        setNewHistoria({
+                                            ...newHistoria,
+                                            doctorId: Number(e.target.value)
+                                        })
+                                    }
+                                    options={[
+                                        { value: "1", label: "Dr. Pérez" },
+                                        { value: "2", label: "Dra. Gómez" }
+                                    ]}
+                                />
+
+                                <LightGreyButton
+                                    text="Guardar"
+                                    onClick={() => {
+                                        if (!newHistoria.evaluacion || !newHistoria.doctorId) {
+                                            alert("Completá evaluación y doctor");
+                                            return;
+                                        }
+
+                                        const nuevaHistoria: HistoriaClinica = {
+                                            id: Date.now(),
+                                            fecha: newHistoria.fecha || new Date().toISOString().split("T")[0],
+                                            evaluacion: newHistoria.evaluacion,
+                                            archivo: newHistoria.archivo || "",
+                                            pacienteId: selectedPaciente.id,
+                                            doctorId: newHistoria.doctorId
+                                        };
+
+                                        setHistorias(prev => [...prev, nuevaHistoria]);
+
+                                        setCreatingHistoria(false);
+                                        setNewHistoria({});
+                                    }}
+                                    variant="primary"
+                                />
+
+                                <span
+                                    className={style.back}
+                                    onClick={() => {
+                                        setCreatingHistoria(false);
+                                        setNewHistoria({});
+                                    }}
+                                >
+                                    ← Cancelar
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

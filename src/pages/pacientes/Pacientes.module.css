@@ -197,17 +197,20 @@
 .turnosList {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
+    gap: var(--20px);
+    margin: var(--40px);
+
 }
 
 .turnoItem {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     padding: 10px;
     background-color: var(--blue-3);
     border-radius: 8px;
     font-size: 14px;
+    gap: var(--10px);
 }
 
 .inputGroup {
@@ -226,4 +229,32 @@
     font-size: 14px;
     font-weight: 500;
     color: #333;
+}
+
+.fileUpload {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    width: 400px;
+}
+
+.fileLabel {
+    display: inline-block;
+    padding: 10px 14px;
+    border-radius: var(--50px);
+    background-color: var(--neutral-4);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    width: 400px;
+}
+
+.fileLabel input {
+    display: none;
+}
+
+.fileName {
+    font-size: 13px;
+    color: #555;
 }
