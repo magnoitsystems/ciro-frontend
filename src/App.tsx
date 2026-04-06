@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Panel from "./pages/panel/Panel.tsx";
 import Sueldos from "./pages/sueldos/Sueldos.tsx";
 import Proveedores from "./pages/proveedores/Proveedores.tsx";
-import Procedimientos from "./pages/procedimientos/Procedimientos.tsx";
+import Procedimientos from "./pages/aranceles/Procedimientos.tsx";
 import Presupuestos from "./pages/presupuestos/Presupuestos.tsx";
 import Pacientes from "./pages/pacientes/Pacientes.tsx";
 import Deudas from "./pages/deudas/Deudas.tsx";
@@ -26,7 +26,7 @@ function App() {
                   <Route path="/deudas" element={<Deudas/>}/>
                   <Route path="/pacientes" element={<Pacientes/>}/>
                   <Route path="/presupuestos" element={<Presupuestos/>}/>
-                  <Route path="/procedimientos" element={<Procedimientos/>}/>
+                  <Route path="/aranceles" element={<Procedimientos/>}/>
                   <Route path="/proveedores" element={<Proveedores/>}/>
                   <Route path="/sueldos" element={<Sueldos/>}/>
                   <Route path="/tareas" element={<Tareas/>}/>

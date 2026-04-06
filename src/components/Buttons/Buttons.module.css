@@ -8,6 +8,8 @@
 
     border-radius: var(--50px);
     border: none;
+
+    transition: all ease-in 0.3s;
 }
 
 .panelButton {
@@ -43,8 +45,8 @@
     width: 330px;
     height: 40px;
 
-    background-color: var(--green);
-    color: var(--neutral-1);
+    background-color: var(--light-green);
+    color: var(--blue-4);
 }
 
 
@@ -69,4 +71,11 @@
 .debtButton:hover {
     background-color: var(--red);
     color: var(--neutral-1);
+}
+
+.greenFormButton:hover {
+    font-weight: bold;
+    background-color: var(--green);
+    color: var(--neutral-1);
+    transform: translateY(-5px);
 }
