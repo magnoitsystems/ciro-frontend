@@ -1,0 +1,42 @@
+.newBudget{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    background-color: var(--blue-2);
+    border-radius: 10px;
+    align-items: center;
+    gap: var(--30px);
+    padding-left: 5%;
+}
+
+.formContainer{
+    display: flex;
+    flex-direction: column;
+    gap: var(--20px);
+    width: 80%;
+    font-size: 18px;
+}
+
+.fileInputContainer, .formContainer select{
+    padding: var(--10px);
+    width: 100%;
+    border-radius: 100px;
+    border: none;
+    background-color: var(--blue-1);
+    color: white;
+}
+
+.buttonFormProperties{
+    width: fit-content;
+    padding: var(--10px) var(--20px);
+    border-radius: 100px;
+    border: none;
+    background-color: var(--green);
+    color: white;
+    cursor: pointer;
+    font-size: var(--18px);
+}
+
+.textContainer{
+    width: 80%;
+}

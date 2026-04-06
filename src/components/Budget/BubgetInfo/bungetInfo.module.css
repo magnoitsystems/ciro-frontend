@@ -1,0 +1,47 @@
+.tableContainerPropeties{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    height: 100%;
+    width: 100%;
+    background-color: var(--blue-2);
+    padding: 50px;
+    gap: var(--10px);
+    overflow: hidden; 
+}
+
+.tableBodyProperties{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    gap: var(--20px);
+    overflow-y: auto; 
+    max-height: 100%;
+}
+
+.tableHeaderProperties {
+    width: 80%;
+}
+
+.tableTrProperties, .tableTrPropertiesTbody{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-self: center;
+    justify-content: space-between;
+}
+
+.tableTrPropertiesTbody{
+    background-color: var(--neutral-2);
+    height: 40px;
+    align-items: center;
+    border-radius: 5px;
+    color: var(--blue-4);
+}
+
+.stateProperties{
+    width: 180px;
+    height: 25px;
+    border-radius: 100px;
+}

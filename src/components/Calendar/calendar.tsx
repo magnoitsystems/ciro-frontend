@@ -10,16 +10,16 @@ import Help from './Help/help'
 import Appointment from './Appointment/appointment'
 import ButtonsRod from '../Buttons/ButtonsRod/buttonsRod'
 
+  type BotonInfo = {
+    tipo: string;
+    subtipo?: string; // opcional, solo para los botones que lo necesiten
+  }
+
 export default function CalendarioMedico() {
-  const [mostrarMiniCalendario, setMostrarMiniCalendario] = useState(false);
 
   const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(new Date());
 
   const [showForm, setShowForm] = useState(false);
-
-  const [iconoSeleccionado, setIconoSeleccionado] = useState<'info' | 'setting'>('info')
-
-  const [mostrarInformacionDeAyuda, setMostrarInformacionDeAyuda] = useState(false);
 
   const [tipo, setTipo] = useState<'view' | 'confirm'>('view')
 
@@ -32,37 +32,47 @@ export default function CalendarioMedico() {
     { title: 'Dro. Ana García', start: '2026-03-20T10:00:00', extendedProps: { barColor: '#22ff00' }, comment: 'hola, este es otro comentario' },
   ]
 
+  const [botonActivo, setBotonActivo] = useState<BotonInfo | null>(null)
+
   return (
-    <div className={styles.calendarProperties}>
-      {mostrarMiniCalendario && (
-        <div className={styles.miniCalendarProperties}>
+    <div>
+
+      {botonActivo?.tipo === 'info' && botonActivo.subtipo === 'setting' ? (
+        <div>
+          <Help type={botonActivo.subtipo} component={'calendar'}></Help>
+        </div>
+      ): botonActivo?.tipo === 'info' && botonActivo.subtipo === 'info' ? (
+        <div>
+          <Help type={botonActivo.subtipo} component={'calendar'}></Help>
+        </div>
+      ) : botonActivo?.tipo === 'calendar' && botonActivo.subtipo === 'calendar' ? (
+         <div className={styles.miniCalendarProperties}>
           <DatePicker
             selected={fechaSeleccionada}
             onChange={(fecha: Date | null) => {
               if (fecha) {
                 setFechaSeleccionada(fecha)
-                setMostrarMiniCalendario(false)
+                setBotonActivo(null) // Cerrar el calendario después de seleccionar una fecha
               }
             }}
             inline
           />
         </div>
-      )}
-      {mostrarInformacionDeAyuda && (
-        <div className={styles.miniCalendarProperties}>
-          <Help type={iconoSeleccionado}></Help>
+      ) : botonActivo?.tipo === 'label' && botonActivo.subtipo === 'label' ? (
+        <div>
+          <CreateAppointment turnos={turnos[1]} type={'create'} component='calendar' name='Ana' onClose={() => setBotonActivo(null)}></CreateAppointment>
         </div>
-      )}
+      ) : null}
 
       {showForm && (
         <div>
-          <CreateAppointment turnos={turnos[1]} type={tipoForm} name='Ana' onClose={() => setShowForm(false)}></CreateAppointment>
+          <CreateAppointment turnos={turnos[1]} type={tipoForm} component='calendar' name='Ana' onClose={() => setShowForm(false)}></CreateAppointment>
         </div>
       )}
 
-      {mostarInfoTurno && (
+      {tipo === 'view' && mostarInfoTurno && (
         <div>
-          <Appointment onClose={() => setInfoTurno(false)} type={tipo}></Appointment>
+          <Appointment component='calendar' turnos = {turnos[1]} type='view' onClose={() => setInfoTurno(false)}></Appointment>
         </div>
       )}
 
@@ -104,7 +114,7 @@ export default function CalendarioMedico() {
             />
           </div>
           <div>
-            <ButtonsRod></ButtonsRod>
+            <ButtonsRod onBotonClick={(boton:any) => setBotonActivo(boton)} />
           </div>
         </div>
       </div>

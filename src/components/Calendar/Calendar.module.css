@@ -101,3 +101,10 @@ body{
     min-width: 0;
     position: relative;
 }
+
+.miniCalendarProperties{
+    position: absolute;
+    z-index: 1000;
+    bottom: 70px;
+    right: 100px;
+}
