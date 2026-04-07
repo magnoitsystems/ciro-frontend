@@ -69,6 +69,7 @@ export const API_ENDPOINTS = {
         BY_ID: (id: number) => `/api/v1/shifts/${id}`,
         BY_DOCTOR: (doctorId: number) => `/api/v1/shifts/doctor/${doctorId}`,
         BY_PATIENT: (dni: string) => `/api/v1/shifts/patient/${dni}`,
+        BY_DATE_RANGE: (startDate: string, endDate: string) => `/api/v1/shifts/range?startDate=${startDate}&endDate=${endDate}`,
     },
     STATISTICS: {
         DASHBOARD: '/api/v1/statistics/dashboard',

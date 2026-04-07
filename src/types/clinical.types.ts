@@ -16,6 +16,7 @@ export interface ShiftResponseDTO {
     patientFullName: string;
     doctorId: number;
     doctorFullName: string;
+    noteDescription?: string;
 }
 
 export interface MedicalRecordCreateDTO {

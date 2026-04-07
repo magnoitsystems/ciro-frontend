@@ -57,5 +57,16 @@ export const shiftService = {
      */
     delete: async (id: number): Promise<void> => {
         await api.delete(API_ENDPOINTS.SHIFTS.BY_ID(id));
-    }
+    },
+
+    /**
+     * Obtiene todos los turnos dentro de un rango de fechas.
+     * Las fechas deben enviarse en formato: '2026-04-10T00:00:00'
+     */
+    getByDateRange: async (startDate: string, endDate: string): Promise<ShiftResponseDTO[]> => {
+        const response = await api.get<ShiftResponseDTO[]>(
+            API_ENDPOINTS.SHIFTS.BY_DATE_RANGE(startDate, endDate)
+        );
+        return response.data;
+    },
 };
