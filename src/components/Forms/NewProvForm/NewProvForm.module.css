@@ -26,7 +26,7 @@
     gap: var(--15px);
 }
 
-.holeInput {
+.holeInput, .holeMiniInput {
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -36,6 +36,10 @@
     gap: var(--5px);
 
     color: var(--neutral-1);
+}
+
+.holeMiniInput {
+    width: 330px;
 }
 
 .inputBoxDefault {
@@ -82,4 +86,12 @@
 
 .back {
     color: var(--neutral-4);
+}
+
+.holeInput select {
+    width: 400px;
+}
+
+.holeMiniInput select {
+    width: 330px;
 }

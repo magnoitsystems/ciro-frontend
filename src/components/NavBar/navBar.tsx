@@ -36,9 +36,9 @@ export default function NavBar() {
                         to={'/tareas'}
                     />
                     <NavItem
-                        sectionName={'Procedimientos'}
+                        sectionName={'Aranceles'}
                         image={'/icons/proc.png'}
-                        to={'/procedimientos'}
+                        to={'/aranceles'}
                     />
                     <NavItem
                         sectionName={'Presupuestos'}

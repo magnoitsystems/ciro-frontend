@@ -8,4 +8,4 @@ export interface Shift {
   doctor: UserResponseDTO;
   shiftDate: string;
   status: ShiftStatus;
-}
+}   

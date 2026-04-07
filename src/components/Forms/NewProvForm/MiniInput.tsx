@@ -10,7 +10,7 @@ type Props = {
     options?: { value: string; label: string }[];
 }
 
-export default function ProvInput({
+export default function MiniInput({
                                       placeholder,
                                       type = "text",
                                       className,
@@ -18,7 +18,7 @@ export default function ProvInput({
                                       options = []
                                   }: Props) {
     return (
-        <main className={style.holeInput}>
+        <main className={style.holeMiniInput}>
             <h6>{placeholder}</h6>
 
             {as === "input" ? (

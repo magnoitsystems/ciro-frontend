@@ -1,4 +1,4 @@
-.panelButton, .filterButton, .debtButton, .greenFormButton {
+.panelButton, .filterButton, .debtButton, .greenFormButton, .lightGreyButton {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,6 +8,8 @@
 
     border-radius: var(--50px);
     border: none;
+
+    transition: all ease-in 0.3s;
 }
 
 .panelButton {
@@ -43,12 +45,37 @@
     width: 330px;
     height: 40px;
 
-    background-color: var(--green);
-    color: var(--neutral-1);
+    background-color: var(--light-green);
+    color: var(--blue-4);
 }
+
+
+
+.lightGreyButton {
+    width: 330px;
+    height: 30px;
+}
+.primary {
+    background-color: var(--neutral-2);
+    color: var(--blue-4);
+}
+.secondary {
+    background-color: var(--blue-4);
+    color: var(--neutral-4);
+}
+
+
+
 
 /*HOVERS*/
 .debtButton:hover {
     background-color: var(--red);
     color: var(--neutral-1);
+}
+
+.greenFormButton:hover {
+    font-weight: bold;
+    background-color: var(--green);
+    color: var(--neutral-1);
+    transform: translateY(-5px);
 }

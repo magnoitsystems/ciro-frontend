@@ -39,3 +39,10 @@ body {
     padding-bottom: var(--50px);
     padding-right: var(--10px);
 }
+
+.miniCalendarProperties{
+    position: absolute;
+    z-index: 1000;
+    bottom: 70px;
+    right: 100px;
+}
