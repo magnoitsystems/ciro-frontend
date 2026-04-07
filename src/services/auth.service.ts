@@ -1,5 +1,3 @@
-// src/services/auth.service.ts
-
 import type { AuthResponseDTO, LoginRequestDTO, RefreshTokenRequestDTO } from '../types/auth.types';
 import { api } from './api';
 import { API_ENDPOINTS } from './api.endpoints';

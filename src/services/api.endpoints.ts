@@ -41,12 +41,7 @@ export const API_ENDPOINTS = {
         BASE: '/api/v1/medicalRecords',
         BY_ID: (id: number) => `/api/v1/medicalRecords/${id}`,
         BY_DOCTOR: (doctorId: number) => `/api/v1/medicalRecords/doctor/${doctorId}`,
-        BY_PATIENT_DNI: (dni: string) => `/api/v1/medicalRecords/patient/${dni}`,
-    },
-    NOTES: {
-        BASE: '/api/v1/notes',
-        BY_ID: (id: number) => `/api/v1/notes/${id}`,
-        BY_TASK: (taskId: number) => `/api/v1/notes/task/${taskId}`,
+        BY_PATIENT: (dni: string) => `/api/v1/medicalRecords/patient/${dni}`,
     },
     PATIENTS: {
         BASE: '/api/v1/patients',
@@ -68,7 +63,8 @@ export const API_ENDPOINTS = {
         BASE: '/api/v1/shifts',
         BY_ID: (id: number) => `/api/v1/shifts/${id}`,
         BY_DOCTOR: (doctorId: number) => `/api/v1/shifts/doctor/${doctorId}`,
-        BY_PATIENT_DNI: (dni: string) => `/api/v1/shifts/patient/${dni}`,
+        BY_PATIENT: (dni: string) => `/api/v1/shifts/patient/${dni}`,
+        BY_DATE_RANGE: (startDate: string, endDate: string) => `/api/v1/shifts/range?startDate=${startDate}&endDate=${endDate}`,
     },
     STATISTICS: {
         DASHBOARD: '/api/v1/statistics/dashboard',
