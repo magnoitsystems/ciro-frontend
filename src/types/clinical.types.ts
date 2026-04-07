@@ -9,10 +9,3 @@ export interface Shift {
   shiftDate: string;
   status: ShiftStatus;
 }
-
-export interface Budget {
-    id?: number;
-    uploadedDate: string;
-    patient: PatientResponseDTO;
-    file_url?: string;
-}
