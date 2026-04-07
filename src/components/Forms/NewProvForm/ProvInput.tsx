@@ -14,6 +14,8 @@ export default function ProvInput({
                                       placeholder,
                                       type = "text",
                                       className,
+                                      value,
+                                      onChange,
                                       as = "input",
                                       options = []
                                   }: Props) {
@@ -26,10 +28,16 @@ export default function ProvInput({
                     placeholder={placeholder}
                     type={type}
                     className={style[className]}
+                    value={value || ""}
+                    onChange={onChange}
                 />
             ) : (
-                <select className={style[className]}>
-                    <option value="" disabled selected>
+                <select
+                    className={style[className]}
+                    value={value || ""}
+                    onChange={onChange}
+                >
+                    <option value="" disabled>
                         Seleccionar...
                     </option>
 

@@ -5,7 +5,7 @@
     width: 100%;
 }
 
-.pages, .columnNames {
+.pages {
     display: flex;
     flex-direction: row;
 }
@@ -26,7 +26,6 @@
     padding: var(--5px);
     padding-inline: var(--30px);
 
-    background-color: var(--blue-4);
     color: var(--neutral-1);
     border-radius: var(--20px) var(--20px) 0 0;
 }
@@ -35,17 +34,78 @@
     padding: var(--30px);
     padding-inline: var(--20px);
     margin-inline: auto;
-    gap: var(--15px);
+    gap: var(--5px);
 
     background-color: var(--blue-3);
 }
 
-.columnNames {
-    align-items: center;
-    justify-content: space-between;
+.fiveRow, .fiveColumnNames, .sevenColumnNames {
+    display: grid;
 
-    width: 90%;
+    padding: 12px 15px;
+    border-radius: var(--50px);
+
+    background-color: var(--blue-3);
+    color: var(--neutral-1);
+
+    transition: all 0.2s ease;
+}
+
+.fiveColumnNames p, .sevenColumnNames p {
+    margin: 0;
+    padding: 0;
 
     font-size: 14px;
     color: var(--neutral-4);
+}
+
+.fiveColumnNames, .fiveRow {
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+}
+
+.sevenColumnNames {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.fiveRow:hover {
+    background-color: var(--blue-2);
+    transform: scale(1.01);
+}
+
+.fiveRow span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pages h4:hover {
+    opacity: 1;
+}
+
+.tab {
+    width: 33%;
+
+    padding: var(--5px);
+    padding-inline: var(--30px);
+
+    background-color: var(--blue-4);
+    color: var(--neutral-4);
+
+    border-radius: var(--20px) var(--20px) 0 0;
+
+    cursor: pointer;
+    opacity: 0.7;
+
+    transition: all 0.2s ease;
+}
+
+.tab:hover {
+    opacity: 1;
+}
+
+.activeTab {
+    background-color: var(--blue-3);
+    color: var(--neutral-1);
+
+    opacity: 1;
 }
