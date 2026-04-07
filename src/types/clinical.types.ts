@@ -1,14 +1,22 @@
 import type { ShiftStatus } from "./enums.types";
-import type { PatientResponseDTO } from "./patients.types";
-import type { UserResponseDTO } from "./users.types";
 
-export interface Shift {
-  id?: number;
-  patient: PatientResponseDTO;
-  doctor: UserResponseDTO;
-  shiftDate: string;
-  status: ShiftStatus;
-}   
+export interface ShiftCreateDTO {
+    patientDni: string;
+    doctorId: number;
+    shiftDate: string; 
+    status: ShiftStatus;
+    noteContent?: string; 
+}
+
+export interface ShiftResponseDTO {
+    id: number;
+    shiftDate: string;
+    status: ShiftStatus;
+    patientDni: string;
+    patientFullName: string;
+    doctorId: number;
+    doctorFullName: string;
+}
 
 export interface MedicalRecordCreateDTO {
     patientDni: string;
