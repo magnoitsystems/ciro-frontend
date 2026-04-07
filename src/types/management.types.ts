@@ -1,10 +1,10 @@
 import type { Shift } from "./clinical.types";
 import type { TaskPriority, TaskStatus } from "./enums.types";
-import type { User } from "./users.types";
+import type { UserResponseDTO } from "./users.types";
 
 export interface Task {
     id?: number;
-    user: User;
+    user: UserResponseDTO;
     taskDate: string; 
     title: string;
     description?: string;
