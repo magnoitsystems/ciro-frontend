@@ -20,9 +20,14 @@
     gap: var(--30px);
 }
 
-.newProvForm {
+.newProvForm, .tableContainer {
     width: 75%;
 }
+
+.tableContainer {
+    overflow-x: auto;
+}
+
 
 .seeMore {
     align-items: center;
@@ -36,4 +41,60 @@
     background-color: var(--blue-2);
     text-align: center;
     color: var(--neutral-4  );
+}
+
+.seeMore img {
+    transition: transform 0.3s ease;
+}
+
+.seeMore.active img {
+    transform: rotate(180deg);
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    min-width: 700px;
+    width: 100%;
+    gap: 8px;
+}
+
+.rowHeader {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--neutral-4);
+
+    font-size: 14px;
+    color: var(--neutral-4);
+}
+
+.row {
+    padding: 12px 15px;
+    border-radius: var(--5px);
+
+    background-color: var(--blue-1);
+    color: var(--neutral-1);
+
+    transition: all 0.2s ease;
+}
+
+.row:hover {
+    background-color: var(--blue-4);
+    transform: scale(1.01);
+}
+
+.row span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tableScroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.rowHeader,
+.row {
+    display: grid;
+    grid-template-columns: 200px 150px 200px 150px 250px;
 }
