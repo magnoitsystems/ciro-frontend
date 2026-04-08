@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import type { TaskResponseDTO } from '../../../types/management.types';
 import styles from './CreateAppointment.module.css';
 
 type Props = {
@@ -10,14 +12,7 @@ type Props = {
         comment: string;
     };
 
-    task?: { 
-        cliente: string;
-        fecha: Date;
-        estado: string;
-        prioridad: string;
-        tarea: string;
-        comentario?: string;
-    }
+    task?: TaskResponseDTO;
     component: string;
 }
 
@@ -26,9 +21,9 @@ export default function CreateAppointment({ name, onClose, type, turnos, compone
         ? turnos.start.toISOString().slice(0, 16)
         : turnos?.start ?? ''
 
-        const startValueTask = task?.fecha instanceof Date
-        ? task.fecha.toISOString().slice(0, 16)
-        : task?.fecha ?? ''
+        /*const startValueTask = task?.taskDate instanceof Date
+        ? task.taskDate.toISOString().slice(0, 16)
+        : task?.taskDate ?? ''*/
     return (
         <div className={styles.backgroundTransparents}>
             <form className={styles.formContainerProperties}>
@@ -40,13 +35,13 @@ export default function CreateAppointment({ name, onClose, type, turnos, compone
                 <div className={styles.campsContainerProperties}>
                     <div className={styles.labelAndInputProperties}>
                         <label>Fecha</label>
-                        <input type='date' name='date' value={type === 'create' ? '' : component === 'calendar' ? startValueTurno : startValueTask} />
+                        <input type='date' name='date' value={type === 'create' ? '' : component === 'calendar' ? startValueTurno : task?.taskDate} />
                     </div>
                     <div className={styles.labelAndInputProperties}>
                         <label>Paciente</label>
                         <select>
                 // me llega la lista de pacientes y los recorro. Por cada uno, se arma un option.
-                            <option>{component === 'task' ? task?.cliente : 'Seleccione un paciente'}</option>
+                            <option>{component === 'task' ? task?.userFullName : 'Seleccione un paciente'}</option>
                             <option><button>Crear nuevo paciente +</button></option>
                         </select>
                     </div>
@@ -58,13 +53,13 @@ export default function CreateAppointment({ name, onClose, type, turnos, compone
                     )}
                     <div className={styles.labelAndInputProperties}>
                         <label>Comentario</label>
-                        <input type='text' name='comment' placeholder={type === 'create' ? 'Comentario' : component === 'task' ? task?.comentario : turnos?.comment} />
+                        <input type='text' name='comment' placeholder={type === 'create' ? 'Comentario' : component === 'task' ? task?.noteDescription : turnos?.comment} />
                     </div>
 
                     {component === 'task' && (
                         <div className={styles.labelAndInputProperties}>
                             <label>Tarea</label>
-                            <input type='text' name='task' placeholder={type === 'create' ? 'Nueva tarea' : task?.tarea} />
+                            <input type='text' name='task' placeholder={type === 'create' ? 'Nueva tarea' : task?.description} />
                         </div>
                     )}
 
@@ -72,7 +67,7 @@ export default function CreateAppointment({ name, onClose, type, turnos, compone
                         <div className={styles.labelAndInputProperties}>
                             <label>Prioridad</label>
                             <select>
-                                <option>{task != null ? task?.prioridad : 'Seleccione una prioridad'}</option>
+                                <option>{task != null ? task?.priority : 'Seleccione una prioridad'}</option>
                                 <option>Alta</option>
                                 <option>Media</option>
                                 <option>Baja</option>

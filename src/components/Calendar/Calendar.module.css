@@ -47,11 +47,6 @@ body{
     padding: 10px;
 }
 
-/* Título del evento */
-:global(.fc-event-title) {
-    background-color: blue !important;
-}
-
 :global(.fc-timegrid-slot) {
     height: 60px !important;
 }
@@ -107,4 +102,10 @@ body{
     z-index: 1000;
     bottom: 70px;
     right: 100px;
+}
+
+.mainInfoProperties{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }

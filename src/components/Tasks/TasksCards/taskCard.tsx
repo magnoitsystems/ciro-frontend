@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './taskCard.module.css'
+import type { TaskResponseDTO } from '../../../types/management.types';
 
 //va a recibir las tareas
 
@@ -9,12 +10,7 @@ type BotonInfo = {
 }
 
 type Prop = {
-    task: {
-        cliente: string;
-        fecha: Date;
-        estado: string;
-        prioridad: string;
-    }
+    task: TaskResponseDTO
     onBotonClick: (boton: BotonInfo) => void
 }
 
@@ -25,7 +21,7 @@ const coloresPrioridad: Record<string, string> = {
 }
 
 export default function TaskCard({ task, onBotonClick }: Prop) {
-    const color = coloresPrioridad[task.prioridad.toLocaleLowerCase()] ?? '#FFFFFF'
+    const color = coloresPrioridad[task.priority.toLocaleLowerCase()] ?? '#FFFFFF'
     const [estado, setEstado] = useState('Pendiente'); 
 
     return (
@@ -33,8 +29,8 @@ export default function TaskCard({ task, onBotonClick }: Prop) {
             <div className={styles.barraColor} style={{ backgroundColor: color }}></div>
             <div className={styles.containerProperties}>
                 <div className={styles.infoContainerProperties}>
-                    <h3>Pedir informacion al paciente {task.cliente}</h3>
-                    <h3>{task.fecha.toLocaleDateString()}</h3>
+                    <h3>Pedir informacion al paciente {task.userFullName}</h3>
+                    <h3>{task.taskDate ? new Date(task.taskDate).toLocaleDateString() : ''}</h3>
                 </div>
                 <div className={styles.buttonsContainerProperties}>
                     <div className={styles.selectProperties}>

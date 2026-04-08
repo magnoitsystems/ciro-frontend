@@ -13,13 +13,14 @@ body {
     height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
+    justify-content: space-between;
 }
 
 .buttonsRodContainerProperties {
+    display: flex;
     position: sticky;
-    top: 0;
     height: 95vh;
-    align-self: flex-start; /* esto también es necesario */
+    
 }
 
 .containerProperties{
