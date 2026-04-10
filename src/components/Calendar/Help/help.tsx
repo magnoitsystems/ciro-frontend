@@ -1,7 +1,7 @@
 import styles from './help.module.css';
 
 type Prop = {
-    type: 'setting' | 'info';
+    type: 'setting' | 'info' | 'label' | 'calendar';
     component: string;
 }
 
@@ -32,6 +32,15 @@ export default function Help({ type, component }: Prop) {
                     <button>Ver {component === 'calendar' ? 'turnos' : 'tareas'} de todos los doctores</button>
                 </div>
             </div>
+        ) : type == 'label' ? (
+            component === 'calendar' && (
+                <div className={styles.helpContainerProperties}>
+                    <span><img src="./icons/confirmado.png" width="20px"></img> significa que el turno está confirmado</span>
+                    <span><img src="./icons/solicitado.png" width="20px"></img> significa que el turno está solicitado</span>
+                    <span><img src="./icons/descartado.png" width="20px"></img> significa que el turno está descartado</span>
+                    <span><img src="./icons/sinAvisar.png" width="20px"></img> significa que el turno no ha sido avisado</span>
+                </div>
+            )
         ) : null
     )
 }

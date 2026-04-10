@@ -1,80 +1,113 @@
-import { useState } from "react";
 import style from './NewProvForm.module.css';
 import ProvInput from "./ProvInput.tsx";
 import GreenFormButton from "../../Buttons/GreenFormButton/greenFormButton";
+import {useState} from "react";
 
-export default function NewProvForm() {
-    const [step, setStep] = useState(1);
+type Proveedor = {
+    id: number;
+    nombre: string;
+    documento: string;
+    direccion: string;
+    localidad: string;
+    observaciones: string;
+};
 
-    const handleNext = (e: React.MouseEvent) => {
+type Props = {
+    onCreate: (prov: Proveedor) => void;
+}
+
+export default function NewProvForm({ onCreate }: Props) {
+
+    const [formData, setFormData] = useState({
+        nombre: "",
+        documento: "",
+        direccion: "",
+        localidad: "",
+        observaciones: ""
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (step === 1) {
-            setStep(2);
-        } else {
-            console.log("CONFIRMAR FORM");
-        }
+        const nuevoProveedor = {
+            id: Date.now(),
+            ...formData
+        };
+
+        onCreate(nuevoProveedor);
+
+        // reset
+        setFormData({
+            nombre: "",
+            documento: "",
+            direccion: "",
+            localidad: "",
+            observaciones: ""
+        });
     };
 
     return(
         <main className={style.formContainer}>
             <p>Crear nuevo proveedor</p>
 
-            <form className={style.form}>
+            <form onSubmit={handleSubmit} className={style.form}>
 
-                {step === 1 && (
-                    <>
-                        <ProvInput type="text" placeholder="Nombre y apellido" className={'inputBoxDefault'}/>
+                <div className={style.sharedInputs}>
+                    <ProvInput
+                        placeholder="Nombre y apellido"
+                        className="inputBoxDefault"
+                        value={formData.nombre}
+                        onChange={(e) =>
+                            setFormData({...formData, nombre: e.target.value})
+                        }
+                    />
+                    <ProvInput
+                        type="text"
+                        placeholder="Número de documento"
+                        className={'inputBoxDefault'}
+                        value={formData.documento}
+                        onChange={(e) =>
+                            setFormData({...formData, documento: e.target.value})
+                        }
+                    />
+                </div>
 
-                        <div className={style.sharedInputs}>
-                            <ProvInput type="text" placeholder="Dirección" className={'inputBoxDefault'}/>
-                            <ProvInput type="text" placeholder="Localidad" className={'inputBoxDefault'}/>
-                        </div>
+                <div className={style.sharedInputs}>
+                    <ProvInput
+                        type="text"
+                        placeholder="Dirección"
+                        className={'inputBoxDefault'}
+                        value={formData.direccion}
+                        onChange={(e) =>
+                            setFormData({...formData, direccion: e.target.value})
+                        }
+                    />
+                    <ProvInput
+                        type="text"
+                        placeholder="Localidad"
+                        className={'inputBoxDefault'}
+                        value={formData.localidad}
+                        onChange={(e) =>
+                            setFormData({...formData, localidad: e.target.value})
+                        }
+                    />
+                </div>
 
-                        <ProvInput type="text" placeholder="IVA" className={'inputBoxDefault'}/>
-                        <ProvInput type="text" placeholder="Teléfono" className={'inputBoxDefault'}/>
+                <ProvInput
+                    type="text"
+                    placeholder="Observaciones"
+                    className={'inputBoxBig'}
+                    value={formData.observaciones}
+                    onChange={(e) =>
+                        setFormData({...formData, observaciones: e.target.value})
+                    }
+                />
 
-                        <div className={style.sharedInputs}>
-                            <ProvInput type="text" placeholder="E-Mail" className={'inputBoxDefault'}/>
-
-                            <GreenFormButton
-                                text={step === 1 ? "Siguiente" : "Confirmar"}
-                                onClick={handleNext}
-                            />
-                        </div>
-                    </>
-                )}
-
-                {step === 2 && (
-                    <>
-                        <div className={style.sharedInputs}>
-                            <ProvInput type="text" placeholder="Tipo de documento" className={'inputBoxDefault'}/>
-                            <ProvInput type="text" placeholder="Número de documento" className={'inputBoxDefault'}/>
-                        </div>
-
-                        <ProvInput type="text" placeholder="Observaciones" className={'inputBoxBig'}/>
-
-                        <div className={style.sharedInputs}>
-                            <ProvInput placeholder="Orden para importar artículos por excel" type="text" className={'inputBoxDefault'}/>
-
-                            <GreenFormButton
-                                text="Confirmar"
-                                onClick={handleNext}
-                            />
-                        </div>
-                    </>
-                )}
-
-                {/* BOTONES */}
-                <div className={style.actions}>
-                    {step === 2 && (
-                        <span
-                            className={style.back}
-                            onClick={() => setStep(1)}
-                        >
-                            ← Volver atrás
-                        </span>
-                    )}
+                <div className={style.sharedInputs}>
+                    <GreenFormButton
+                        text="Crear proveedor"
+                        onClick={handleSubmit}
+                    />
                 </div>
 
             </form>
