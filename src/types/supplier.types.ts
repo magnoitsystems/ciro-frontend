@@ -1,16 +1,16 @@
-export interface Supplier {
-    id: number;
+export interface SupplierCreateDTO {
     fullName: string;
-    address?: string;
-    city?: string;
-    dni?: string; 
+    address: string;
+    city: string;
+    dni: string;
     observations?: string;
 }
 
-export interface SupplierDTO {
+export interface SupplierResponseDTO {
+    id: number;
     fullName: string;
-    address?: string;
-    city?: string;
-    dni?: string;
+    address: string;
+    city: string;
+    dni: string;
     observations?: string;
 }
