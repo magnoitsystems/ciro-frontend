@@ -43,6 +43,12 @@ export const API_ENDPOINTS = {
         BY_DOCTOR: (doctorId: number) => `/api/v1/medicalRecords/doctor/${doctorId}`,
         BY_PATIENT: (dni: string) => `/api/v1/medicalRecords/patient/${dni}`,
     },
+    NOTES: {
+        BASE: '/api/v1/notes',
+        BY_ID: (id: number) => `/api/v1/notes/${id}`,
+        BY_TASK: (taskId: number) => `/api/v1/notes/task/${taskId}`,
+        INDEPENDENT_BY_DATE: (date: string) => `/api/v1/notes/independent/${date}`,
+    },
     PATIENTS: {
         BASE: '/api/v1/patients',
         BY_ID: (id: number) => `/api/v1/patients/${id}`,

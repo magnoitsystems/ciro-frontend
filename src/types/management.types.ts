@@ -21,3 +21,18 @@ export interface TaskResponseDTO {
     priority: TaskPriority;
     noteDescription?: string;
 }
+
+export interface NoteCreateDTO {
+    description: string;
+    date?: string;
+    shiftId?: number;
+    taskId?: number;
+}
+
+export interface NoteResponseDTO {
+    id: number;
+    description: string;
+    date: string;
+    shiftId?: number;
+    taskId?: number;
+}
