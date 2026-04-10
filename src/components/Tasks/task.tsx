@@ -89,7 +89,7 @@ export default function Task() {
 
       {/* Botones */}
       <div className={styles.buttonsRodContainerProperties}>
-        <ButtonsRod onBotonClick={(boton: any) => setBotonActivo(boton)} botonActivo={botonActivo} />
+        <ButtonsRod onBotonClick={(boton: any) => setBotonActivo(boton)} botonActivo={botonActivo} component="task" />
       </div>
 
     </section>

@@ -1,0 +1,7 @@
+.formPatientContainer{
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    height: 10vh;
+    background-color: aqua;
+}

@@ -26,6 +26,12 @@
     color: white;
 }
 
+.fileInputContainer input[type="date"] {
+    background-color: transparent;
+    border: none;
+    color: white;
+}
+
 .buttonFormProperties{
     width: fit-content;
     padding: var(--10px) var(--20px);
