@@ -26,11 +26,12 @@ export const budgetService = {
     createBudget: async (dto: BudgetCreateDTO): Promise<BudgetResponseDTO> => {
         const formData = new FormData();
         formData.append('patientId', dto.patientId.toString());
+        formData.append('status', dto.status);
+        formData.append('date', dto.date);
         
         if (dto.uploadedDate) {
             formData.append('uploadedDate', dto.uploadedDate);
         }
-        
         if (dto.file) {
             formData.append('file', dto.file);
         }
@@ -54,6 +55,12 @@ export const budgetService = {
         }
         if (dto.uploadedDate) {
             formData.append('uploadedDate', dto.uploadedDate);
+        }
+        if (dto.status) {
+            formData.append('status', dto.status);
+        }
+        if (dto.date) {
+            formData.append('date', dto.date);
         }
         if (dto.file) {
             formData.append('file', dto.file);

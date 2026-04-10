@@ -25,3 +25,5 @@ export type ShiftStatus = 'REQUIRED' | 'ASSIGNED';
 export type TaskPriority = 'HIGH' | 'MEDIUM' | 'LOW';
 
 export type TaskStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
+
+export type BudgetStatus = 'ENVIADO' | 'ACEPTADO' | 'ACEPTADO_PARCIALMENTE' | 'RECHAZADO' | 'PENDIENTE_DE_RESPUESTA' | 'SIN_ENVIAR' | 'SIN_HACER'
