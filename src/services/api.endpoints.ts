@@ -64,6 +64,7 @@ export const API_ENDPOINTS = {
         BY_ID: (id: number) => `/api/v1/receipts/${id}`,
         BY_PATIENT: (patientId: number) => `/api/v1/receipts/patient/${patientId}`,
         PDF_BY_ID: (id: number) => `/api/v1/receipts/${id}/pdf`,
+        WIDGET_WEEKLY_REVENUE: '/api/v1/receipts/widget/weekly-revenue',
     },
     SHIFTS: {
         BASE: '/api/v1/shifts',
@@ -71,6 +72,7 @@ export const API_ENDPOINTS = {
         BY_DOCTOR: (doctorId: number) => `/api/v1/shifts/doctor/${doctorId}`,
         BY_PATIENT: (dni: string) => `/api/v1/shifts/patient/${dni}`,
         BY_DATE_RANGE: (startDate: string, endDate: string) => `/api/v1/shifts/range?startDate=${startDate}&endDate=${endDate}`,
+        WIDGET_DASHBOARD: '/api/v1/shifts/widget/dashboard',
     },
     STATISTICS: {
         DASHBOARD: '/api/v1/statistics/dashboard',
@@ -84,6 +86,7 @@ export const API_ENDPOINTS = {
         BY_ID: (id: number) => `/api/v1/tasks/${id}`,
         BY_USER: (userId: number) => `/api/v1/tasks/user/${userId}`,
         BY_STATUS: (status: string) => `/api/v1/tasks/status/${status}`,
+        WIDGET_PENDING: '/api/v1/tasks/widget/pending',
     },
     USERS: {
         BASE: '/api/v1/users',

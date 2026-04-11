@@ -38,3 +38,9 @@ export interface MedicalRecordResponseDTO {
     doctorFullName: string;
     shiftId?: number;
 }
+
+export interface ShiftWidgetDTO {
+    weeklyCount: number;
+    todayCount: number;
+    nextShift: ShiftResponseDTO | null;
+}
