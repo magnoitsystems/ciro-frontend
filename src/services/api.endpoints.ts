@@ -84,6 +84,7 @@ export const API_ENDPOINTS = {
         BY_ID: (id: number) => `/api/v1/tasks/${id}`,
         BY_USER: (userId: number) => `/api/v1/tasks/user/${userId}`,
         BY_STATUS: (status: string) => `/api/v1/tasks/status/${status}`,
+        WIDGET_PENDING: '/api/v1/tasks/widget/pending',
     },
     USERS: {
         BASE: '/api/v1/users',

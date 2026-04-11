@@ -22,6 +22,11 @@ export interface TaskResponseDTO {
     noteDescription?: string;
 }
 
+export interface TaskWidgetDTO {
+    pendingCount: number;
+    pendingTasks: TaskResponseDTO[];
+}
+
 export interface NoteCreateDTO {
     description: string;
     date?: string;
