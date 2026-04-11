@@ -83,3 +83,8 @@ export interface VoucherResponseDTO {
     totalAmount: number;
     currencyType: CurrencyType; 
 }
+
+export interface RevenueWidgetDTO {
+    totalPesos: number;
+    totalDollars: number;
+}

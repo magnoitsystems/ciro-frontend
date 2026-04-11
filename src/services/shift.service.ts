@@ -1,4 +1,4 @@
-import type { ShiftResponseDTO, ShiftCreateDTO } from '../types/clinical.types';
+import type { ShiftResponseDTO, ShiftCreateDTO, ShiftWidgetDTO } from '../types/clinical.types';
 import { api } from './api';
 import { API_ENDPOINTS } from './api.endpoints';
 
@@ -69,4 +69,17 @@ export const shiftService = {
         );
         return response.data;
     },
+
+    /**
+     * Método para el dashboard (widget) para la parte de cantidad de turnos restantes del día y a qué hora es el próximo
+     */
+    getDashboardWidget: async (): Promise<ShiftWidgetDTO> => {
+        try {
+            const response = await api.get<ShiftWidgetDTO>(API_ENDPOINTS.SHIFTS.WIDGET_DASHBOARD);
+            return response.data;
+        } catch (error) {
+            console.error("Error al obtener el widget de turnos:", error);
+            throw error;
+        }
+    }
 };
