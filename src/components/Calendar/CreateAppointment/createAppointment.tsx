@@ -55,7 +55,13 @@ export default function CreateAppointment({ name, onClose, type, turnos, compone
                         <label>Comentario</label>
                         <input type='text' name='comment' placeholder={type === 'create' ? 'Comentario' : component === 'task' ? task?.noteDescription : turnos?.comment} />
                     </div>
-
+                    {component === 'task' && (
+                        <div className={styles.labelAndInputProperties}>
+                            <label>Descripción</label>
+                            <input type='textbox' name='task' placeholder={type === 'create' ? 'Nueva descripción' : task?.description} />
+                        </div>
+                    )}
+                    
                     {component === 'task' && (
                         <div className={styles.labelAndInputProperties}>
                             <label>Tarea</label>
