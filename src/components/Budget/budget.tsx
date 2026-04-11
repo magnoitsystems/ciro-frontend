@@ -23,7 +23,7 @@ export default function Budget() {
             <WelcomeText sectionText='Aca los presupuestos' className=''></WelcomeText>
              {showPatientForm && (
                             <div>
-                                <Patient></Patient>
+                                <Patient onNuevoPacienteClick={() => setShowPatientForm(false)}></Patient>
                             </div>
                         )}
             <div className={styles.budgetContentProperties}>
@@ -38,7 +38,7 @@ export default function Budget() {
 
                 ) : (
                     <div className={styles.tableContainerPropeties}>
-                        <NewBudget onNuevoPacienteClick={() => setShowFormBudget(true)}></NewBudget>
+                        <NewBudget onNuevoPacienteClick={() => setShowPatientForm(true)}></NewBudget>
                     </div>
                 )}
 

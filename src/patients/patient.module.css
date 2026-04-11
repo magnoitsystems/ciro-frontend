@@ -1,7 +1,74 @@
-.formPatientContainer{
+.formPatientContainerProperties{
     position: absolute;
     z-index: 1000;
     width: 100%;
-    height: 10vh;
-    background-color: aqua;
+    height: 100vh;
+    background-color: rgba(23, 22, 32, 0.7);
+}
+
+.formPatienProperties{
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    padding: 20px;
+    background-color: var(--blue-4);
+    border: white solid 1px;
+    border-radius: 8px;
+    margin-left: 25%;
+    margin-top: 10%;
+}
+
+.formPatienProperties h3{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.formPatientLabelProperties{
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.formPatientLabelProperties input, .formPatientLabelProperties select{
+    width: 100%;
+    height: 30px;
+    border-radius: 30px;
+    border: none;
+    padding: 10px;
+}
+
+.containerPatientLabelProperties{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.buttonsProperties{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.cancelButton, .createButton, .nextButton, .lastButton{
+    width: fit-content;
+    padding: 10px;
+    border-radius: 100px;
+    color: white;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.cancelButton{
+    border: 2px solid var(--red);
+}
+
+.createButton{
+    border: 2px solid var(--green)
+}
+
+.nextButton, .lastButton{
+    border: 2px solid var(--neutral-3);
 }
