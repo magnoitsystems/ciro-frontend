@@ -1,13 +1,11 @@
 .main {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
 
     width: 95%;
 
     padding: var(--5px);
-    padding-inline: var(--20px);
+    padding-inline: var(--15px);
 
     background-color: var(--blue-4);
     color: var(--neutral-1);

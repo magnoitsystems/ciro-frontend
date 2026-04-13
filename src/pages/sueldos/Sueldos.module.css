@@ -42,7 +42,7 @@
 .fiveRow, .fiveColumnNames, .sevenColumnNames {
     display: grid;
 
-    padding: 12px 15px;
+    padding: 12px var(--15px);
     border-radius: var(--50px);
 
     background-color: var(--blue-3);

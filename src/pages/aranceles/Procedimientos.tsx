@@ -10,9 +10,7 @@ import GreenFormButton from "../../components/Buttons/GreenFormButton/greenFormB
 export default function Procedimientos() {
     const [creating, setCreating] = useState(false);
     const [newArancel, setNewArancel] = useState({
-        dia: "",
-        mes: "",
-        anio: "",
+        fecha: "",
         dni: "",
         cirugia: "",
         implante: "",
@@ -34,9 +32,7 @@ export default function Procedimientos() {
             {!creating ? (
                 <div className={style.procedimientosContainer}>
                     <div className={style.columnNames}>
-                        <p>Día</p>
-                        <p>Mes</p>
-                        <p>Año</p>
+                        <p>Fecha</p>
                         <p>D.N.I del paciente</p>
                         <p>Tipo de cirugía</p>
                         <p>Tipo de implante</p>
@@ -64,7 +60,7 @@ export default function Procedimientos() {
                                 value={newArancel.fecha}
                                 type={'date'}
                                 onChange={(e) =>
-                                    setNewArancel({...newArancel, anio: e.target.value})
+                                    setNewArancel({...newArancel, fecha: e.target.value})
                                 }
                             />
 

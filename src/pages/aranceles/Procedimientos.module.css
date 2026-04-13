@@ -50,14 +50,12 @@
 }
 
 .columnNames {
-    display: flex;
-    flex-direction: row;
-
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
 
     width: 95%;
 
+    padding: 8px var(--15px);
     font-size: 14px;
     color: var(--neutral-4);
 }
