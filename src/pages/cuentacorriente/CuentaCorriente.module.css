@@ -264,3 +264,42 @@
     font-size: 12px;
     color: white;
 }
+
+.reciboContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.reciboSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    background: var(--blue-4);
+    padding: 15px;
+    border-radius: var(--10px);
+}
+
+.reciboSection h5 {
+    color: var(--neutral-2);
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 13px;
+}
+
+.row span {
+    color: var(--neutral-4);
+    width: 30%;
+}
+
+.row p {
+    color: var(--neutral-1);
+    font-weight: 500;
+    text-decoration: none;
+}

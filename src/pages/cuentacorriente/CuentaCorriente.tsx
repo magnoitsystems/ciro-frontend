@@ -20,6 +20,27 @@ export default function CuentaCorriente() {
         ]
     });
 
+    const recibosMock = [
+        {
+            id: 1,
+            receiptDate: "2026-06-10",
+            amount: 15000,
+            currencyType: "PESOS",
+            exchangeRate: 1200,
+            convertedAmount: 12.5,
+            patientFullName: "Milagros Alvarez",
+            patientDni: "30123456"
+        },
+        {
+            id: 2,
+            receiptDate: "2026-06-15",
+            amount: 100,
+            currencyType: "DOLARES",
+            patientFullName: "Milagros Alvarez",
+            patientDni: "30123456"
+        }
+    ];
+
     const addDetail = () => {
         setComprobanteData(prev => ({
             ...prev,
@@ -70,6 +91,9 @@ export default function CuentaCorriente() {
 
     const [pagarEnDolares, setPagarEnDolares] = useState(false);
 
+    const [viewReciboModal, setViewReciboModal] = useState(false);
+    const [selectedRecibo, setSelectedRecibo] = useState<any>(null);
+
     return(
         <main className={style.main}>
             <WelcomeText
@@ -100,6 +124,10 @@ export default function CuentaCorriente() {
                         />
                         <Register
                             type={'Recibo'}
+                            onClick={() => {
+                                setSelectedRecibo(recibosMock[0]);
+                                setViewReciboModal(true);
+                            }}
                         />
                         <Register
                             type={'Comprobante'}
@@ -109,6 +137,10 @@ export default function CuentaCorriente() {
                         />
                         <Register
                             type={'Recibo'}
+                            onClick={() => {
+                                setSelectedRecibo(recibosMock[1]);
+                                setViewReciboModal(true);
+                            }}
                         />
 
                         <DebtButton/>
@@ -344,6 +376,76 @@ export default function CuentaCorriente() {
                                     setShowReciboModal(false);
                                 }}
                             />
+                        </div>
+                    </div>
+                </div>
+            )}
+            {viewReciboModal && selectedRecibo && (
+                <div
+                    className={style.overlay}
+                    onClick={() => setViewReciboModal(false)}
+                >
+                    <div
+                        className={style.modal}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className={style.close}
+                            onClick={() => setViewReciboModal(false)}
+                        >
+                            ✕
+                        </button>
+
+                        <h3>Recibo</h3>
+
+                        <div className={style.reciboContainer}>
+
+                            {/* 🧍 PACIENTE */}
+                            <div className={style.reciboSection}>
+                                <h5>Paciente</h5>
+
+                                <div className={style.row}>
+                                    <span>Nombre</span>
+                                    <p>{selectedRecibo.patientFullName}</p>
+                                </div>
+
+                                <div className={style.row}>
+                                    <span>DNI</span>
+                                    <p>{selectedRecibo.patientDni}</p>
+                                </div>
+                            </div>
+
+                            {/* 💰 INFO RECIBO */}
+                            <div className={style.reciboSection}>
+                                <h5>Detalle</h5>
+
+                                <div className={style.row}>
+                                    <span>Fecha</span>
+                                    <p>{selectedRecibo.receiptDate}</p>
+                                </div>
+
+                                <div className={style.row}>
+                                    <span>Monto</span>
+                                    <p>
+                                        {selectedRecibo.currencyType} {selectedRecibo.amount}
+                                    </p>
+                                </div>
+
+                                {selectedRecibo.exchangeRate && (
+                                    <div className={style.row}>
+                                        <span>Tipo de cambio</span>
+                                        <p>{selectedRecibo.exchangeRate}</p>
+                                    </div>
+                                )}
+
+                                {selectedRecibo.convertedAmount && (
+                                    <div className={style.row}>
+                                        <span>Monto convertido</span>
+                                        <p>${selectedRecibo.convertedAmount}</p>
+                                    </div>
+                                )}
+                            </div>
+
                         </div>
                     </div>
                 </div>

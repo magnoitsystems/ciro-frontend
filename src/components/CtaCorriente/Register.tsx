@@ -2,11 +2,12 @@ import style from './CtaCorriente.module.css';
 
 type Props = {
     type: 'Recibo' | 'Comprobante';
+    onClick?: () => void;
 }
 
-export default function Register({type}: Props) {
+export default function Register({type, onClick}: Props) {
     return (
-        <main className={style.register}>
+        <main onClick={onClick} className={style.register}>
             <div className={style[type]}>{type}</div>
             <h6>27/05/26</h6>
             <h6>345.666,00</h6>
