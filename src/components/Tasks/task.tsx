@@ -22,11 +22,6 @@ export default function Task() {
   const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(new Date());
   const [taskSeleccionada, setTaskSeleccionada] = useState<TaskResponseDTO | null>(null);
 
-  const turnos = [
-    { title: 'Dro. Juan Pérez', start: '2026-03-20T09:00:00', extendedProps: { barColor: '#FF00FF' }, comment: 'hola, este es un comentario' },
-    { title: 'Dro. Ana García', start: '2026-03-20T10:00:00', extendedProps: { barColor: '#22ff00' }, comment: 'hola, este es otro comentario' },
-  ]
-
   useEffect(() => {
     taskService.getAll()
       .then(fetchedTasks => setTasks(fetchedTasks))
@@ -44,7 +39,7 @@ export default function Task() {
         <Help type={botonActivo.subtipo} component={'task'} />
       )}
       {botonActivo?.tipo === 'form' && botonActivo.subtipo === 'form' && (
-        <CreateAppointment turnos={turnos[1]} type={'create'} component="task" name='Ana' onClose={() => setBotonActivo(null)} />
+        <CreateAppointment type={'create'} component="task" name='Ana' onClose={() => setBotonActivo(null)} />
       )}
       {botonActivo?.tipo === 'calendar' && botonActivo.subtipo === 'calendar' && (
         <div className={styles.miniCalendarProperties}>

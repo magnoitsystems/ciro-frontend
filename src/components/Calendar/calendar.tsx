@@ -14,12 +14,10 @@ import type { ButtonInfo } from '../../types/buttonInfo'
 export default function CalendarioMedico() {
 
   const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(new Date());
-
   const [tipo, setTipo] = useState<'view' | 'confirm'>('view')
-
   const [tipoForm, setTipoForm] = useState<'create' | 'edit'>('create')
-
   const [mostarInfoTurno, setInfoTurno] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   const coloresEstados: Record<string, string> = {
     'confirmado': '#77FF00',
@@ -79,7 +77,16 @@ export default function CalendarioMedico() {
           <CreateAppointment turnos={turnos[1]} type={tipoForm} component='calendar' name='Ana' onClose={() => {
             setBotonActivo(null)
             setTipoForm('create')
-          }}></CreateAppointment>
+          }} onlyComment={false}></CreateAppointment>
+        </div>
+      )}
+
+      {showForm && (
+        <div>
+          <CreateAppointment turnos={turnos[1]} type={tipoForm} component='calendar' name='Ana' onClose={() => {
+            setBotonActivo(null)
+            setTipoForm('create')
+          }} onlyComment={true}></CreateAppointment>
         </div>
       )}
 
@@ -103,6 +110,15 @@ export default function CalendarioMedico() {
               slotMinTime="06:00:00"
               slotMaxTime="20:00:00"
               slotDuration="00:30:00"
+              dayHeaderContent={(args) => (
+                <div className={styles.diaHeader}>
+                  <span>{args.text}</span>
+                  <button onClick={() => {
+                    setShowForm(true)
+                    setTipoForm('create')
+                  }}>+</button>
+                </div>
+              )}
               eventContent={(eventInfo) => (
                 <div className={styles.evento}>
                   <div className={styles.barraColor} style={{ backgroundColor: colorActual }}></div>

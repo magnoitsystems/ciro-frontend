@@ -14,15 +14,14 @@ type Prop = {
     onBotonClick: (boton: BotonInfo) => void
 }
 
-const coloresPrioridad: Record<string, string> = {
-    alta: '#EB0C0C',
-    media: '#FFFF00',
-    baja: '#29C41B',
-}
-
 export default function TaskCard({ task, onBotonClick }: Prop) {
+    const coloresPrioridad: Record<string, string> = {
+        HIGH: '#EB0C0C',
+        MEDIUM: '#FFFF00',
+        LOW: '#29C41B',
+    }
     const color = coloresPrioridad[task.priority.toLocaleLowerCase()] ?? '#FFFFFF'
-    const [estado, setEstado] = useState('Pendiente'); 
+    const [estado, setEstado] = useState('Pendiente');
 
     return (
         <div className={styles.cardContainerProperties}>
@@ -42,8 +41,8 @@ export default function TaskCard({ task, onBotonClick }: Prop) {
                         </select>
                     </div>
                     <div className={styles.buttonsProperties}>
-                        <button onClick={() => onBotonClick({ tipo: 'edit'})}><img src='./icons/editIcon.png' width={20} height={20}></img></button>
-                        <button onClick={() => onBotonClick({tipo: 'show'})}><img src='./icons/plus.png' width={20} height={20}></img></button>
+                        <button onClick={() => onBotonClick({ tipo: 'edit' })}><img src='./icons/editIcon.png' width={20} height={20}></img></button>
+                        <button onClick={() => onBotonClick({ tipo: 'show' })}><img src='./icons/plus.png' width={20} height={20}></img></button>
                         <button><img src='./icons/deudas.png'></img></button>
                     </div>
                 </div>

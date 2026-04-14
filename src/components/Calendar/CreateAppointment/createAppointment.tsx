@@ -11,32 +11,37 @@ type Props = {
         start: string | Date;
         comment: string;
     };
-
     task?: TaskResponseDTO;
     component: string;
+    onlyComment: boolean;
 }
 
-export default function CreateAppointment({ name, onClose, type, turnos, component, task }: Props) {
+export default function CreateAppointment({ name, onClose, type, turnos, component, task, onlyComment }: Props) {
     const startValueTurno = turnos?.start instanceof Date
         ? turnos.start.toISOString().slice(0, 16)
         : turnos?.start ?? ''
 
-        /*const startValueTask = task?.taskDate instanceof Date
-        ? task.taskDate.toISOString().slice(0, 16)
-        : task?.taskDate ?? ''*/
+    /*const startValueTask = task?.taskDate instanceof Date
+    ? task.taskDate.toISOString().slice(0, 16)
+    : task?.taskDate ?? ''*/
     return (
         <div className={styles.backgroundTransparents}>
             <form className={styles.formContainerProperties}>
-                {type === 'create' ? (
+                {type === 'create' && onlyComment === false ? (
                     <h3>{name}, complete los siguientes datos para crear {component === 'calendar' ? 'el turno' : 'la tarea'}</h3>
                 ) : (
                     <h3>{name}, complete los siguientes datos necesario para modificar {component === 'calendar' ? 'el turno' : 'la tarea'}</h3>
                 )}
                 <div className={styles.campsContainerProperties}>
-                    <div className={styles.labelAndInputProperties}>
-                        <label>Fecha</label>
-                        <input type='date' name='date' value={type === 'create' ? '' : component === 'calendar' ? startValueTurno : task?.taskDate} />
-                    </div>
+
+                    {onlyComment === false && (
+                        <div className={styles.labelAndInputProperties}>
+                            <label>Fecha</label>
+                            <input type='date' name='date' value={type === 'create' ? '' : component === 'calendar' ? startValueTurno : task?.taskDate} />
+                        </div>
+                    )}
+
+                     {onlyComment === false && (
                     <div className={styles.labelAndInputProperties}>
                         <label>Paciente</label>
                         <select>
@@ -45,7 +50,8 @@ export default function CreateAppointment({ name, onClose, type, turnos, compone
                             <option><button>Crear nuevo paciente +</button></option>
                         </select>
                     </div>
-                    {component === 'calendar' && (
+                     )}
+                    {component === 'calendar' && onlyComment === false && (
                         <div className={styles.labelAndInputProperties}>
                             <label>Horario</label>
                             <input type='datetime-local' name='hour' placeholder={type === 'create' ? '' : startValueTurno} />
@@ -61,7 +67,7 @@ export default function CreateAppointment({ name, onClose, type, turnos, compone
                             <input type='textbox' name='task' placeholder={type === 'create' ? 'Nueva descripción' : task?.description} />
                         </div>
                     )}
-                    
+
                     {component === 'task' && (
                         <div className={styles.labelAndInputProperties}>
                             <label>Tarea</label>
