@@ -1,4 +1,4 @@
-.main, .procedimientosContainer, .formContainer {
+.main, .procedimientosContainer, .formContainer, .form {
     display: flex;
     flex-direction: column;
 }
@@ -11,16 +11,6 @@
     overflow-y: auto;
 }
 
-.filters {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: end;
-
-    width: 100%;
-    height: var(--40px);
-}
-
 .procedimientosContainer {
     align-items: center;
 
@@ -28,6 +18,7 @@
 
     padding: var(--40px);
     padding-inline: var(--20px);
+    margin-top: var(--50px);
     gap: var(--10px);
 
     background-color: var(--blue-2);
@@ -49,9 +40,13 @@
     color: var(--neutral-1);
 }
 
+.form {
+    gap: var(--10px);
+}
+
 .columnNames {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
 
     width: 95%;
 

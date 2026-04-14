@@ -1,6 +1,6 @@
 .main {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
 
     width: 95%;
 
@@ -10,4 +10,10 @@
     background-color: var(--blue-4);
     color: var(--neutral-1);
     border-radius: var(--50px);
+
+    transition: all ease-in-out 0.2s;
+}
+
+.main:hover {
+    background-color: var(--blue-1);
 }

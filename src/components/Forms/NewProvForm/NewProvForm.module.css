@@ -95,3 +95,7 @@
 .holeMiniInput select {
     width: 330px;
 }
+
+.error {
+    border: 1px solid var(--red);
+}

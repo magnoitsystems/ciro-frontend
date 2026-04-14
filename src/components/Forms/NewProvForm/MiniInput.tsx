@@ -8,14 +8,18 @@ type Props = {
     onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     as?: "input" | "select";
     options?: { value: string; label: string }[];
+    error?: boolean;
 }
 
 export default function MiniInput({
                                       placeholder,
                                       type = "text",
                                       className,
+                                      value,
+                                      onChange,
                                       as = "input",
-                                      options = []
+                                      options = [],
+                                      error = false
                                   }: Props) {
     return (
         <main className={style.holeMiniInput}>
@@ -25,11 +29,17 @@ export default function MiniInput({
                 <input
                     placeholder={placeholder}
                     type={type}
-                    className={style[className]}
+                    value={value}
+                    onChange={onChange}
+                    className={`${style[className]} ${error ? style.error : ""}`}
                 />
             ) : (
-                <select className={style[className]}>
-                    <option value="" disabled selected>
+                <select
+                    value={value}
+                    onChange={onChange}
+                    className={`${style[className]} ${error ? style.error : ""}`}
+                >
+                    <option value="" disabled>
                         Seleccionar...
                     </option>
 
@@ -41,5 +51,5 @@ export default function MiniInput({
                 </select>
             )}
         </main>
-    )
+    );
 }

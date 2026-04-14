@@ -1,6 +1,5 @@
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import style from './Procedimientos.module.css';
-import FilterButton from "../../components/Buttons/FilterButton/filterButton.tsx";
 import Procedimiento from "../../components/Procedimiento/procedimiento.tsx";
 import {useState} from "react";
 import MiniInput from "../../components/Forms/NewProvForm/MiniInput.tsx";
@@ -10,11 +9,27 @@ export default function Procedimientos() {
     const [creating, setCreating] = useState(false);
     const [newArancel, setNewArancel] = useState({
         fecha: "",
-        dni: "",
-        cirugia: "",
-        implante: "",
-        reimplante: "",
-        cantidad: ""
+        nombre: "",
+        monto_pesos: "",
+        monto_dolares: "",
+        tc: ""
+    });
+
+    const validate = () => {
+        const montoVacio =
+            !newArancel.monto_pesos.trim() &&
+            !newArancel.monto_dolares.trim();
+
+        setErrors({
+            monto: montoVacio
+        });
+
+        return !montoVacio;
+    };
+
+
+    const [errors, setErrors] = useState({
+        monto: false
     });
 
     return(
@@ -24,19 +39,14 @@ export default function Procedimientos() {
                 className={'darkStyle'}
             />
 
-            <div className={style.filters}>
-                <FilterButton/>
-            </div>
-
             {!creating ? (
                 <div className={style.procedimientosContainer}>
                     <div className={style.columnNames}>
                         <p>Fecha</p>
-                        <p>D.N.I del paciente</p>
-                        <p>Tipo de cirugía</p>
-                        <p>Tipo de implante</p>
-                        <p>Reimplante</p>
-                        <p>Cantidad</p>
+                        <p>Nombre</p>
+                        <p>Monto en USD</p>
+                        <p>Monto en ARS</p>
+                        <p>Tipo de cambio</p>
                     </div>
 
                     <Procedimiento/>
@@ -64,63 +74,58 @@ export default function Procedimientos() {
                             />
 
                             <MiniInput
-                                placeholder="DNI paciente"
+                                placeholder="Nombre"
                                 className="inputBoxDefault"
-                                value={newArancel.dni}
+                                value={newArancel.nombre}
                                 onChange={(e) =>
-                                    setNewArancel({...newArancel, dni: e.target.value})
+                                    setNewArancel({...newArancel, nombre: e.target.value})
                                 }
                             />
                         </div>
 
                         <div className={style.sharedInput}>
                             <MiniInput
-                                placeholder="Tipo de cirugía"
+                                placeholder="Monto en ARS"
                                 className="inputBoxDefault"
-                                value={newArancel.cirugia}
+                                value={newArancel.monto_pesos}
                                 onChange={(e) =>
-                                    setNewArancel({...newArancel, cirugia: e.target.value})
+                                    setNewArancel({...newArancel, monto_pesos: e.target.value})
                                 }
+                                error={errors.monto}
                             />
 
                             <MiniInput
-                                placeholder="Tipo de implante"
+                                placeholder="Monto en ARS"
                                 className="inputBoxDefault"
-                                value={newArancel.implante}
+                                value={newArancel.monto_dolares}
                                 onChange={(e) =>
-                                    setNewArancel({...newArancel, implante: e.target.value})
+                                    setNewArancel({...newArancel, monto_dolares: e.target.value})
                                 }
+                                error={errors.monto}
                             />
                         </div>
 
                         <div className={style.sharedInput}>
-                            <MiniInput
-                                placeholder="Reimplante"
-                                as="select"
-                                className="inputBoxDefault"
-                                value={newArancel.reimplante}
-                                onChange={(e) =>
-                                    setNewArancel({...newArancel, reimplante: e.target.value})
-                                }
-                                options={[
-                                    {value: "si", label: "Sí"},
-                                    {value: "no", label: "No"}
-                                ]}
-                            />
 
                             <MiniInput
-                                placeholder="Cantidad"
+                                placeholder="Tipo de cambio"
                                 className="inputBoxDefault"
-                                value={newArancel.cantidad}
+                                value={newArancel.tc}
                                 onChange={(e) =>
-                                    setNewArancel({...newArancel, cantidad: e.target.value})
+                                    setNewArancel({...newArancel, tc: e.target.value})
                                 }
                             />
                         </div>
                     </div>
 
                     <div className={style.button}>
-                        <GreenFormButton text={'Guardar arancel'}/>
+                        <GreenFormButton text={'Guardar arancel'}
+                                         onClick={() => {
+                            if (!validate()) return;
+
+                            console.log("Ok enviar");
+                        }}
+                        />
                     </div>
                 </div>
             )}
