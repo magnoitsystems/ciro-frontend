@@ -122,15 +122,26 @@ export default function Pacientes() {
     const [pacientesState, setPacientesState] = useState<Paciente[]>(pacientes);
 
     const normalize = (text: string) => text.replace(/\D/g, "");
+    const normalizeText = (text: string) =>
+        text
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+
+    const queryText = normalizeText(search);
+    const queryNumber = normalize(search);
 
     const filteredPacientes = pacientesState.filter((p) => {
-        const query = normalize(search);
+        const textMatch =
+            normalizeText(p.nombre).includes(queryText) ||
+            normalizeText(p.localidad).includes(queryText);
 
-        return (
-            p.nombre.toLowerCase().includes(search.toLowerCase()) ||
-            p.numeroDocumento.includes(query) ||
-            normalize(p.telefono).includes(query)
-        );
+        const numberMatch =
+            queryNumber &&
+            (p.numeroDocumento.includes(queryNumber) ||
+                normalize(p.telefono).includes(queryNumber));
+
+        return textMatch || numberMatch;
     });
 
     const [openModal, setOpenModal] = useState(false);
@@ -591,7 +602,7 @@ export default function Pacientes() {
                         {editStep === 1 && (
                             <>
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Nombre completo:  {editData.nombre}</span>
+                                    <span className={style.label}>Nombre completo: {editData.nombre}</span>
 
                                     <ProvInput
                                         placeholder="Nombre completo"
@@ -600,39 +611,6 @@ export default function Pacientes() {
                                         value={editData.nombre}
                                         onChange={(e) =>
                                             setEditData({...editData, nombre: e.target.value})
-                                        }
-                                    />
-                                </div>
-
-                                <div className={style.inputGroup}>
-                                    <span className={style.label}>Documento: {editData.tipoDocumento}</span>
-
-                                    <ProvInput
-                                        placeholder="Tipo de documento"
-                                        as="select"
-                                        className="inputBoxDefault"
-                                        value={editData.tipoDocumento}
-                                        onChange={(e) =>
-                                            setEditData({...editData, tipoDocumento: e.target.value})
-                                        }
-                                        options={[
-                                            {value: "DNI", label: "DNI"},
-                                            {value: "CUIT", label: "CUIT"},
-                                            {value: "Pasaporte", label: "Pasaporte"}
-                                        ]}
-                                    />
-                                </div>
-
-                                <div className={style.inputGroup}>
-                                    <span className={style.label}>Número de documento: {editData.numeroDocumento}</span>
-
-                                    <ProvInput
-                                        placeholder="Número de documento"
-                                        type="text"
-                                        className="inputBoxDefault"
-                                        value={editData.numeroDocumento}
-                                        onChange={(e) =>
-                                            setEditData({...editData, numeroDocumento: e.target.value})
                                         }
                                     />
                                 </div>
@@ -650,11 +628,7 @@ export default function Pacientes() {
                                         }
                                     />
                                 </div>
-                            </>
-                        )}
 
-                        {editStep === 2 && (
-                            <>
                                 <div className={style.inputGroup}>
                                     <span className={style.label}>Teléfono: {editData.telefono}</span>
 
@@ -668,7 +642,11 @@ export default function Pacientes() {
                                         }
                                     />
                                 </div>
+                            </>
+                        )}
 
+                        {editStep === 2 && (
+                            <>
                                 <div className={style.inputGroup}>
                                     <span className={style.label}>Dirección: {editData.direccion}</span>
 
@@ -721,20 +699,6 @@ export default function Pacientes() {
                         {/* 🏥 PASO 3 */}
                         {editStep === 3 && (
                             <>
-                                <div className={style.inputGroup}>
-                                    <span className={style.label}>Secretaria a cargo del registro: {editData.secretaria}</span>
-
-                                    <ProvInput
-                                        placeholder="Secretaria"
-                                        type="text"
-                                        className="inputBoxDefault"
-                                        value={editData.secretaria}
-                                        onChange={(e) =>
-                                            setEditData({...editData, secretaria: e.target.value})
-                                        }
-                                    />
-                                </div>
-
                                 <div className={style.inputGroup}>
                                     <span className={style.label}>Observaciones: {editData.observaciones}</span>
 

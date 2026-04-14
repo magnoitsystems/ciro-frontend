@@ -14,7 +14,6 @@ export default function Deudas() {
                 <div className={style.columnNames}>
                     <p>Nombre y apellido</p>
                     <p>D.N.I del paciente</p>
-                    <p>Localidad</p>
                     <p>Deuda en dólares</p>
                     <p>Deuda en pesos</p>
                 </div>

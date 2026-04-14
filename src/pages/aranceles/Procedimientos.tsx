@@ -3,7 +3,6 @@ import style from './Procedimientos.module.css';
 import FilterButton from "../../components/Buttons/FilterButton/filterButton.tsx";
 import Procedimiento from "../../components/Procedimiento/procedimiento.tsx";
 import {useState} from "react";
-import ProvInput from "../../components/Forms/NewProvForm/ProvInput.tsx";
 import MiniInput from "../../components/Forms/NewProvForm/MiniInput.tsx";
 import GreenFormButton from "../../components/Buttons/GreenFormButton/greenFormButton.tsx";
 

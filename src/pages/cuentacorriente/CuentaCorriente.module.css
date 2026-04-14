@@ -2,11 +2,6 @@
     display: flex;
     flex-direction: column;
 }
-.columnNames, .content {
-    display: flex;
-    flex-direction: row;
-}
-
 
 .main {
     gap: var(--20px);
@@ -22,6 +17,8 @@
 }
 
 .content {
+    display: flex;
+    flex-direction: row;
     justify-content: space-between;
 
     width: 100%;
@@ -29,7 +26,7 @@
 }
 
 .allInformation {
-    width: 75%;
+    width: 80%;
     height: 100%;
 
     gap: var(--10px);
@@ -50,10 +47,12 @@
 }
 
 .columnNames {
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 0.8fr 1fr 1fr 1fr 1fr;
 
-    width: 90%;
+    width: 95%;
+
+    padding-inline: var(--15px);
 
     font-size: 14px;
     color: var(--neutral-4);
@@ -63,7 +62,7 @@
     align-items: center;
     justify-content: center;
 
-    width: 23%;
+    width: 19%;
     height: 100%;
 
     padding: var(--50px);
@@ -77,8 +76,191 @@
 
 .createRegisters div {
     align-items: center;
+
+    transition: all ease-in 0.2s;
+}
+
+.createRegisters div:hover {
+    transform: scale(1.1);
 }
 
 .createRegisters p, .columnNames p {
     text-decoration: none;
+}
+
+.overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+
+    z-index: 1000;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+
+    width: 50%;
+    max-height: 80vh;
+
+    background: var(--blue-3);
+    padding: 30px;
+    border-radius: var(--5px);
+    color: var(--neutral-1);
+
+    overflow: hidden;
+}
+
+.modal h3 {
+    padding: var(--10px) 0;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--10px);
+    padding: var(--20px);
+
+    overflow-y: auto;
+}
+
+.form select {
+    width: 100%;
+}
+
+.form::-webkit-scrollbar {
+    width: 6px;
+}
+.form::-webkit-scrollbar-thumb {
+    background-color: var(--blue-1);
+    border-radius: var(--10px);
+}
+
+.close {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--red);
+}
+
+.submitButton button {
+    margin: var(--10px);
+    margin-inline: auto;
+}
+
+.detailsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    background: var(--blue-4);
+    padding: 15px;
+    border-radius: var(--10px);
+}
+
+.detailsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detailsHeader span {
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--neutral-4);
+}
+
+.detailsTable {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detailsColumns {
+    display: grid;
+    grid-template-columns: 2fr 0.7fr 1fr 1fr 0.3fr;
+    font-size: 12px;
+    color: var(--neutral-4);
+}
+
+.detailRow {
+    display: grid;
+    grid-template-columns: 2fr 0.7fr 1fr 1fr 0.3fr;
+    gap: 8px;
+    align-items: center;
+}
+
+.detailRow input {
+    padding: 6px;
+    border-radius: var(--5px);
+    border: none;
+    background: var(--blue-3);
+    color: var(--neutral-1);
+    font-size: 12px;
+}
+
+.detailRow button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--red);
+}
+
+.rowTotal {
+    font-size: 12px;
+}
+
+.totalBox {
+    text-align: right;
+    margin-top: 5px;
+}
+
+.checkboxContainer {
+    margin-top: 5px;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 14px;
+    color: var(--neutral-2);
+
+    cursor: pointer;
+}
+
+/* checkbox base */
+.checkboxLabel input {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+
+    border-radius: 4px;
+    border: 1px solid var(--neutral-4);
+    background: var(--blue-4);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+/* cuando está tildado */
+.checkboxLabel input:checked {
+    background: var(--blue-1);
+    border-color: var(--blue-1);
+}
+
+/* tilde */
+.checkboxLabel input:checked::after {
+    content: "✓";
+    font-size: 12px;
+    color: white;
 }

@@ -4,8 +4,72 @@ import SaldosResume from "../../components/CtaCorriente/saldosResume.tsx";
 import Register from "../../components/CtaCorriente/Register.tsx";
 import DebtButton from "../../components/Buttons/CancelDebtButton/cancelDebtButton.tsx";
 import {NavLink} from "react-router-dom";
+import ProvInput from "../../components/Forms/NewProvForm/ProvInput.tsx";
+import {useState} from "react";
+import GreenFormButton from "../../components/Buttons/GreenFormButton/greenFormButton.tsx";
 
 export default function CuentaCorriente() {
+    const [comprobanteData, setComprobanteData] = useState({
+        fecha: "",
+        observaciones: "",
+        moneda: "",
+        tipoCambio: "",
+        metodoPago: "",
+        details: [
+            { detalle: "", cantidad: 1, precioUnitario: 0 }
+        ]
+    });
+
+    const addDetail = () => {
+        setComprobanteData(prev => ({
+            ...prev,
+            details: [...prev.details, { detalle: "", cantidad: 1, precioUnitario: 0 }]
+        }));
+    };
+
+    const removeDetail = (index: number) => {
+        setComprobanteData(prev => ({
+            ...prev,
+            details: prev.details.filter((_, i) => i !== index)
+        }));
+    };
+
+    const updateDetail = (index: number, field: string, value: any) => {
+        const newDetails = [...comprobanteData.details];
+        newDetails[index] = {
+            ...newDetails[index],
+            [field]: value
+        };
+
+        setComprobanteData(prev => ({
+            ...prev,
+            details: newDetails
+        }));
+    };
+
+    const [showComprobanteModal, setShowComprobanteModal] = useState(false);
+    const [showReciboModal, setShowReciboModal] = useState(false);
+
+    const handleSubmit = () => {
+        const payload = {
+            fecha: comprobanteData.fecha || null,
+            observaciones: comprobanteData.observaciones,
+            moneda: comprobanteData.moneda,
+            tipoCambio: Number(comprobanteData.tipoCambio),
+            metodoPago: comprobanteData.metodoPago,
+            details: comprobanteData.details
+        };
+
+        console.log("PAYLOAD:", payload);
+    };
+
+    const total = comprobanteData.details.reduce(
+        (acc, d) => acc + d.cantidad * d.precioUnitario,
+        0
+    );
+
+    const [pagarEnDolares, setPagarEnDolares] = useState(false);
+
     return(
         <main className={style.main}>
             <WelcomeText
@@ -23,37 +87,267 @@ export default function CuentaCorriente() {
 
                     <div className={style.registerContainer}>
                         <div className={style.columnNames}>
-                            <p>Referencia</p>
-                            <p>Fecha</p>
-                            <p>Tipo</p>
-                            <p>Moneda</p>
-                            <p>Importe/Pago</p>
-                            <p>Saldo total</p>
-                            <p>Link</p>
+                            <h6>Tipo</h6>
+                            <h6>Fecha</h6>
+                            <h6>Importe en ARS</h6>
+                            <h6>Importe en USD</h6>
+                            <h6>Saldo en ARS</h6>
+                            <h6>Saldo en USD</h6>
                         </div>
 
-                        <Register/>
-                        <Register/>
-                        <Register/>
-                        <Register/>
-                        <Register/>
+                        <Register
+                            type={'Comprobante'}
+                        />
+                        <Register
+                            type={'Recibo'}
+                        />
+                        <Register
+                            type={'Comprobante'}
+                        />
+                        <Register
+                            type={'Comprobante'}
+                        />
+                        <Register
+                            type={'Recibo'}
+                        />
 
                         <DebtButton/>
                     </div>
                 </div>
 
                 <div className={style.createRegisters}>
-                    <div>
+                    <div onClick={() => setShowComprobanteModal(true)}>
                         <img src={'/icons/bigPlus.png'}/>
                         <p>Crear nuevo comprobante</p>
                     </div>
 
-                    <div>
+                    <div onClick={() => setShowReciboModal(true)}>
                         <img src={'/icons/bigPlus.png'}/>
                         <p>Crear nuevo recibo</p>
                     </div>
                 </div>
             </div>
+
+            {showComprobanteModal && (
+                <div
+                    className={style.overlay}
+                    onClick={() => setShowComprobanteModal(false)}
+                >
+                    <div
+                        className={style.modal}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className={style.close}
+                            onClick={() => setShowComprobanteModal(false)}
+                        >
+                            ✕
+                        </button>
+
+                        <h3>Nuevo comprobante</h3>
+
+                        <div className={style.form}>
+
+                            <ProvInput
+                                placeholder="Fecha"
+                                type="date"
+                                className="inputBoxDefault"
+                                value={comprobanteData.fecha}
+                                onChange={(e) =>
+                                    setComprobanteData({...comprobanteData, fecha: e.target.value})
+                                }
+                            />
+
+                            <ProvInput
+                                placeholder="Observaciones"
+                                type="text"
+                                className="inputBoxBig"
+                                value={comprobanteData.observaciones}
+                                onChange={(e) =>
+                                    setComprobanteData({...comprobanteData, observaciones: e.target.value})
+                                }
+                            />
+
+                            <ProvInput
+                                placeholder="Moneda"
+                                as="select"
+                                className="inputBoxDefault"
+                                value={comprobanteData.moneda}
+                                onChange={(e) =>
+                                    setComprobanteData({...comprobanteData, moneda: e.target.value})
+                                }
+                                options={[
+                                    {value: "PESOS", label: "Pesos (ARS)"},
+                                    {value: "DOLARES", label: "Dólares (USD)"},
+                                    {value: "REALES", label: "Reales (R)"},
+                                    {value: "EUROS", label: "Euros (EUR)"}
+                                ]}
+                            />
+
+                            {/* 🧾 DETAILS */}
+                            <div className={style.detailsContainer}>
+                                <div className={style.detailsHeader}>
+                                    <h5>Detalles</h5>
+                                    <span onClick={addDetail}>+ Agregar</span>
+                                </div>
+
+                                <div className={style.detailsTable}>
+                                    <div className={style.detailsColumns}>
+                                        <span>Detalle</span>
+                                        <span>Cant.</span>
+                                        <span>Precio</span>
+                                        <span>Total</span>
+                                        <span></span>
+                                    </div>
+
+                                    {comprobanteData.details.map((d, i) => (
+                                        <div key={i} className={style.detailRow}>
+
+                                            <input
+                                                type="text"
+                                                placeholder="Ej: Consulta"
+                                                value={d.detalle}
+                                                onChange={(e) => updateDetail(i, "detalle", e.target.value)}
+                                            />
+
+                                            <input
+                                                type="number"
+                                                value={d.cantidad}
+                                                onChange={(e) => updateDetail(i, "cantidad", Number(e.target.value))}
+                                            />
+
+                                            <input
+                                                type="number"
+                                                value={d.precioUnitario}
+                                                onChange={(e) => updateDetail(i, "precioUnitario", Number(e.target.value))}
+                                            />
+
+                                            <span className={style.rowTotal}>
+                    ${(d.cantidad * d.precioUnitario).toFixed(2)}
+                </span>
+
+                                            {comprobanteData.details.length > 1 && (
+                                                <button onClick={() => removeDetail(i)}>✕</button>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className={style.totalBox}>
+                                    Total: <strong>${total.toFixed(2)}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={style.submitButton}>
+                            <GreenFormButton
+                                text="Guardar comprobante"
+                                onClick={() => {
+                                    console.log("guardar comprobante");
+                                    setShowComprobanteModal(false);
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showReciboModal && (
+                <div
+                    className={style.overlay}
+                    onClick={() => setShowReciboModal(false)}
+                >
+                    <div
+                        className={style.modal}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className={style.close}
+                            onClick={() => setShowReciboModal(false)}
+                        >
+                            ✕
+                        </button>
+
+                        <h3>Nuevo recibo</h3>
+
+                        <div className={style.form}>
+
+                            <ProvInput
+                                placeholder="Fecha"
+                                type="date"
+                                className="inputBoxDefault"
+                            />
+
+                            <ProvInput
+                                placeholder="Cantidad"
+                                type="number"
+                                className="inputBoxDefault"
+                            />
+
+                            <ProvInput
+                                placeholder="Observaciones"
+                                type="text"
+                                className="inputBoxBig"
+                            />
+
+                            <ProvInput
+                                placeholder="Moneda"
+                                as="select"
+                                className="inputBoxDefault"
+                                options={[
+                                    {value: "PESOS", label: "Pesos (ARS)"},
+                                    {value: "DOLARES", label: "Dólares (USD)"},
+                                    {value: "REALES", label: "Reales (R)"},
+                                    {value: "EUROS", label: "Euros (EUR)"}
+                                ]}
+                            />
+
+                            <ProvInput
+                                placeholder="Tipo de cambio al día"
+                                type="number"
+                                className="inputBoxDefault"
+                            />
+
+                            <ProvInput
+                                placeholder="Método de pago"
+                                as="select"
+                                className="inputBoxDefault"
+                                options={[
+                                    {value: "EFECTIVO", label: "Efectivo"},
+                                    {value: "TRANSFERENCIA", label: "Transferencia"},
+                                    {value: "TARJETA_CREDITO", label: "Tarjeta de crédito"},
+                                    {value: "TARJETA_DEBITO", label: "Tarjeta de débito"},
+                                    {value: "MERCADO_PAGO", label: "Mercado Pago"},
+                                    {value: "DOLARES", label: "Dolares"},
+                                    {value: "CHEQUE", label: "Cheque"}
+                                ]}
+                            />
+
+                            <div className={style.checkboxContainer}>
+                                <label className={style.checkboxLabel}>
+                                    <input
+                                        type="checkbox"
+                                        checked={pagarEnDolares}
+                                        onChange={(e) => setPagarEnDolares(e.target.checked)}
+                                    />
+                                    <span>Pagar deuda en dólares</span>
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <div className={style.submitButton}>
+                            <GreenFormButton
+                                text="Guardar recibo"
+                                onClick={() => {
+                                    console.log("guardar recibo");
+                                    setShowReciboModal(false);
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
     )
 }
