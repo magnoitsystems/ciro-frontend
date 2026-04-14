@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/set-state-in-effect */
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import style from './Procedimientos.module.css';
 import Procedimiento from "../../components/Procedimiento/procedimiento.tsx";
@@ -7,11 +6,13 @@ import { useState, useEffect } from "react";
 import MiniInput from "../../components/Forms/NewProvForm/MiniInput.tsx";
 import GreenFormButton from "../../components/Buttons/GreenFormButton/greenFormButton.tsx";
 import { tariffService } from "../../services/tariff.service"; 
-import type { TariffResponseDTO } from "../../types/tariffs.types";
+import type { TariffResponseDTO, TariffUpdateDTO } from "../../types/tariffs.types";
 
 export default function Procedimientos() {
     const [creating, setCreating] = useState(false);
     const [tariffs, setTariffs] = useState<TariffResponseDTO[]>([]);
+    
+    const [tariffToDelete, setTariffToDelete] = useState<number | null>(null);
 
     const [newArancel, setNewArancel] = useState({
         fecha: "",
@@ -28,12 +29,8 @@ export default function Procedimientos() {
     const loadTariffs = async () => {
         try {
             const data = await tariffService.getTariffs();
-            
-            // Lo pasamos a 'any' temporalmente para que TypeScript no nos bloquee la compilación
-            // mientras investigamos qué formato tiene realmente la respuesta.
             const responseData: any = data;
-            console.log("Respuesta real del backend:", responseData);
-
+            
             if (Array.isArray(responseData)) {
                 setTariffs(responseData);
             } else if (responseData && Array.isArray(responseData.content)) {
@@ -41,10 +38,8 @@ export default function Procedimientos() {
             } else if (responseData && Array.isArray(responseData.data)) {
                 setTariffs(responseData.data);
             } else {
-                console.warn("Formato desconocido devuelto por el backend:", responseData);
                 setTariffs([]); 
             }
-
         } catch (error) {
             console.error("Error al obtener aranceles:", error);
             setTariffs([]); 
@@ -90,6 +85,31 @@ export default function Procedimientos() {
         }
     };
 
+    const handleDeleteRequest = (id: number) => {
+        setTariffToDelete(id);
+    };
+
+    const confirmDelete = async () => {
+        if (tariffToDelete === null) return;
+        try {
+            await tariffService.deleteTariff(tariffToDelete);
+            loadTariffs();
+        } catch (error) {
+            console.error("Error al eliminar:", error);
+        } finally {
+            setTariffToDelete(null); 
+        }
+    };
+
+    const handleUpdate = async (id: number, data: TariffUpdateDTO) => {
+        try {
+            await tariffService.updateTariff(id, data);
+            loadTariffs();
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+        }
+    };
+
     return(
         <main className={style.main}>
             <WelcomeText
@@ -105,11 +125,17 @@ export default function Procedimientos() {
                         <p>Monto en USD</p>
                         <p>Monto en ARS</p>
                         <p>Tipo de cambio</p>
+                        <p>Acciones</p>
                     </div>
 
                     {Array.isArray(tariffs) ? (
                         tariffs.map((tariff) => (
-                            <Procedimiento key={tariff.id} tariff={tariff} />
+                            <Procedimiento 
+                                key={tariff.id} 
+                                tariff={tariff} 
+                                onDelete={handleDeleteRequest} 
+                                onUpdate={handleUpdate}
+                            />
                         ))
                     ) : (
                         <p style={{ textAlign: "center", marginTop: "2rem" }}>
@@ -208,6 +234,28 @@ export default function Procedimientos() {
                     {creating ? 'Ver registros de aranceles' : 'Crear un nuevo arancel'}
                 </h6>
             </div>
+
+            {tariffToDelete !== null && (
+                <div className={style.modalOverlay}>
+                    <div className={style.modalContent}>
+                        <p>¿Estás seguro que querés eliminar este arancel?</p>
+                        <div className={style.modalButtons}>
+                            <button 
+                                className={style.cancelBtn} 
+                                onClick={() => setTariffToDelete(null)}
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                className={style.confirmDeleteBtn} 
+                                onClick={confirmDelete}
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
     )
 }
