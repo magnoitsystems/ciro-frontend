@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { api } from './api';
 import { API_ENDPOINTS } from './api.endpoints';
 import type { TariffCreateDTO, TariffFilters, TariffResponseDTO, TariffUpdateDTO } from '../types/tariffs.types';
 
@@ -8,7 +8,7 @@ class TariffService {
      * Crea un nuevo arancel.
      */
     async createTariff(data: TariffCreateDTO): Promise<TariffResponseDTO> {
-        const response = await axios.post<TariffResponseDTO>(API_ENDPOINTS.TARIFFS.BASE, data);
+        const response = await api.post<TariffResponseDTO>(API_ENDPOINTS.TARIFFS.BASE, data);
         return response.data;
     }
 
@@ -16,7 +16,7 @@ class TariffService {
      * Obtiene la lista de aranceles. Soporta filtros opcionales.
      */
     async getTariffs(filters?: TariffFilters): Promise<TariffResponseDTO[]> {
-        const response = await axios.get<TariffResponseDTO[]>(API_ENDPOINTS.TARIFFS.BASE, {
+        const response = await api.get<TariffResponseDTO[]>(API_ENDPOINTS.TARIFFS.BASE, {
             params: filters 
         });
         return response.data;
@@ -27,7 +27,7 @@ class TariffService {
      * Solo se enviarán los campos que vengan definidos en el DTO.
      */
     async updateTariff(id: number, data: TariffUpdateDTO): Promise<TariffResponseDTO> {
-        const response = await axios.put<TariffResponseDTO>(API_ENDPOINTS.TARIFFS.BY_ID(id), data);
+        const response = await api.put<TariffResponseDTO>(API_ENDPOINTS.TARIFFS.BY_ID(id), data);
         return response.data;
     }
 
@@ -35,7 +35,7 @@ class TariffService {
      * Elimina un arancel por su ID.
      */
     async deleteTariff(id: number): Promise<void> {
-        await axios.delete(API_ENDPOINTS.TARIFFS.BY_ID(id));
+        await api.delete(API_ENDPOINTS.TARIFFS.BY_ID(id));
     }
 }
 

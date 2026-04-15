@@ -31,15 +31,12 @@
     flex-direction: column;
     align-items: start;
 
-    min-width: 330px;
+    min-width: 400px;
+    max-width: 100%;
 
     gap: var(--5px);
 
     color: var(--neutral-1);
-}
-
-.holeMiniInput {
-    width: 330px;
 }
 
 .inputBoxDefault {
@@ -88,12 +85,13 @@
     color: var(--neutral-4);
 }
 
-.holeInput select {
-    width: 400px;
+.holeInput select, .holeMiniInput select {
+    min-width: 400px;
+    max-width: 100%;
 }
 
-.holeMiniInput select {
-    width: 330px;
+.holeInput select, .holeMiniInput select, .holeInput input, .holeMiniInput input {
+    border: none;
 }
 
 .error {
