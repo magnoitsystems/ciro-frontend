@@ -10,6 +10,8 @@ import DatePicker from 'react-datepicker'
 import Appointment from "../Calendar/Appointment/appointment";
 import type { TaskResponseDTO } from "../../types/management.types";
 import { taskService } from "../../services/task.service";
+import DeleteConfirmCard from "../DeleteConfirmCard/deleteConfirmCard";
+import { useNavigate } from 'react-router-dom'
 
 type typeButton = {
   tipo: string;
@@ -17,16 +19,29 @@ type typeButton = {
 }
 
 export default function Task() {
+  const navigate = useNavigate()
   const [tasks, setTasks] = useState<TaskResponseDTO[]>([]);
   const [botonActivo, setBotonActivo] = useState<typeButton | null>(null)
   const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(new Date());
   const [taskSeleccionada, setTaskSeleccionada] = useState<TaskResponseDTO | null>(null);
+  const [cardEliminarTask, setCardEliminarTask] = useState(false)
+  const [idCard, setIdCard] = useState(-1)
 
   useEffect(() => {
     taskService.getAll()
       .then(fetchedTasks => setTasks(fetchedTasks))
       .catch(error => console.error('Error fetching tasks:', error));
   }, []);
+
+  const handleDelete = async () => {
+    try {
+      await taskService.delete(idCard)
+      navigate('/task.tsx')
+    }
+    catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <section className={styles.mainContainerProperties}>
@@ -39,7 +54,13 @@ export default function Task() {
         <Help type={botonActivo.subtipo} component={'task'} />
       )}
       {botonActivo?.tipo === 'form' && botonActivo.subtipo === 'form' && (
-        <CreateAppointment type={'create'} component="task" name='Ana' onClose={() => setBotonActivo(null)} />
+        <CreateAppointment type={'create'} component="task" name='Ana' onClose={() => setBotonActivo(null)} 
+        onlyComment={false} />
+      )}
+      {cardEliminarTask && (
+        <DeleteConfirmCard component="la tarea" onClose={() => setCardEliminarTask(false)} 
+        onAcceptButtonClick={() => {handleDelete()
+        }}></DeleteConfirmCard>
       )}
       {botonActivo?.tipo === 'calendar' && botonActivo.subtipo === 'calendar' && (
         <div className={styles.miniCalendarProperties}>
@@ -56,7 +77,7 @@ export default function Task() {
         </div>
       )}
       {botonActivo?.tipo === 'edit' && taskSeleccionada && (
-        <CreateAppointment task={taskSeleccionada} type={'edit'} component='task' name='Ana' onClose={() => setBotonActivo(null)} />
+        <CreateAppointment task={taskSeleccionada} type={'edit'} component='task' name='Ana' onClose={() => setBotonActivo(null)} onlyComment={false} />
       )}
       {botonActivo?.tipo === 'show' && taskSeleccionada && (
         <Appointment task={taskSeleccionada} type="view" component='task' onClose={() => setBotonActivo(null)} />
@@ -75,6 +96,10 @@ export default function Task() {
                 onBotonClick={(boton: any) => {
                   setTaskSeleccionada(task)
                   setBotonActivo(boton)
+                }}
+                onBotonEliminarClick={(boton: any) => {
+                  setCardEliminarTask(!cardEliminarTask)
+                  setIdCard(task.id)
                 }}
               />
             ))
