@@ -124,3 +124,71 @@
 .newBill .button:hover {
     background-color: var(--neutral-1);
 }
+
+.overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,0.4);
+}
+
+.form, .modal {
+    display: flex;
+    flex-direction: column;
+}
+
+.form {
+    gap: var(--5px);
+}
+
+.modal {
+    overflow-y: auto;
+
+    width: 60%;
+    max-height: 80vh;
+
+    padding: var(--30px) var(--20px);
+    gap: var(--20px);
+
+    background: var(--blue-4);
+    color: var(--neutral-1);
+}
+
+.modal input, .modal select {
+    background-color: var(--blue-2);
+}
+
+.close {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+
+    padding: 0;
+    margin: 0;
+
+    background-color: transparent;
+    color: var(--red);
+    border: none;
+}
+
+.sharedInput {
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+
+    gap: var(--20px);
+}
+
+.modal::-webkit-scrollbar {
+    width: 6px;
+}
+.modal::-webkit-scrollbar-thumb {
+    background-color: var(--blue-1);
+    border-radius: var(--10px);
+}

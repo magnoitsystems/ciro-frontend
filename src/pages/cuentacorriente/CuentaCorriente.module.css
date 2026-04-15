@@ -235,7 +235,6 @@
     cursor: pointer;
 }
 
-/* checkbox base */
 .checkboxLabel input {
     appearance: none;
     width: 16px;
@@ -252,13 +251,11 @@
     cursor: pointer;
 }
 
-/* cuando está tildado */
 .checkboxLabel input:checked {
     background: var(--blue-1);
     border-color: var(--blue-1);
 }
 
-/* tilde */
 .checkboxLabel input:checked::after {
     content: "✓";
     font-size: 12px;
