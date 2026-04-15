@@ -5,7 +5,6 @@
 
 .main {
     width: 100%;
-
     gap: var(--20px);
     height: 100vh;
     overflow-y: auto;
@@ -13,14 +12,11 @@
 
 .procedimientosContainer {
     align-items: center;
-
     width: 100%;
-
     padding: var(--40px);
     padding-inline: var(--20px);
     margin-top: var(--50px);
     gap: var(--10px);
-
     background-color: var(--blue-2);
     border-radius: var(--5px);
 }
@@ -29,7 +25,6 @@
     padding: var(--20px);
     padding-inline: var(--40px);
     gap: var(--30px);
-
     background-color: var(--blue-2);
     border-radius: var(--5px);
 }
@@ -46,10 +41,8 @@
 
 .columnNames {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
-
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 80px; 
     width: 95%;
-
     padding: 8px var(--15px);
     font-size: 14px;
     color: var(--neutral-4);
@@ -59,21 +52,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
     width: 100%;
     height: 150px;
-
     background-color: var(--blue-2);
     color: var(--neutral-1);
     transition: all ease-in 0.3s;
+    cursor: pointer;
 }
 
 .sharedInput {
     display: flex;
     flex-direction: row;
-
     width: 100%;
-
     gap: var(--50px);
 }
 
@@ -82,11 +72,73 @@
     flex-direction: row;
     align-items: center;
     justify-content: end;
-
     width: 100%;
 }
 
-/*HOVERS*/
 .createContainer:hover {
     background-color: var(--blue-1);
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: var(--blue-2);
+    padding: var(--40px);
+    border-radius: var(--5px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--30px);
+    color: var(--neutral-1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modalContent p {
+    font-size: var(--h3);
+    font-weight: 500;
+}
+
+.modalButtons {
+    display: flex;
+    gap: var(--20px);
+}
+
+.cancelBtn, .confirmDeleteBtn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--5px);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.cancelBtn {
+    background-color: transparent;
+    color: var(--neutral-1);
+    border: 1px solid var(--neutral-4);
+}
+
+.cancelBtn:hover {
+    background-color: var(--blue-4);
+}
+
+.confirmDeleteBtn {
+    background-color: #d9534f;
+    color: white;
+}
+
+.confirmDeleteBtn:hover {
+    background-color: #c9302c;
 }
