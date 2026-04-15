@@ -4,25 +4,71 @@ import TaskSummery from '../../components/TaskSummery/taskSummery'
 import WelcomeText from '../../components/WelcomeText/welcomeText'
 import { useState, useEffect } from 'react'
 import { taskService } from '../../services/task.service' 
+import { shiftService } from '../../services/shift.service'
+import { receiptService } from '../../services/receipt.service'
 import type { TaskResponseDTO } from '../../types/management.types'
+import type { RevenueWidgetDTO } from '../../types/currentAccount.types'
+import type { ShiftWidgetDTO } from '../../types/clinical.types'
 
 export default function Panel() {
     const [pendingCount, setPendingCount] = useState<number>(0);
     const [pendingTasks, setPendingTasks] = useState<TaskResponseDTO[]>([]);
+    const [shiftData, setShiftData] = useState<ShiftWidgetDTO | null>(null);
+    const [revenueData, setRevenueData] = useState<RevenueWidgetDTO | null>(null);
+    const [currentTime, setCurrentTime] = useState<string>('');
 
     useEffect(() => {
-        const fetchPendingTasks = async () => {
-            try {
-                const data = await taskService.getPendingWidget();
-                setPendingCount(data.pendingCount);
-                setPendingTasks(data.pendingTasks);
-            } catch (error) {
-                console.error("Error al obtener el widget de tareas pendientes:", error);
+        const timer = setInterval(() => {
+            setCurrentTime(new Date().toLocaleTimeString('es-AR', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            }));
+        }, 1000);
+
+        const fetchDashboardData = async () => {
+            const [tasksResult, shiftsResult, revenueResult] = await Promise.allSettled([
+                taskService.getPendingWidget(),
+                shiftService.getDashboardWidget(),
+                receiptService.getWeeklyRevenueWidget()
+            ]);
+
+            if (tasksResult.status === 'fulfilled') {
+                setPendingCount(tasksResult.value.pendingCount);
+                setPendingTasks(tasksResult.value.pendingTasks);
+            } else {
+                console.error("El backend falló al traer las tareas", tasksResult.reason);
+            }
+
+            if (shiftsResult.status === 'fulfilled') {
+                setShiftData(shiftsResult.value);
+            } else {
+                console.error("El backend falló al traer los turnos (Error 500)", shiftsResult.reason);
+            }
+
+            if (revenueResult.status === 'fulfilled') {
+                setRevenueData(revenueResult.value);
+            } else {
+                console.error("El backend falló al traer los ingresos", revenueResult.reason);
             }
         };
 
-        fetchPendingTasks();
+        fetchDashboardData();
+
+        return () => clearInterval(timer);
     }, []);
+
+    const getShiftTime = (dateString?: string) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        return date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    };
+
+    const getFormattedDate = () => {
+        const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const dateStr = new Date().toLocaleDateString('es-AR', options);
+        return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+    };
 
     return(
         <main className={style.main}>
@@ -34,24 +80,29 @@ export default function Panel() {
             <div className={style.firstWidgetsRow}>
                 <div className={style.totalPacients}>
                     <h5>Total de pacientes atendidos en la semana:</h5>
-                    <h1>17</h1>
+                    <h1>{shiftData?.weeklyCount || 0}</h1>
                 </div>
 
                 <div className={style.totalMoney}>
                     <h5>Total de dinero recaudado en la semana:</h5>
-                    <h1>$147.450</h1>
+                    <h2>{revenueData?.totalDollars ? `USD ${revenueData.totalDollars.toLocaleString('es-AR')}` : 'USD 0'}</h2>
+                    <h2>{revenueData?.totalPesos ? `$ ${revenueData.totalPesos.toLocaleString('es-AR')}` : '$ 0'}</h2>
                 </div>
 
                 <div className={style.totalAppointments}>
                     <div>
-                        <p>16:42</p>
-                        <h5>Lunes 12 de Enero de 2026</h5>
+                        <p>{currentTime}</p>
+                        <h5>{getFormattedDate()}</h5>
                     </div>
 
                     <div className={style.appoInfo}>
                         <div>
-                            <h6>3 turnos para hoy</h6>
-                            <h3>Próximo a las 11:15hs</h3>
+                            <h6>{shiftData?.todayCount || 0} turnos para hoy</h6>
+                            <h3>
+                                {shiftData?.nextShift 
+                                    ? `Próximo a las ${getShiftTime(shiftData.nextShift.shiftDate)}hs` 
+                                    : 'No hay más turnos hoy'}
+                            </h3>
                         </div>
 
                         <div>
