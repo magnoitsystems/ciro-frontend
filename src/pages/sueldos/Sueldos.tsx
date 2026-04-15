@@ -1,62 +1,11 @@
 import style from './Sueldos.module.css';
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
-import SueldoCard from "../../components/SueldoCard/sueldoCard.tsx";
+import BillCard from "../../components/BillCard/billCard.tsx";
 import {useState} from "react";
 import ReporteForm from "../../components/Forms/ReporteForm/ReporteForm.tsx";
 
 export default function Sueldos() {
     const [activeTab, setActiveTab] = useState<"sueldos" | "gastos" | "reporte">("sueldos");
-
-    const gastos = [
-        {
-            id: 1,
-            resumen: "Compra de insumos médicos",
-            fecha: "2026-06-15",
-            metodo: "Transferencia",
-            monto: 250000,
-            moneda: "ARS"
-        },
-        {
-            id: 2,
-            resumen: "Pago servicio limpieza",
-            fecha: "2026-06-10",
-            metodo: "Efectivo",
-            monto: 80000,
-            moneda: "ARS"
-        },
-        {
-            id: 1,
-            resumen: "Compra de insumos médicos",
-            fecha: "2026-06-15",
-            metodo: "Transferencia",
-            monto: 250000,
-            moneda: "ARS"
-        },
-        {
-            id: 2,
-            resumen: "Pago servicio limpieza",
-            fecha: "2026-06-10",
-            metodo: "Efectivo",
-            monto: 80000,
-            moneda: "ARS"
-        },
-        {
-            id: 1,
-            resumen: "Compra de insumos médicos",
-            fecha: "2026-06-15",
-            metodo: "Transferencia",
-            monto: 250000,
-            moneda: "ARS"
-        },
-        {
-            id: 2,
-            resumen: "Pago servicio limpieza",
-            fecha: "2026-06-10",
-            metodo: "Efectivo",
-            monto: 80000,
-            moneda: "ARS"
-        }
-    ];
 
     return(
         <main className={style.main}>
@@ -64,6 +13,10 @@ export default function Sueldos() {
                 sectionText={'Acá los registros de sueldos y gastos'}
                 className={'darkStyle'}
             />
+
+            <div className={style.newBill}>
+                <div className={style.button}><h3>+</h3></div>
+            </div>
 
             <div className={style.container}>
                 <div className={style.pages}>
@@ -93,7 +46,7 @@ export default function Sueldos() {
 
                     {activeTab === "sueldos" && (
                         <>
-                            <div className={style.sevenColumnNames}>
+                            <div className={style.columnNames}>
                                 <p>Nombre y apellido</p>
                                 <p>Fecha de pago</p>
                                 <p>Método de pago</p>
@@ -103,30 +56,25 @@ export default function Sueldos() {
                                 <p>Estado</p>
                             </div>
 
-                            <SueldoCard/>
-                            <SueldoCard/>
+                            <BillCard/>
+                            <BillCard/>
                         </>
                     )}
 
                     {activeTab === "gastos" && (
                         <>
-                            <div className={style.fiveColumnNames}>
-                                <p>Resumen de gasto</p>
+                            <div className={style.columnNames}>
+                                <p>Nombre y apellido</p>
                                 <p>Fecha de pago</p>
                                 <p>Método de pago</p>
                                 <p>Monto</p>
                                 <p>Moneda</p>
+                                <p>Origen del dinero</p>
+                                <p>Estado</p>
                             </div>
 
-                            {gastos.map(g => (
-                                <div key={g.id} className={style.fiveRow}>
-                                    <span title={g.resumen}>{g.resumen}</span>
-                                    <span>{g.fecha}</span>
-                                    <span>{g.metodo}</span>
-                                    <span>${g.monto.toLocaleString()}</span>
-                                    <span>{g.moneda}</span>
-                                </div>
-                            ))}
+                            <BillCard/>
+                            <BillCard/>
                         </>
                     )}
 

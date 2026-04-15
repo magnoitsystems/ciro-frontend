@@ -1,7 +1,7 @@
 import { useState } from "react";
-import style from './SueldoCard.module.css'
+import style from './BillCard.module.css'
 
-export default function SueldoCard() {
+export default function BillCard() {
     const [selected, setSelected] = useState(false);
     const [estado, setEstado] = useState("pago");
 
