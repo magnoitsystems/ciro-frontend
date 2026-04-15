@@ -1,14 +1,19 @@
 import { useState } from "react";
 import style from './BillCard.module.css'
 
-export default function BillCard() {
+type Props = {
+    onClick? : () => void;
+}
+
+export default function BillCard({onClick}: Props) {
     const [selected, setSelected] = useState(false);
     const [estado, setEstado] = useState("pago");
 
     return (
         <main
             className={`${style.sueldo} ${selected ? style.active : ""}`}
-            onClick={() => setSelected(!selected)}
+            onClick={() => {setSelected(!selected)
+        }}
         >
             <div>Agostina Bidegain</div>
             <h6>27/05/26</h6>
@@ -29,17 +34,28 @@ export default function BillCard() {
                 <option value="nopago">No pago</option>
             </select>
 
-            {/* Botón eliminar */}
             {selected && (
-                <button
-                    className={style.delete}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        console.log("Eliminar sueldo");
-                    }}
-                >
-                    Eliminar
-                </button>
+                <>
+                    <button
+                        className={style.view}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onClick?.();
+                        }}
+                    >
+                        Ver detalle
+                    </button>
+
+                    <button
+                        className={style.delete}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            console.log("Eliminar sueldo");
+                        }}
+                    >
+                        Eliminar
+                    </button>
+                </>
             )}
         </main>
     )
