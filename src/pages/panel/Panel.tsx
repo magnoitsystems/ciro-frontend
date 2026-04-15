@@ -2,8 +2,28 @@ import style from './Panel.module.css'
 import PanelButton from '../../components/Buttons/PanelButton/panelButton'
 import TaskSummery from '../../components/TaskSummery/taskSummery'
 import WelcomeText from '../../components/WelcomeText/welcomeText'
+import { useState, useEffect } from 'react'
+import { taskService } from '../../services/task.service' 
+import type { TaskResponseDTO } from '../../types/management.types'
 
 export default function Panel() {
+    const [pendingCount, setPendingCount] = useState<number>(0);
+    const [pendingTasks, setPendingTasks] = useState<TaskResponseDTO[]>([]);
+
+    useEffect(() => {
+        const fetchPendingTasks = async () => {
+            try {
+                const data = await taskService.getPendingWidget();
+                setPendingCount(data.pendingCount);
+                setPendingTasks(data.pendingTasks);
+            } catch (error) {
+                console.error("Error al obtener el widget de tareas pendientes:", error);
+            }
+        };
+
+        fetchPendingTasks();
+    }, []);
+
     return(
         <main className={style.main}>
             <WelcomeText
@@ -45,14 +65,21 @@ export default function Panel() {
 
             <div className={style.secondWidgetsRow}>
                 <div className={style.totalTasks}>
-                    <p>7</p>
+                    <p>{pendingCount}</p>
                     <h5>Tareas en estado PENDIENTE</h5>
                 </div>
 
                 <div className={style.tasksSummery}>
-                    <TaskSummery/>
-                    <TaskSummery/>
-                    <TaskSummery/>
+                    {pendingTasks.length > 0 ? (
+                        pendingTasks.slice(0, 3).map((task) => (
+                            <TaskSummery 
+                                key={task.id} 
+                                title={task.title} 
+                            />
+                        ))
+                    ) : (
+                        <p style={{ color: 'var(--neutral-4)', fontSize: '14px' }}>No hay tareas pendientes.</p>
+                    )}
                 </div>
 
                 <div className={style.seeTasks}>
