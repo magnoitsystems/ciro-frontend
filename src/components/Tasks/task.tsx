@@ -35,11 +35,12 @@ export default function Task() {
 
   const handleDelete = async () => {
     try {
+      console.log(idCard)
       await taskService.delete(idCard)
       navigate('/task.tsx')
     }
-    catch (error) {
-      console.error(error)
+    catch (error:any) {
+      console.error(error.response?.data)
     }
   }
 
@@ -54,13 +55,16 @@ export default function Task() {
         <Help type={botonActivo.subtipo} component={'task'} />
       )}
       {botonActivo?.tipo === 'form' && botonActivo.subtipo === 'form' && (
-        <CreateAppointment type={'create'} component="task" name='Ana' onClose={() => setBotonActivo(null)} 
-        onlyComment={false} />
+        <CreateAppointment onTaskSaved={(newTask) => {
+          setTasks(prev => [...prev, newTask])
+        }} type={'create'} component="task" name='Ana' onClose={() => setBotonActivo(null)}
+          onlyComment={false} />
       )}
       {cardEliminarTask && (
-        <DeleteConfirmCard component="la tarea" onClose={() => setCardEliminarTask(false)} 
-        onAcceptButtonClick={() => {handleDelete()
-        }}></DeleteConfirmCard>
+        <DeleteConfirmCard component="la tarea" onClose={() => setCardEliminarTask(false)}
+          onAcceptButtonClick={() => {
+            handleDelete()
+          }}></DeleteConfirmCard>
       )}
       {botonActivo?.tipo === 'calendar' && botonActivo.subtipo === 'calendar' && (
         <div className={styles.miniCalendarProperties}>
@@ -77,7 +81,11 @@ export default function Task() {
         </div>
       )}
       {botonActivo?.tipo === 'edit' && taskSeleccionada && (
-        <CreateAppointment task={taskSeleccionada} type={'edit'} component='task' name='Ana' onClose={() => setBotonActivo(null)} onlyComment={false} />
+        <CreateAppointment onTaskSaved={(updatedTask) => {
+          setTasks(prev =>
+            prev.map(t => t.id === updatedTask.id ? updatedTask : t)
+          )
+        }} task={taskSeleccionada} type={'edit'} component='task' name='Ana' onClose={() => setBotonActivo(null)} onlyComment={false} />
       )}
       {botonActivo?.tipo === 'show' && taskSeleccionada && (
         <Appointment task={taskSeleccionada} type="view" component='task' onClose={() => setBotonActivo(null)} />
@@ -101,6 +109,40 @@ export default function Task() {
                   setCardEliminarTask(!cardEliminarTask)
                   setIdCard(task.id)
                 }}
+                onPriorityChange={async (task) => {
+                  try {
+                    await taskService.update(task.id, {
+                      ...task,
+                      priority: "HIGH"
+                    });
+
+                    setTasks(prev =>
+                      prev.map(t =>
+                        t.id === task.id ? { ...t, priority: "HIGH" } : t
+                      )
+                    );
+
+                  } catch (error) {
+                    console.error(error);
+                  }
+                }}
+                onStatusChange={async (task, newStatus) => {
+                  try {
+                    await taskService.update(task.id, {
+                      ...task,
+                      status: newStatus
+                    });
+
+                    setTasks(prev =>
+                      prev.map(t =>
+                        t.id === task.id ? { ...t, status: newStatus } : t
+                      )
+                    );
+
+                  } catch (error) {
+                    console.error(error);
+                  }
+                }}
               />
             ))
           )}
@@ -111,7 +153,6 @@ export default function Task() {
       <div className={styles.buttonsRodContainerProperties}>
         <ButtonsRod onBotonClick={(boton: any) => setBotonActivo(boton)} botonActivo={botonActivo} component="task" />
       </div>
-
     </section>
   );
 }
