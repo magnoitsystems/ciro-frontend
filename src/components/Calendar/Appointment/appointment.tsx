@@ -26,7 +26,9 @@ export default function Appointment({ type, onClose, component, turnos, task }: 
                     <h4>Paciente: <span>{turnos?.title || task?.userFullName}</span></h4>
                     <h4>Horario: <span>{'09:00'}</span></h4>
                     <h4>Dia: <span>{turnos?.start ? new Date(turnos.start).toLocaleDateString() : task?.taskDate ? new Date(task.taskDate).toLocaleDateString() : ''}</span></h4>
-                    <h4>Dr./Dra.: <span>{turnos?.title || 'Martin Rogriguez'}</span></h4>
+                    {type === 'view' && component === 'calendar' && (
+                        <h4>Dr./Dra.: <span>{turnos?.title}</span></h4>
+                    )}
                     {type === 'view' && component === 'calendar' && (
                         <h4>Como nos conocio? <span>Instagram</span></h4>
                     )}
