@@ -25,6 +25,9 @@ export default function Sueldos() {
         billType: ""
     });
 
+    const [viewGastoModal, setViewGastoModal] = useState(false);
+    const [selectedGasto, setSelectedGasto] = useState<any>(null);
+
 
     return(
         <main className={style.main}>
@@ -35,9 +38,8 @@ export default function Sueldos() {
 
             <div
                 className={style.newBill}
-                onClick={() => setShowGastoModal(true)}
             >
-                <div className={style.button}><h3>+</h3></div>
+                <div onClick={() => setShowGastoModal(true)} className={style.button}><h3>+</h3></div>
             </div>
 
             <div className={style.container}>
@@ -78,8 +80,40 @@ export default function Sueldos() {
                                 <p>Estado</p>
                             </div>
 
-                            <BillCard/>
-                            <BillCard/>
+                            <BillCard
+                                onClick={() => {
+                                    setSelectedGasto({
+                                        employeeId: 1,
+                                        supplierId: 2,
+                                        billDate: "2026-04-10",
+                                        amount: 15000,
+                                        description: "Compra de insumos",
+                                        status: "PAGADO",
+                                        paymentMethod: "EFECTIVO",
+                                        currencyType: "PESOS",
+                                        from: "CAJA",
+                                        billType: "SERVICIO"
+                                    });
+                                    setViewGastoModal(true);
+                                }}
+                            />
+                            <BillCard
+                                onClick={() => {
+                                    setSelectedGasto({
+                                        employeeId: 1,
+                                        supplierId: 2,
+                                        billDate: "2026-04-10",
+                                        amount: 15000,
+                                        description: "Compra de insumos",
+                                        status: "PAGADO",
+                                        paymentMethod: "EFECTIVO",
+                                        currencyType: "PESOS",
+                                        from: "CAJA",
+                                        billType: "SERVICIO"
+                                    });
+                                    setViewGastoModal(true);
+                                }}
+                            />
                         </>
                     )}
 
@@ -95,8 +129,40 @@ export default function Sueldos() {
                                 <p>Estado</p>
                             </div>
 
-                            <BillCard/>
-                            <BillCard/>
+                            <BillCard
+                                onClick={() => {
+                                    setSelectedGasto({
+                                        employeeId: 1,
+                                        supplierId: null,
+                                        billDate: "2026-04-15",
+                                        amount: 20000,
+                                        description: "Compra insumos",
+                                        status: "PAGADO",
+                                        paymentMethod: "EFECTIVO",
+                                        currencyType: "PESOS",
+                                        from: "CAJA",
+                                        billType: "SERVICIO"
+                                    });
+                                    setViewGastoModal(true);
+                                }}
+                            />
+                            <BillCard
+                                onClick={() => {
+                                    setSelectedGasto({
+                                        employeeId: 1,
+                                        supplierId: null,
+                                        billDate: "2026-04-15",
+                                        amount: 20000,
+                                        description: "Compra insumos",
+                                        status: "PAGADO",
+                                        paymentMethod: "EFECTIVO",
+                                        currencyType: "PESOS",
+                                        from: "CAJA",
+                                        billType: "SERVICIO"
+                                    });
+                                    setViewGastoModal(true);
+                                }}
+                            />
                         </>
                     )}
 
@@ -277,6 +343,94 @@ export default function Sueldos() {
                                     setShowGastoModal(false);
                                 }}
                             />
+                        </div>
+                    </div>
+                </div>
+            )}
+            {viewGastoModal && selectedGasto && (
+                <div
+                    className={style.overlay}
+                    onClick={() => setViewGastoModal(false)}
+                >
+                    <div
+                        className={style.modal}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className={style.close}
+                            onClick={() => setViewGastoModal(false)}
+                        >
+                            ✕
+                        </button>
+
+                        <h3>Detalle del gasto</h3>
+
+                        <div className={style.reciboContainer}>
+
+                            <div className={style.reciboSection}>
+                                <h5>Información</h5>
+
+                                <div className={style.row}>
+                                    <span>Fecha</span>
+                                    <p>{selectedGasto.billDate}</p>
+                                </div>
+
+                                <div className={style.row}>
+                                    <span>Monto</span>
+                                    <p>
+                                        {selectedGasto.currencyType} {selectedGasto.amount}
+                                    </p>
+                                </div>
+
+                                <div className={style.row}>
+                                    <span>Estado</span>
+                                    <p>{selectedGasto.status}</p>
+                                </div>
+                            </div>
+
+                            <div className={style.reciboSection}>
+                                <h5>Detalle</h5>
+
+                                <div className={style.row}>
+                                    <span>Descripción</span>
+                                    <p>{selectedGasto.description}</p>
+                                </div>
+
+                                <div className={style.row}>
+                                    <span>Método de pago</span>
+                                    <p>{selectedGasto.paymentMethod}</p>
+                                </div>
+
+                                <div className={style.row}>
+                                    <span>Origen</span>
+                                    <p>{selectedGasto.from}</p>
+                                </div>
+
+                                <div className={style.row}>
+                                    <span>Tipo</span>
+                                    <p>{selectedGasto.billType}</p>
+                                </div>
+                            </div>
+
+                            {(selectedGasto.employeeId || selectedGasto.supplierId) && (
+                                <div className={style.reciboSection}>
+                                    <h5>Relación</h5>
+
+                                    {selectedGasto.employeeId && (
+                                        <div className={style.row}>
+                                            <span>ID Empleado</span>
+                                            <p>{selectedGasto.employeeId}</p>
+                                        </div>
+                                    )}
+
+                                    {selectedGasto.supplierId && (
+                                        <div className={style.row}>
+                                            <span>ID Proveedor</span>
+                                            <p>{selectedGasto.supplierId}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
