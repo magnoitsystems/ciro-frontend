@@ -13,30 +13,32 @@ import Calendario from "./pages/calendario/Calendario.tsx";
 import Tareas from "./pages/tareas/Tareas.tsx";
 import CuentaCorriente from "./pages/cuentacorriente/CuentaCorriente.tsx";
 import Estadisticas from "./pages/estadisticas/Estadisticas.tsx";
+import Login from './components/Login/login.tsx';
 
 function App() {
-  return (
-      <div className="appContainer">
-          <NavBar/>
+    return (
+        <div className="appContainer">
+            <NavBar />
 
-          <div className="content">
-              <Routes>
-                  <Route path="/" element={<Panel/>}/>
-                  <Route path="/calendario" element={<Calendario/>}/>
-                  <Route path="/caja" element={<Caja/>}/>
-                  <Route path="/deudas" element={<Deudas/>}/>
-                  <Route path="/pacientes" element={<Pacientes/>}/>
-                  <Route path="/presupuestos" element={<Presupuestos/>}/>
-                  <Route path="/aranceles" element={<Procedimientos/>}/>
-                  <Route path="/proveedores" element={<Proveedores/>}/>
-                  <Route path="/sueldos" element={<Sueldos/>}/>
-                  <Route path="/tareas" element={<Tareas/>}/>
-                  <Route path="/cuentacorriente" element={<CuentaCorriente/>}/>
-                  <Route path="/estadisticas" element={<Estadisticas/>}/>
-              </Routes>
-          </div>
-      </div>
-  )
+            <div className="content">
+                <Routes>
+                    <Route path="/" element={<Panel />} />
+                    <Route path="/calendario" element={<Calendario />} />
+                    <Route path="/caja" element={<Caja />} />
+                    <Route path="/deudas" element={<Deudas />} />
+                    <Route path="/pacientes" element={<Pacientes />} />
+                    <Route path="/presupuestos" element={<Presupuestos />} />
+                    <Route path="/aranceles" element={<Procedimientos />} />
+                    <Route path="/proveedores" element={<Proveedores />} />
+                    <Route path="/sueldos" element={<Sueldos />} />
+                    <Route path="/tareas" element={<Tareas />} />
+                    <Route path="/cuentacorriente" element={<CuentaCorriente />} />
+                    <Route path="/estadisticas" element={<Estadisticas />} />
+                    <Route path="/login" element={<Login />} />
+                </Routes>
+            </div>
+        </div>
+    )
 }
 
 export default App

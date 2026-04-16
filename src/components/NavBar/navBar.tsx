@@ -72,6 +72,11 @@ export default function NavBar() {
                         image={'/icons/caja.png'}
                         to={'/caja'}
                     />
+                    <NavItem
+                        sectionName={'Iniciar sesión'}
+                        image={'/icons/presup.png'}
+                        to={'/login'}
+                    />
                 </div>
             </div>
         </main>
