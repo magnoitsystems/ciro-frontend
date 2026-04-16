@@ -5,6 +5,7 @@ import PacientCard from "../../components/PacientCard/pacientCards.tsx";
 import { useState } from "react";
 import ProvInput from "../../components/Forms/NewProvForm/ProvInput.tsx";
 import LightGreyButton from "../../components/Buttons/LightGreyButton/lightGreyButton.tsx";
+import {NavLink} from "react-router-dom";
 
 type Paciente = {
     id: number;
@@ -232,7 +233,9 @@ export default function Pacientes() {
 
                 <div className={style.secondFunctionalities}>
                     <div className={style.estadistics}>
-                        <img src={'/icons/estadistics.png'} alt={'estadistics image'}/>
+                        <NavLink to={'/estadisticas'}>
+                            <img src={'/icons/estadistics.png'} alt={'estadistics image'}/>
+                        </NavLink>
                     </div>
 
                     <div
