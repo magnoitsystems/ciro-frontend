@@ -266,6 +266,7 @@ export default function Pacientes() {
                             setEditModal(true);
                             setEditStep(1);
                         }}
+                        attachments={true}
                     />
                 ))}
             </div>

@@ -146,6 +146,7 @@ export default function Estadisticas() {
                             }}
                             onEdit={() => {
                             }}
+                            attachments={false}
                         />
                     ))}
                 </div>

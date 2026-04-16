@@ -34,6 +34,7 @@
 }
 
 .appliedFilters {
+    padding: var(--15px) var(--30px);
     background-color: var(--blue-4);
 }
 
