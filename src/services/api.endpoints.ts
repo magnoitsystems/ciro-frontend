@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
         BASE: '/api/v1/bills',
         BY_ID: (id: number) => `/api/v1/bills/${id}`,
         REPORT_PDF: '/api/v1/bills/report/pdf',
+        WIDGET_PENDING_SALARIES: '/api/v1/bills/widget/pending-salaries',
     },
     BUDGETS: {
         BASE: '/api/v1/budgets',

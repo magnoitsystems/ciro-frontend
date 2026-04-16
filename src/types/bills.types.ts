@@ -29,3 +29,10 @@ export interface BillResponseDTO {
     from: OriginType;
     billType: BillType;
 }
+
+export interface PendingSalaryItemDTO {
+    id: number;
+    employeeFullName: string;
+    amount: number;
+    currencyType: CurrencyType;
+}

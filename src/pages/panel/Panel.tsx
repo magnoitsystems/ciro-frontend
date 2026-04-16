@@ -6,15 +6,18 @@ import { useState, useEffect } from 'react'
 import { taskService } from '../../services/task.service' 
 import { shiftService } from '../../services/shift.service'
 import { receiptService } from '../../services/receipt.service'
+import { billService } from '../../services/bill.service'
 import type { TaskResponseDTO } from '../../types/management.types'
 import type { RevenueWidgetDTO } from '../../types/currentAccount.types'
 import type { ShiftWidgetDTO } from '../../types/clinical.types'
+import type { PendingSalaryItemDTO } from '../../types/bills.types'
 
 export default function Panel() {
     const [pendingCount, setPendingCount] = useState<number>(0);
     const [pendingTasks, setPendingTasks] = useState<TaskResponseDTO[]>([]);
     const [shiftData, setShiftData] = useState<ShiftWidgetDTO | null>(null);
     const [revenueData, setRevenueData] = useState<RevenueWidgetDTO | null>(null);
+    const [pendingSalaries, setPendingSalaries] = useState<PendingSalaryItemDTO[]>([]); 
     const [currentTime, setCurrentTime] = useState<string>('');
 
     useEffect(() => {
@@ -27,10 +30,11 @@ export default function Panel() {
         }, 1000);
 
         const fetchDashboardData = async () => {
-            const [tasksResult, shiftsResult, revenueResult] = await Promise.allSettled([
+            const [tasksResult, shiftsResult, revenueResult, salariesResult] = await Promise.allSettled([
                 taskService.getPendingWidget(),
                 shiftService.getDashboardWidget(),
-                receiptService.getWeeklyRevenueWidget()
+                receiptService.getWeeklyRevenueWidget(),
+                billService.getPendingSalariesWidget()
             ]);
 
             if (tasksResult.status === 'fulfilled') {
@@ -43,13 +47,19 @@ export default function Panel() {
             if (shiftsResult.status === 'fulfilled') {
                 setShiftData(shiftsResult.value);
             } else {
-                console.error("El backend falló al traer los turnos (Error 500)", shiftsResult.reason);
+                console.error("El backend falló al traer los turnos", shiftsResult.reason);
             }
 
             if (revenueResult.status === 'fulfilled') {
                 setRevenueData(revenueResult.value);
             } else {
                 console.error("El backend falló al traer los ingresos", revenueResult.reason);
+            }
+
+            if (salariesResult.status === 'fulfilled') {
+                setPendingSalaries(salariesResult.value);
+            } else {
+                console.error("El backend falló al traer los saldos pendientes", salariesResult.reason);
             }
         };
 
@@ -68,6 +78,16 @@ export default function Panel() {
         const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const dateStr = new Date().toLocaleDateString('es-AR', options);
         return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+    };
+
+    const getCurrencySymbol = (currency: string) => {
+        switch (currency) {
+            case 'DOLARES': return 'USD ';
+            case 'EUROS': return '€ ';
+            case 'REALES': return 'R$ ';
+            case 'PESOS':
+            default: return '$ ';
+        }
     };
 
     return(
@@ -144,8 +164,15 @@ export default function Panel() {
                 <div className={style.saldos}>
                     <div className={style.saldosList}>
                         <h6>Saldos pendientes</h6>
-                        <h5>- $44.565 Juan M. García</h5>
-                        <h5>- $44.565 Juan M. García</h5>
+                        {pendingSalaries.length > 0 ? (
+                            pendingSalaries.slice(0, 3).map((salary) => (
+                                <h5 key={salary.id}>
+                                    - {getCurrencySymbol(salary.currencyType)}{salary.amount.toLocaleString('es-AR')} {salary.employeeFullName}
+                                </h5>
+                            ))
+                        ) : (
+                            <p style={{ color: 'var(--neutral-4)', fontSize: '14px', marginTop: '10px' }}>Todo al día.</p>
+                        )}
                     </div>
 
                     <div>
