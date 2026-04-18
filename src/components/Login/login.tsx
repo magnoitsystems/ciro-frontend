@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { authService } from "../../services/auth.service";
 import { useState } from "react";
 import type { LoginRequestDTO } from "../../types/auth.types";
@@ -25,6 +26,7 @@ export default function Login({onLogin} : Prop) {
             console.log("Entro al try");
 
             console.log("Voy a logearme la task");
+            // eslint-disable-next-line prefer-const, @typescript-eslint/no-unused-vars
             response = await authService.login(login);
             onLogin()
             navigate('/Panel')
