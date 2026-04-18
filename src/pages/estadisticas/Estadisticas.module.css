@@ -1,0 +1,87 @@
+.main, .patients, .filters, .filterOptions, .graph {
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    height: 80vh;
+    gap: var(--30px);
+
+    color: var(--neutral-1);
+}
+
+.patients {
+    padding: var(--20px) var(--30px);
+    gap: var(--15px);
+
+    background-color: var(--blue-3);
+    border-radius: var(--5px);
+}
+
+.filters, .graph {
+    padding: var(--20px) var(--30px);
+
+    background-color: var(--blue-3);
+    border-radius: var(--5px);
+}
+
+.filters button {
+    width: 100%;
+    height: var(--40px);
+
+    padding: 0;
+    margin: 0;
+}
+
+.appliedFilters {
+    padding: var(--15px) var(--30px);
+    background-color: var(--blue-4);
+}
+
+.contentContainer {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+
+    height: 100%;
+}
+
+.contentContainer > div {
+    height: 100%;
+}
+
+.patients {
+    border-radius: 6px;
+    padding: 15px;
+
+    overflow-y: auto;
+}
+
+.filters {
+    gap: var(--30px);
+}
+
+.filterOptions {
+    gap: var(--10px);
+}
+
+.filterOptions button {
+    width: 100%;
+    padding: 8px;
+
+    background: var(--blue-1);
+    color: white;
+    border: none;
+    border-radius: 5px;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.filterOptions button:hover {
+    transform: scale(1.05);
+}
+
+.graph {
+    align-items: center;
+}

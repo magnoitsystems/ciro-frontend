@@ -47,7 +47,7 @@
     cursor: pointer;
 }
 
-.selectProperties select {
+.selectProperties  {
     width: 190px;
     border-radius: 20px;
     height: var(--30px);

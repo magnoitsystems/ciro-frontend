@@ -7,9 +7,10 @@ type Props = {
     onDelete: () => void;
     onView: () => void;
     onEdit: () => void;
+    attachments: boolean;
 }
 
-export default function PacientCard({ nombre, dni, onDelete, onView, onEdit }: Props) {
+export default function PacientCard({ nombre, dni, onDelete, onView, onEdit, attachments }: Props) {
     const getInitials = (nombreCompleto: string) => {
         const partes = nombreCompleto.trim().split(" ");
 
@@ -36,38 +37,40 @@ export default function PacientCard({ nombre, dni, onDelete, onView, onEdit }: P
                 </div>
             </div>
 
-            <div className={style.attachments}>
-                <NavLink to={'/cuentacorriente'}>
-                    <img src={'/icons/cash.png'} alt={'cash image'}/>
-                </NavLink>
+            {attachments && (
+                <div className={style.attachments}>
+                    <NavLink to={'/cuentacorriente'}>
+                        <img src={'/icons/cash.png'} alt={'cash image'}/>
+                    </NavLink>
 
-                <img
-                    src={'/icons/trash.png'}
-                    alt={'trash image'}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete();
-                    }}
-                />
+                    <img
+                        src={'/icons/trash.png'}
+                        alt={'trash image'}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onDelete();
+                        }}
+                    />
 
-                <img
-                    src={'/icons/editGrey.png'}
-                    alt={'editGrey image'}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onEdit();
-                    }}
-                />
+                    <img
+                        src={'/icons/editGrey.png'}
+                        alt={'editGrey image'}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onEdit();
+                        }}
+                    />
 
-                <img
-                    src={'/icons/eye.png'}
-                    alt={'eye image'}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onView();
-                    }}
-                />
-            </div>
+                    <img
+                        src={'/icons/eye.png'}
+                        alt={'eye image'}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onView();
+                        }}
+                    />
+                </div>
+            )}
         </main>
     )
 }

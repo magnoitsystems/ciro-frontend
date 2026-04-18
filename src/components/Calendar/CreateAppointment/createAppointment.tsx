@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { TaskCreateDTO, TaskResponseDTO } from '../../../types/management.types';
 import styles from './CreateAppointment.module.css';
 import { taskService } from '../../../services/task.service';
+import type { TaskPriority, TaskStatus } from '../../../types/enums.types';
 
 type Props = {
     name: string;
@@ -15,7 +16,7 @@ type Props = {
     task?: TaskResponseDTO;
     component: string;
     onlyComment: boolean;
-    onTaskSaved: (task: TaskResponseDTO) => void; // 🔥 NUEVO
+    onTaskSaved: (task: TaskResponseDTO) => void;
 }
 
 export default function CreateAppointment({
@@ -28,137 +29,123 @@ export default function CreateAppointment({
     onlyComment,
     onTaskSaved
 }: Props) {
-
-    // 🔥 ESTADOS (agregados)
     const [date, setDate] = useState('');
     const [comment, setComment] = useState('');
     const [description, setDescription] = useState('');
-    const [priority, setPriority] = useState('');
+    const [title, setTitle] = useState('');
+    const [priority, setPriority] = useState<TaskPriority | ''>('');
+    const [status, setStatus] = useState<TaskStatus>('PENDING');
 
     const startValueTurno = turnos?.start instanceof Date
         ? turnos.start.toISOString().slice(0, 16)
         : turnos?.start ?? '';
 
-    // 🔥 cargar datos en edit
     useEffect(() => {
         if (type === 'edit' && task) {
-            setDate(task.taskDate ?? '');
+            setDate(task.taskDate ? task.taskDate.slice(0, 10) : '')
             setComment(task.noteDescription ?? '');
             setDescription(task.description ?? '');
+            setTitle(task.title ?? '');
             setPriority(task.priority ?? '');
+            setStatus(task.status ?? '')
         }
     }, [type, task]);
 
-    // 🔥 SUBMIT
     const handleSubmit = async (e: React.FormEvent) => {
+        console.log("SUBMIT ejecutado");
         e.preventDefault();
 
+        if (!priority) {
+            alert("Seleccioná una prioridad");
+            return;
+        }
+
         const payload: TaskCreateDTO = {
-            userId: 1,
-            taskDate: date,
-            title: "",
+            userId: task?.userId != null ? task.userId : 1,
+            taskDate: date + "T00:00:00",
+            title,
             description,
-            status: "PENDING",
-            priority: "HIGH",
-            noteDescription: comment
+            status,
+            priority,
+            noteDescription: comment,
         };
 
+        console.log("Creo la tarea");
 
         try {
             let response;
+            console.log("Entro al try");
 
             if (type === 'create') {
+                console.log("Voy a crear la task");
                 response = await taskService.create(payload);
             } else {
                 response = await taskService.update(task!.id, payload);
             }
 
-            onTaskSaved(response); // 🔥 actualizar lista
-            onClose(); // cerrar modal
+            onTaskSaved(response);
+            onClose();
 
-        } catch (error:any) {
-            console.error(error.response.data);
+        } catch (error: any) {
+            console.error(error);
         }
     };
 
     return (
         <div className={styles.backgroundTransparents}>
-            {/* 🔥 AGREGAR onSubmit */}
             <form className={styles.formContainerProperties} onSubmit={handleSubmit}>
 
-                {type === 'create' && onlyComment === false ? (
+                {type === 'create' && !onlyComment ? (
                     <h3>{name}, complete los siguientes datos para crear {component === 'calendar' ? 'el turno' : 'la tarea'}</h3>
                 ) : (
-                    <h3>{name}, complete los siguientes datos necesario para modificar {component === 'calendar' ? 'el turno' : 'la tarea'}</h3>
+                    <h3>{name}, modifique los datos de {component === 'calendar' ? 'el turno' : 'la tarea'}</h3>
                 )}
 
                 <div className={styles.campsContainerProperties}>
 
-                    {onlyComment === false && (
+                    {!onlyComment && (
                         <div className={styles.labelAndInputProperties}>
                             <label>Fecha</label>
                             <input
                                 type='date'
-                                name='date'
-                                value={type === 'create' ? date : component === 'calendar' ? startValueTurno : date}
-                                onChange={(e) => setDate(e.target.value)} // 🔥
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
                             />
                         </div>
                     )}
 
-                    {onlyComment === false && (
+                    {component === 'task' && (
                         <div className={styles.labelAndInputProperties}>
-                            <label>Paciente</label>
-                            <select>
-                                <option>{component === 'task' ? task?.userFullName : 'Seleccione un paciente'}</option>
-                                <option value="new">Crear nuevo paciente +</option>
+                            <label>Título</label>
+                            <input
+                                type='text'
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder='Título de la tarea'
+                            />
+                        </div>
+                    )}
+
+                    {component === 'task' && (
+                        <div className={styles.labelAndInputProperties}>
+                            <label>Estado</label>
+                            <select value={status} onChange={(e) => setStatus(e.target.value as TaskStatus)}>
+                                <option value={''}>Seleccione un estado</option>
+                                <option value="PENDING">Pendiente</option>
+                                <option value="IN_PROGRESS">En proceso</option>
+                                <option value="COMPLETED">Finalizada</option>
                             </select>
                         </div>
                     )}
-
-                    {component === 'calendar' && onlyComment === false && (
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Horario</label>
-                            <input
-                                type='datetime-local'
-                                name='hour'
-                                placeholder={type === 'create' ? '' : startValueTurno}
-                            />
-                        </div>
-                    )}
-
-                    <div className={styles.labelAndInputProperties}>
-                        <label>Comentario</label>
-                        <input
-                            type='text'
-                            name='comment'
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                            placeholder={type === 'create' ? 'Comentario' : ''}
-                        />
-                    </div>
 
                     {component === 'task' && (
                         <div className={styles.labelAndInputProperties}>
                             <label>Descripción</label>
                             <input
                                 type='text'
-                                name='task'
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder={type === 'create' ? 'Nueva descripción' : ''}
-                            />
-                        </div>
-                    )}
-
-                    {component === 'task' && (
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Tarea</label>
-                            <input
-                                type='text'
-                                name='task'
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder='Descripción de la tarea'
                             />
                         </div>
                     )}
@@ -168,9 +155,9 @@ export default function CreateAppointment({
                             <label>Prioridad</label>
                             <select
                                 value={priority}
-                                onChange={(e) => setPriority(e.target.value)}
+                                onChange={(e) => setPriority(e.target.value as TaskPriority)}
                             >
-                                <option>{task != null ? task?.priority : 'Seleccione una prioridad'}</option>
+                                <option value="">Seleccione una prioridad</option>
                                 <option value="HIGH">Alta</option>
                                 <option value="MEDIUM">Media</option>
                                 <option value="LOW">Baja</option>
@@ -178,13 +165,31 @@ export default function CreateAppointment({
                         </div>
                     )}
 
+                    <div className={styles.labelAndInputProperties}>
+                        <label>Comentario (opcional)</label>
+                        <input
+                            type='text'
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            placeholder='Comentario de la tarea'
+                        />
+                    </div>
+
+                    {component === 'calendar' && !onlyComment && (
+                        <div className={styles.labelAndInputProperties}>
+                            <label>Horario</label>
+                            <input
+                                type='datetime-local'
+                                placeholder={type === 'create' ? 'Horario' : startValueTurno}
+                            />
+                        </div>
+                    )}
+
                     <div className={styles.buttonsContainerProperties}>
-                        {/* 🔥 type submit */}
                         <button type="submit" className={styles.confirmButton}>
                             {component === 'calendar' ? 'Confirmar turno' : 'Confirmar tarea'}
                         </button>
 
-                        {/* 🔥 evitar submit accidental */}
                         <button type="button" className={styles.cancelButton} onClick={onClose}>
                             <img src='./icons/cancelIcon.png'></img>
                         </button>

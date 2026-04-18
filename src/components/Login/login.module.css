@@ -1,0 +1,86 @@
+.containerProperties{
+    background-image: url(/public/logo/backgroundLogin.jpeg);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.loginContainerProperties{
+    display: flex;
+    flex-direction: column;
+    color: var(--neutral-1);
+}
+
+.formProperties{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: fit-content;
+    padding-bottom: var(--40px);
+    padding-top: var(--40px);
+    border-radius: var(--10px);
+    gap: var(--20px);
+}
+
+.formContainerProperties{
+    width: 60%;
+}
+
+.labelContainerProperties{
+    width: 90%;
+}
+
+.labelAndInputProperties{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    gap: var(--5px);
+}
+
+.labelAndInputProperties input{
+    border-radius: var(--20px);
+    border: var(--blue-2);
+    height: var(--30px);
+    width: 90%;
+    padding: var(--20px);
+    font-size: large;
+}
+
+.buttonProperties{
+    display: flex;
+    justify-content: center;
+    width: 90%;
+}
+
+.buttonProperties button{
+    width: 60%;
+    padding: var(--10px);
+    border-radius: var(--30px);
+    background-color: transparent;
+    border: 2px solid var(--neutral-4);
+    font-size: var(--16px);
+    color: var(--neutral-1);
+    cursor: pointer;
+}
+
+.firstContainerProperties{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    height: 370px;
+    background-color: var(--blue-4);
+    border: 2px solid white;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--10px);
+}
+
+.imageProperties{
+    display: flex;
+    margin-right: 5%;
+}
