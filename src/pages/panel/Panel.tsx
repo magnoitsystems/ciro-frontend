@@ -6,9 +6,11 @@ import { useState, useEffect } from 'react'
 import { taskService } from '../../services/task.service' 
 import { shiftService } from '../../services/shift.service'
 import { receiptService } from '../../services/receipt.service'
+import { billService } from '../../services/bill.service'
 import type { TaskResponseDTO } from '../../types/management.types'
 import type { RevenueWidgetDTO } from '../../types/currentAccount.types'
 import type { ShiftWidgetDTO } from '../../types/clinical.types'
+import type { PendingSalaryItemDTO } from '../../types/bills.types'
 import { PieChart, Pie, Cell} from "recharts";
 
 export default function Panel() {
@@ -44,13 +46,19 @@ export default function Panel() {
             if (shiftsResult.status === 'fulfilled') {
                 setShiftData(shiftsResult.value);
             } else {
-                console.error("El backend falló al traer los turnos (Error 500)", shiftsResult.reason);
+                console.error("El backend falló al traer los turnos", shiftsResult.reason);
             }
 
             if (revenueResult.status === 'fulfilled') {
                 setRevenueData(revenueResult.value);
             } else {
                 console.error("El backend falló al traer los ingresos", revenueResult.reason);
+            }
+
+            if (salariesResult.status === 'fulfilled') {
+                setPendingSalaries(salariesResult.value);
+            } else {
+                console.error("El backend falló al traer los saldos pendientes", salariesResult.reason);
             }
         };
 
@@ -69,6 +77,16 @@ export default function Panel() {
         const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const dateStr = new Date().toLocaleDateString('es-AR', options);
         return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+    };
+
+    const getCurrencySymbol = (currency: string) => {
+        switch (currency) {
+            case 'DOLARES': return 'USD ';
+            case 'EUROS': return '€ ';
+            case 'REALES': return 'R$ ';
+            case 'PESOS':
+            default: return '$ ';
+        }
     };
 
     const estadisticasMock = [

@@ -1,6 +1,6 @@
 import { api } from './api';
 import { API_ENDPOINTS } from './api.endpoints';
-import type { BillCreateDTO, BillResponseDTO } from '../types/bills.types';
+import type { BillCreateDTO, BillResponseDTO, PendingSalaryItemDTO } from '../types/bills.types';
 import type { BillType, OriginType, ReportPeriod } from '../types/enums.types';
 
 export const billService = {
@@ -71,6 +71,19 @@ export const billService = {
 
         } catch (error) {
             console.error("Error al descargar el reporte PDF:", error);
+            throw error;
+        }
+    },
+
+    /**
+     * Método para el dashboard (widget) de saldos pendientes (Sueldos en estado PENDIENTE)
+     */
+    getPendingSalariesWidget: async (): Promise<PendingSalaryItemDTO[]> => {
+        try {
+            const response = await api.get<PendingSalaryItemDTO[]>(API_ENDPOINTS.BILLS.WIDGET_PENDING_SALARIES);
+            return response.data;
+        } catch (error) {
+            console.error("Error al obtener el widget de saldos pendientes:", error);
             throw error;
         }
     }

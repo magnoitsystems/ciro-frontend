@@ -9,6 +9,7 @@ export const authService = {
     login: async (credentials: LoginRequestDTO): Promise<AuthResponseDTO> => {
         const response = await api.post<AuthResponseDTO>(API_ENDPOINTS.AUTH.LOGIN, credentials);
         
+        console.log("hola login service");
         const authData = response.data;
         localStorage.setItem('accessToken', authData.accessToken);
         localStorage.setItem('refreshToken', authData.refreshToken);

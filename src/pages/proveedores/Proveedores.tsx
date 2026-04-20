@@ -1,85 +1,32 @@
 import style from './Proveedores.module.css';
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import NewProvForm from "../../components/Forms/NewProvForm/newProvForm.tsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import type { SupplierResponseDTO } from '../../types/supplier.types';
+import { supplierService } from '../../services/supplier.service.ts';
 
 export default function Proveedores() {
 
     const [showForm, setShowForm] = useState(false);
+    const [proveedores, setProveedores] = useState<SupplierResponseDTO[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const [proveedores, setProveedores] = useState([
-        {
-            id: 1,
-            nombre: "MedInsumos SRL",
-            documento: "30-71234567-8",
-            direccion: "Av. Siempre Viva 123",
-            localidad: "Tandil",
-            observaciones: "Proveedor habitual"
-        },
-        {
-            id: 1,
-            nombre: "MedInsumos SRL",
-            documento: "30-71234567-8",
-            direccion: "Av. Siempre Viva 123",
-            localidad: "Tandil",
-            observaciones: "Proveedor habitual"
-        },
-        {
-            id: 1,
-            nombre: "MedInsumos SRL",
-            documento: "30-71234567-8",
-            direccion: "Av. Siempre Viva 123",
-            localidad: "Tandil",
-            observaciones: "Proveedor habitual"
-        },
-        {
-            id: 1,
-            nombre: "MedInsumos SRL",
-            documento: "30-71234567-8",
-            direccion: "Av. Siempre Viva 123",
-            localidad: "Tandil",
-            observaciones: "Proveedor habitual"
-        },
-        {
-            id: 1,
-            nombre: "MedInsumos SRL",
-            documento: "30-71234567-8",
-            direccion: "Av. Siempre Viva 123",
-            localidad: "Tandil",
-            observaciones: "Proveedor habitual"
-        },{
-            id: 1,
-            nombre: "MedInsumos SRL",
-            documento: "30-71234567-8",
-            direccion: "Av. Siempre Viva 123",
-            localidad: "Tandil",
-            observaciones: "Proveedor habitual"
-        },
-        {
-            id: 1,
-            nombre: "MedInsumos SRL",
-            documento: "30-71234567-8",
-            direccion: "Av. Siempre Viva 123",
-            localidad: "Tandil",
-            observaciones: "Proveedor habitual"
-        },
-        {
-            id: 1,
-            nombre: "MedInsumos SRL",
-            documento: "30-71234567-8",
-            direccion: "Av. Siempre Viva 123",
-            localidad: "Tandil",
-            observaciones: "Proveedor habitual"
-        },{
-            id: 1,
-            nombre: "MedInsumos SRL",
-            documento: "30-71234567-8",
-            direccion: "Av. Siempre Viva 123",
-            localidad: "Tandil",
-            observaciones: "Proveedor habitual"
-        },
+    const fetchProveedores = async () => {
+        try {
+            setIsLoading(true);
+            const data = await supplierService.getAll();
+            setProveedores(data);
+        } catch (error) {
+            console.error("Error al cargar los proveedores:", error);
+            alert("No pudimos cargar la lista de proveedores. Comprobá tu conexión o intentá de nuevo.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-    ]);
+    useEffect(() => {
+        fetchProveedores();
+    }, []);
 
     return(
         <main className={style.main}>
@@ -104,17 +51,23 @@ export default function Proveedores() {
                                     <span>Observaciones</span>
                                 </div>
 
-                                {proveedores.map((prov) => (
-                                    <div key={prov.id} className={style.row}>
-                                        <span>{prov.nombre}</span>
-                                        <span>{prov.documento}</span>
-                                        <span>{prov.direccion}</span>
-                                        <span>{prov.localidad}</span>
-                                        <span title={prov.observaciones}>
-                                            {prov.observaciones}
-                                        </span>
-                                    </div>
-                                ))}
+                                {isLoading ? (
+                                    <p style={{ padding: '20px' }}>Cargando proveedores...</p>
+                                ) : proveedores.length > 0 ? (
+                                    proveedores.map((prov) => (
+                                        <div key={prov.id} className={style.row}>
+                                            <span>{prov.fullName}</span>
+                                            <span>{prov.dni}</span>
+                                            <span>{prov.address}</span>
+                                            <span>{prov.city}</span>
+                                            <span title={prov.observations}>
+                                                {prov.observations || "-"}
+                                            </span>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p style={{ padding: '20px' }}>No hay proveedores registrados aún.</p>
+                                )}
                             </div>
                         </div>
 
@@ -123,6 +76,8 @@ export default function Proveedores() {
                     <div className={style.newProvForm}>
                         <NewProvForm onCreate={(nuevoProveedor) => {
                             setProveedores(prev => [...prev, nuevoProveedor]);
+                            setShowForm(false);
+                            alert("¡Proveedor creado y guardado con éxito!");
                         }}/>
                     </div>
                 )}
@@ -131,7 +86,7 @@ export default function Proveedores() {
                     className={`${style.seeMore} ${showForm ? style.active : ""}`}
                     onClick={() => setShowForm(!showForm)}
                 >
-                    <img src={'/icons/bigRight.png'}/>
+                    <img src={'/icons/bigRight.png'} alt="Flecha" />
                     <h6>
                         {showForm
                             ? "Ver listado de todos los proveedores"

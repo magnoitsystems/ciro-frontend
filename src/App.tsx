@@ -14,15 +14,21 @@ import Tareas from "./pages/tareas/Tareas.tsx";
 import CuentaCorriente from "./pages/cuentacorriente/CuentaCorriente.tsx";
 import Estadisticas from "./pages/estadisticas/Estadisticas.tsx";
 import Login from './components/Login/login.tsx';
+import { useState } from 'react';
 
 function App() {
+    const [isLogueado, setIsLogueado] = useState(false)
     return (
         <div className="appContainer">
-            <NavBar />
+            {!isLogueado ? (
+                <Login onLogin={() => setIsLogueado(true)}/>
+            ): (
+                <NavBar />
+            )}
 
             <div className="content">
                 <Routes>
-                    <Route path="/" element={<Panel />} />
+                    <Route path="/Panel" element={<Panel />} />
                     <Route path="/calendario" element={<Calendario />} />
                     <Route path="/caja" element={<Caja />} />
                     <Route path="/deudas" element={<Deudas />} />
@@ -34,7 +40,6 @@ function App() {
                     <Route path="/tareas" element={<Tareas />} />
                     <Route path="/cuentacorriente" element={<CuentaCorriente />} />
                     <Route path="/estadisticas" element={<Estadisticas />} />
-                    <Route path="/login" element={<Login />} />
                 </Routes>
             </div>
         </div>

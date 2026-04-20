@@ -1,49 +1,55 @@
 import style from './NewProvForm.module.css';
 import ProvInput from "./ProvInput.tsx";
 import GreenFormButton from "../../Buttons/GreenFormButton/greenFormButton";
-import {useState} from "react";
-
-type Proveedor = {
-    id: number;
-    nombre: string;
-    documento: string;
-    direccion: string;
-    localidad: string;
-    observaciones: string;
-};
+import { useState } from "react";
+import { supplierService } from '../../../services/supplier.service.ts';
+import type { SupplierResponseDTO, SupplierCreateDTO } from '../../../types/supplier.types.ts';
 
 type Props = {
-    onCreate: (prov: Proveedor) => void;
+    onCreate: (prov: SupplierResponseDTO) => void;
 }
 
 export default function NewProvForm({ onCreate }: Props) {
 
-    const [formData, setFormData] = useState({
-        nombre: "",
-        documento: "",
-        direccion: "",
-        localidad: "",
-        observaciones: ""
+    const [formData, setFormData] = useState<SupplierCreateDTO>({
+        fullName: "",
+        dni: "",
+        address: "",
+        city: "",
+        observations: ""
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const nuevoProveedor = {
-            id: Date.now(),
-            ...formData
-        };
+        if (!formData.fullName || !formData.dni) {
+            alert("Por favor, completá al menos el Nombre y el Documento.");
+            return;
+        }
 
-        onCreate(nuevoProveedor);
+        try {
+            setIsSubmitting(true);
+            
+            const nuevoProveedor = await supplierService.create(formData);
 
-        // reset
-        setFormData({
-            nombre: "",
-            documento: "",
-            direccion: "",
-            localidad: "",
-            observaciones: ""
-        });
+            onCreate(nuevoProveedor);
+
+            setFormData({
+                fullName: "",
+                dni: "",
+                address: "",
+                city: "",
+                observations: ""
+            });
+
+        } catch (error) {
+            console.error("Error al crear proveedor:", error);
+            alert("Ocurrió un error al intentar crear el proveedor. Por favor, intentá nuevamente.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return(
@@ -56,18 +62,18 @@ export default function NewProvForm({ onCreate }: Props) {
                     <ProvInput
                         placeholder="Nombre y apellido"
                         className="inputBoxDefault"
-                        value={formData.nombre}
+                        value={formData.fullName}
                         onChange={(e) =>
-                            setFormData({...formData, nombre: e.target.value})
+                            setFormData({...formData, fullName: e.target.value})
                         }
                     />
                     <ProvInput
                         type="text"
                         placeholder="Número de documento"
                         className={'inputBoxDefault'}
-                        value={formData.documento}
+                        value={formData.dni}
                         onChange={(e) =>
-                            setFormData({...formData, documento: e.target.value})
+                            setFormData({...formData, dni: e.target.value})
                         }
                     />
                 </div>
@@ -77,18 +83,18 @@ export default function NewProvForm({ onCreate }: Props) {
                         type="text"
                         placeholder="Dirección"
                         className={'inputBoxDefault'}
-                        value={formData.direccion}
+                        value={formData.address}
                         onChange={(e) =>
-                            setFormData({...formData, direccion: e.target.value})
+                            setFormData({...formData, address: e.target.value})
                         }
                     />
                     <ProvInput
                         type="text"
                         placeholder="Localidad"
                         className={'inputBoxDefault'}
-                        value={formData.localidad}
+                        value={formData.city}
                         onChange={(e) =>
-                            setFormData({...formData, localidad: e.target.value})
+                            setFormData({...formData, city: e.target.value})
                         }
                     />
                 </div>
@@ -97,15 +103,15 @@ export default function NewProvForm({ onCreate }: Props) {
                     type="text"
                     placeholder="Observaciones"
                     className={'inputBoxBig'}
-                    value={formData.observaciones}
+                    value={formData.observations}
                     onChange={(e) =>
-                        setFormData({...formData, observaciones: e.target.value})
+                        setFormData({...formData, observations: e.target.value})
                     }
                 />
 
                 <div className={style.sharedInputs}>
                     <GreenFormButton
-                        text="Crear proveedor"
+                        text={isSubmitting ? "Creando..." : "Crear proveedor"}
                         onClick={handleSubmit}
                     />
                 </div>
