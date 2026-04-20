@@ -192,3 +192,54 @@
 .saldosList h5 {
     font-weight: bold;
 }
+
+.estadistics {
+    display: flex;
+    flex-direction: column; /* 👈 clave */
+
+    justify-content: space-between;
+
+    padding: 10px 15px;
+    background-color: var(--neutral-2);
+}
+
+.chartContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+}
+
+.legend {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend p {
+    font-size: 11px;
+}
+
+.colorDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.statsContent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    align-items: center;
+    height: 100%;
+    min-height: 90px; /* 👈 importante */
+}

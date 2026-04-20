@@ -9,6 +9,7 @@ import { receiptService } from '../../services/receipt.service'
 import type { TaskResponseDTO } from '../../types/management.types'
 import type { RevenueWidgetDTO } from '../../types/currentAccount.types'
 import type { ShiftWidgetDTO } from '../../types/clinical.types'
+import { PieChart, Pie, Cell} from "recharts";
 
 export default function Panel() {
     const [pendingCount, setPendingCount] = useState<number>(0);
@@ -69,6 +70,15 @@ export default function Panel() {
         const dateStr = new Date().toLocaleDateString('es-AR', options);
         return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
     };
+
+    const estadisticasMock = [
+        { name: "Instagram", value: 8 },
+        { name: "Facebook", value: 5 },
+        { name: "Recomendación", value: 12 },
+        { name: "Web", value: 3 }
+    ];
+
+    const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#a855f7"];
 
     return(
         <main className={style.main}>
@@ -156,7 +166,38 @@ export default function Panel() {
                 </div>
 
                 <div className={style.estadistics}>
+                    <h5>¿Cómo nos conocieron?</h5>
 
+                    <div className={style.statsContent}>
+                        <div className={style.chartContainer}>
+                            <PieChart width={150} height={150}>
+                                <Pie
+                                    data={estadisticasMock}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={30}
+                                    outerRadius={60}
+                                    dataKey="value"
+                                >
+                                    {estadisticasMock.map((_, index) => (
+                                        <Cell key={index} fill={COLORS[index % COLORS.length]}/>
+                                    ))}
+                                </Pie>
+                            </PieChart>
+                        </div>
+
+                        <div className={style.legend}>
+                            {estadisticasMock.map((item, index) => (
+                                <div key={index} className={style.legendItem}>
+                <span
+                    className={style.colorDot}
+                    style={{backgroundColor: COLORS[index % COLORS.length]}}
+                />
+                                    <p>{item.name}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
