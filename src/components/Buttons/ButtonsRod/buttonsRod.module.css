@@ -1,14 +1,14 @@
 .buttonsContainerProperties {
     width: 60px; 
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
     height: 100%;
 }
 
 .buttonsSectionProperties, .mainInfoProperties{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
 }
 
@@ -35,4 +35,18 @@
     z-index: 999;
     bottom: 15%;
     right: 10%;
+}
+
+@media (min-width: 768px) {
+    .buttonsSectionProperties, .mainInfoProperties{
+        flex-direction: column;
+    }
+
+    .buttonsContainerProperties {
+        width: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
 }
