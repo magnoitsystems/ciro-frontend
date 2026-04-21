@@ -10,7 +10,6 @@ type Prop = {
     onNuevoPacienteClick: () => void;
 }
 
-
 export default function NewBudget({ onNuevoPacienteClick }: Prop) {
     const [patient, setPatient] = useState<PatientResponseDTO[]>([]);
     const navigate = useNavigate()
@@ -28,10 +27,10 @@ export default function NewBudget({ onNuevoPacienteClick }: Prop) {
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault() // evita que recargue la página
+        e.preventDefault()
         try {
-            await budgetService.createBudget(data) // hago la petición a la API para crear la tarea
-            navigate('/budget.tsx') // redirijo a la página de tareas para ver la nueva tarea creada
+            await budgetService.createBudget(data) 
+            navigate('/budget.tsx') 
         } catch (error) {
             console.error(error)
         }
