@@ -37,11 +37,11 @@ const state = taskStatus[task.status]
 
 return (
     <div className={styles.cardContainerProperties}>
-        <div className={styles.barraColor} style={{ backgroundColor: color }}></div>
+        <div className={styles.upperBarraColor} style={{ backgroundColor: color }}></div>
         <div className={styles.containerProperties}>
             <div className={styles.infoContainerProperties}>
-                <h3>{task.title}</h3>
-                <h3>{task.taskDate ? new Date(task.taskDate).toLocaleDateString() : ''}</h3>
+                <h4>{task.title}</h4>
+                <h5>{task.taskDate ? new Date(task.taskDate).toLocaleDateString() : ''}</h5>
             </div>
             <div className={styles.buttonsContainerProperties}>
                 <div className={styles.selectProperties}>
@@ -55,7 +55,7 @@ return (
                 </div>
             </div>
         </div>
-        <div className={styles.barraColor} style={{ backgroundColor: color }}></div>
+        <div className={styles.bottomBarraColor} style={{ backgroundColor: color }}></div>
     </div>
 );
 }

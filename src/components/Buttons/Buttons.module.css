@@ -52,7 +52,8 @@
 
 
 .lightGreyButton {
-    width: 330px;
+    min-width: 200px;
+    max-width: 330px;
     height: 30px;
 }
 .primary {
@@ -62,6 +63,13 @@
 .secondary {
     background-color: var(--blue-4);
     color: var(--neutral-4);
+}
+
+@media (min-width: 768px) {
+    .lightGreyButton {
+        width: 330px;
+        height: 30px;
+    }
 }
 
 

@@ -10,10 +10,13 @@ body {
 
 .mainContainerProperties {
     display: flex;
+    flex-direction: column;
+    width: 100%;
     height: 100vh;
     overflow-y: auto;
     overflow-x: hidden;
-    justify-content: space-between;
+
+    padding-inline: var(--10px);
 }
 
 .buttonsRodContainerProperties {
@@ -34,11 +37,12 @@ body {
 
 .taskContainerProperties{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 30px;
+    grid-template-columns: 1fr;
+    gap: var(--10px);
     color: black;
-    padding-bottom: var(--50px);
-    padding-right: var(--10px);
+    padding-bottom: 100px;
+
+    margin-inline: auto;
 }
 
 .miniCalendarProperties{
@@ -46,4 +50,18 @@ body {
     z-index: 1000;
     bottom: 70px;
     right: 100px;
+}
+
+@media (min-width: 768px) {
+    .taskContainerProperties {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: var(--30px);
+
+        padding-bottom: var(--50px);
+    }
+
+    .mainContainerProperties {
+        flex-direction: row;
+        justify-content: space-between;
+    }
 }

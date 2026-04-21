@@ -22,12 +22,18 @@
     align-items: center;
     justify-content: center;
 
-    width: 70px;
-    height: 70px;
+    width: var(--30px);
+    height: var(--30px);
+
+    padding-inline: var(--10px);
 
     border-radius: var(--50px);
     background-color: var(--neutral-2);
     color: var(--blue-4);
+}
+
+.profileImage h1 {
+    font-size: var(--h4);
 }
 
 .information {
@@ -47,9 +53,37 @@
 }
 
 .attachments {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
 
-    gap: var(--20px);
+.attachments img {
+    width: 20px;
+    height: 20px;
+}
+
+@media (min-width: 768px) {
+    .profileImage {
+        padding-inline: 0;
+
+        width: 70px;
+        height: 70px;
+    }
+
+    .profileImage h1 {
+        font-size: var(--h1);
+    }
+
+    .attachments {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        gap: var(--20px);
+    }
+
+    .attachments img {
+        width: 22px;
+        height: 22px;
+    }
 }
