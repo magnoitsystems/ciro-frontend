@@ -1,28 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import style from './Pacientes.module.css';
 import SearchBar from "../../components/SearchBar/searchBar.tsx";
 import PacientCard from "../../components/PacientCard/pacientCards.tsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProvInput from "../../components/Forms/NewProvForm/ProvInput.tsx";
 import LightGreyButton from "../../components/Buttons/LightGreyButton/lightGreyButton.tsx";
 import {NavLink} from "react-router-dom";
 
-type Paciente = {
-    id: number;
-    nombre: string;
-    tipoDocumento: string;
-    numeroDocumento: string;
-    fechaNacimiento: string;
-
-    telefono: string;
-    direccion: string;
-    localidad: string;
-    obraSocial: string;
-
-    secretaria: string;
-    observaciones: string;
-    comoNosConocio: string;
-};
+// Importamos el servicio y el DTO
+import { patientService } from "../../services/patient.service";
+import type { PatientResponseDTO } from "../../types/patients.types";
 
 type HistoriaClinica = {
     id: number;
@@ -36,91 +24,26 @@ type HistoriaClinica = {
 export default function Pacientes() {
 
     const [search, setSearch] = useState("");
+    
+    const [pacientesState, setPacientesState] = useState<PatientResponseDTO[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const pacientes: Paciente[] = [
-        {
-            id: 1,
-            nombre: "Agostina Bidegain",
-            tipoDocumento: "DNI",
-            numeroDocumento: "46185819",
-            fechaNacimiento: "1998-05-27",
+    useEffect(() => {
+        const fetchPacientes = async () => {
+            try {
+                setLoading(true);
+                const data = await patientService.getAllPatients();
+                setPacientesState(data);
+            } catch (error) {
+                console.error("Error al cargar los pacientes:", error);
+                alert("Hubo un error al cargar los pacientes.");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-            telefono: "2494567890",
-            direccion: "Av. Colón 123",
-            localidad: "Tandil",
-            obraSocial: "OSDE",
-
-            secretaria: "Milagros Alvarez",
-            observaciones: "Paciente con tratamiento en curso. Buena evolución.",
-            comoNosConocio: "Instagram"
-        },
-        {
-            id: 2,
-            nombre: "Juan Pérez",
-            tipoDocumento: "DNI",
-            numeroDocumento: "30123456",
-            fechaNacimiento: "1985-09-12",
-
-            telefono: "2494123456",
-            direccion: "San Martín 456",
-            localidad: "Tandil",
-            obraSocial: "IOMA",
-
-            secretaria: "Lucía Fernández",
-            observaciones: "Primera consulta realizada. Estudios pendientes.",
-            comoNosConocio: "Recomendación"
-        },
-        {
-            id: 3,
-            nombre: "María López",
-            tipoDocumento: "DNI",
-            numeroDocumento: "28999888",
-            fechaNacimiento: "1990-03-22",
-
-            telefono: "2494987654",
-            direccion: "Belgrano 789",
-            localidad: "Azul",
-            obraSocial: "Swiss Medical",
-
-            secretaria: "Carla Gómez",
-            observaciones: "Control mensual. Sin complicaciones.",
-            comoNosConocio: "Facebook"
-        },
-        {
-            id: 4,
-            nombre: "Carlos Gómez",
-            tipoDocumento: "DNI",
-            numeroDocumento: "33444555",
-            fechaNacimiento: "1978-11-02",
-
-            telefono: "2494332211",
-            direccion: "Rivadavia 321",
-            localidad: "Olavarría",
-            obraSocial: "Particular",
-
-            secretaria: "Milagros Alvarez",
-            observaciones: "Paciente derivado. Requiere seguimiento.",
-            comoNosConocio: "Sitio Web"
-        },
-        {
-            id: 5,
-            nombre: "Lucía Martínez",
-            tipoDocumento: "DNI",
-            numeroDocumento: "35222111",
-            fechaNacimiento: "1995-07-18",
-
-            telefono: "2494556677",
-            direccion: "España 654",
-            localidad: "Tandil",
-            obraSocial: "Avalian",
-
-            secretaria: "Lucía Fernández",
-            observaciones: "Turnos frecuentes. Muy puntual.",
-            comoNosConocio: "Tik Tok"
-        }
-    ];
-
-    const [pacientesState, setPacientesState] = useState<Paciente[]>(pacientes);
+        fetchPacientes();
+    }, []);
 
     const normalize = (text: string) => text.replace(/\D/g, "");
     const normalizeText = (text: string) =>
@@ -134,35 +57,34 @@ export default function Pacientes() {
 
     const filteredPacientes = pacientesState.filter((p) => {
         const textMatch =
-            normalizeText(p.nombre).includes(queryText) ||
-            normalizeText(p.localidad).includes(queryText);
+            normalizeText(p.fullName || "").includes(queryText) ||
+            normalizeText(p.city || "").includes(queryText);
 
         const numberMatch =
             queryNumber &&
-            (p.numeroDocumento.includes(queryNumber) ||
-                normalize(p.telefono).includes(queryNumber));
+            ((p.dni || "").includes(queryNumber) ||
+                normalize(p.phone || "").includes(queryNumber));
 
         return textMatch || numberMatch;
     });
 
     const [openModal, setOpenModal] = useState(false);
-
     const [step, setStep] = useState(1);
 
     const handleNext = () => {
         if (step < 3) {
             setStep(step + 1);
         } else {
-            console.log("CREAR PACIENTE");
+            console.log("CREAR PACIENTE (Próximamente conectado al back)");
         }
     };
 
     const [deleteModal, setDeleteModal] = useState(false);
-    const [selectedPaciente, setSelectedPaciente] = useState<Paciente | null>(null);
+    const [selectedPaciente, setSelectedPaciente] = useState<PatientResponseDTO | null>(null);
     const [viewModal, setViewModal] = useState(false);
     const [turnosModal, setTurnosModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
-    const [editData, setEditData] = useState<Paciente | null>(null);
+    const [editData, setEditData] = useState<PatientResponseDTO | null>(null);
     const [editStep, setEditStep] = useState(1);
 
     const [historiasModal, setHistoriasModal] = useState(false);
@@ -186,15 +108,20 @@ export default function Pacientes() {
     const [newHistoria, setNewHistoria] = useState<Partial<HistoriaClinica>>({});
     const [creatingHistoria, setCreatingHistoria] = useState(false);
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (!selectedPaciente) return;
 
-        setPacientesState(prev =>
-            prev.filter(p => p.id !== selectedPaciente.id)
-        );
-
-        setDeleteModal(false);
-        setSelectedPaciente(null);
+        try {
+            await patientService.deletePatient(selectedPaciente.id);
+            setPacientesState(prev =>
+                prev.filter(p => p.id !== selectedPaciente.id)
+            );
+            setDeleteModal(false);
+            setSelectedPaciente(null);
+        } catch (error) {
+            console.error("Error eliminando paciente:", error);
+            alert("No se pudo eliminar el paciente.");
+        }
     };
 
     const handleEditNext = () => {
@@ -248,27 +175,34 @@ export default function Pacientes() {
             </div>
 
             <div className={style.pacientCards}>
-                {filteredPacientes.map((p) => (
-                    <PacientCard
-                        key={p.id}
-                        nombre={p.nombre}
-                        dni={p.numeroDocumento}
-                        onDelete={() => {
-                            setSelectedPaciente(p);
-                            setDeleteModal(true);
-                        }}
-                        onView={() => {
-                            setSelectedPaciente(p);
-                            setViewModal(true);
-                        }}
-                        onEdit={() => {
-                            setEditData(p);
-                            setEditModal(true);
-                            setEditStep(1);
-                        }}
-                        attachments={true}
-                    />
-                ))}
+                {loading ? (
+                    <p style={{padding: '20px'}}>Cargando pacientes...</p>
+                ) : filteredPacientes.length > 0 ? (
+                    filteredPacientes.map((p) => (
+                        <PacientCard
+                            key={p.id}
+                            id={p.id} 
+                            nombre={p.fullName}
+                            dni={p.dni}
+                            onDelete={() => {
+                                setSelectedPaciente(p);
+                                setDeleteModal(true);
+                            }}
+                            onView={() => {
+                                setSelectedPaciente(p);
+                                setViewModal(true);
+                            }}
+                            onEdit={() => {
+                                setEditData(p);
+                                setEditModal(true);
+                                setEditStep(1);
+                            }}
+                            attachments={true}
+                        />
+                    ))
+                ) : (
+                    <p style={{padding: '20px'}}>No se encontraron pacientes.</p>
+                )}
             </div>
 
             {openModal && (
@@ -295,7 +229,6 @@ export default function Pacientes() {
                         </button>
 
                         <h3>Cargar nuevo paciente</h3>
-
                         <p>Paso {step} de 3</p>
 
                         {step === 1 && (
@@ -305,14 +238,10 @@ export default function Pacientes() {
                                            as="select"
                                            className="inputBoxDefault"
                                            options={[
-                                               { value: "dni", label: "DNI" },
-                                               { value: "cuit", label: "CUIT" },
-                                               { value: "pasaporte", label: "Pasaporte" },
-                                               { value: "cuil", label: "CUIL" },
-                                               { value: "cdi", label: "CDI" },
-                                               { value: "le", label: "LE" },
-                                               { value: "lc", label: "LC" },
-                                               { value: "otro", label: "Otro" }
+                                               { value: "DNI", label: "DNI" },
+                                               { value: "CUIT", label: "CUIT" },
+                                               { value: "PASAPORTE", label: "Pasaporte" },
+                                               { value: "OTRO", label: "Otro" }
                                            ]}
                                 />
                                 <ProvInput placeholder="Número de documento" type="text" className="inputBoxDefault"/>
@@ -330,22 +259,15 @@ export default function Pacientes() {
                                     as="select"
                                     className="inputBoxDefault"
                                     options={[
-                                        { value: "particular", label: "Particular" },
-                                        { value: "sancor", label: "Sancor Salud (ficha verde)" },
-                                        { value: "federada", label: "Federada Salud (solo ficha verde)" },
-                                        { value: "avalian", label: "Avalian (1ra vez ficha verde y bono, luego solo bono)" },
-                                        { value: "amebpba", label: "AMEBPBA (ficha verde y bono)" },
-                                        { value: "medicus", label: "Medicus" },
-                                        { value: "jerarquicos", label: "Jerarquicos Salud (ficha verde)" },
-                                        { value: "medife", label: "Medife (no trabaja Manu)" },
-                                        { value: "osiad", label: "OSIAD Salud" },
-                                        { value: "ioma", label: "IOMA" },
-                                        { value: "prevencion", label: "Prevención Salud" },
-                                        { value: "osde", label: "OSDE" },
-                                        { value: "swiss", label: "Swiss Medical" },
-                                        { value: "osecac", label: "OSECAC" },
-                                        { value: "osfatlyft", label: "OSFATLYFT" },
-                                        { value: "union", label: "Unión Personal" }
+                                        { value: "PARTICULAR", label: "Particular" },
+                                        { value: "OSDE", label: "OSDE" },
+                                        { value: "IOMA", label: "IOMA" },
+                                        { value: "SWISS_MEDICAL", label: "Swiss Medical" },
+                                        { value: "GALENO", label: "GALENO" },
+                                        { value: "SANCOR_SALUD", label: "Sancor Salud" },
+                                        { value: "PAMI", label: "PAMI" },
+                                        { value: "OMINT", label: "OMINT" },
+                                        { value: "OTRA", label: "otra" }
                                     ]}
                                 />
                             </>
@@ -353,7 +275,6 @@ export default function Pacientes() {
 
                         {step === 3 && (
                             <>
-                                <ProvInput placeholder="Secretaria a cargo" type="text" className="inputBoxDefault"/>
                                 <ProvInput placeholder="Observaciones" type="text" className="inputBoxBig"/>
                                 <ProvInput
                                     placeholder="¿Cómo nos conoció?"
@@ -408,7 +329,7 @@ export default function Pacientes() {
 
                         <p>
                             ¿Seguro que querés eliminar a{" "}
-                            <strong>{selectedPaciente?.nombre}</strong>?
+                            <strong>{selectedPaciente?.fullName}</strong>?
                         </p>
 
                         <div className={style.modalActions}>
@@ -448,70 +369,62 @@ export default function Pacientes() {
 
                         <div className={style.details}>
 
-                            {/* 🧍 DATOS PERSONALES */}
                             <div className={style.section}>
                                 <h5>Datos personales</h5>
 
                                 <div className={style.row}>
                                     <span>Nombre</span>
-                                    <h6>{selectedPaciente.nombre}</h6>
+                                    <h6>{selectedPaciente.fullName}</h6>
                                 </div>
 
                                 <div className={style.row}>
                                     <span>Documento</span>
                                     <h6>
-                                        {selectedPaciente.tipoDocumento} {selectedPaciente.numeroDocumento}
+                                        {selectedPaciente.documentType || "DNI"} {selectedPaciente.dni}
                                     </h6>
                                 </div>
 
                                 <div className={style.row}>
                                     <span>Fecha de nacimiento</span>
-                                    <h6>{selectedPaciente.fechaNacimiento}</h6>
+                                    <h6>{selectedPaciente.birthDate || "-"}</h6>
                                 </div>
                             </div>
 
-                            {/* 📞 CONTACTO */}
                             <div className={style.section}>
                                 <h5>Contacto</h5>
 
                                 <div className={style.row}>
                                     <span>Teléfono</span>
-                                    <h6>{selectedPaciente.telefono}</h6>
+                                    <h6>{selectedPaciente.phone || "-"}</h6>
                                 </div>
 
                                 <div className={style.row}>
                                     <span>Dirección</span>
-                                    <h6>{selectedPaciente.direccion}</h6>
+                                    <h6>{selectedPaciente.address || "-"}</h6>
                                 </div>
 
                                 <div className={style.row}>
                                     <span>Localidad</span>
-                                    <h6>{selectedPaciente.localidad}</h6>
+                                    <h6>{selectedPaciente.city || "-"}</h6>
                                 </div>
                             </div>
 
-                            {/* 🏥 INFO EXTRA */}
                             <div className={style.section}>
                                 <h5>Información adicional</h5>
 
                                 <div className={style.row}>
                                     <span>Obra social</span>
-                                    <h6>{selectedPaciente.obraSocial}</h6>
-                                </div>
-
-                                <div className={style.row}>
-                                    <span>Secretaria</span>
-                                    <h6>{selectedPaciente.secretaria}</h6>
+                                    <h6>{selectedPaciente.obraSocial || "-"}</h6>
                                 </div>
 
                                 <div className={style.row}>
                                     <span>¿Cómo nos conoció?</span>
-                                    <h6>{selectedPaciente.comoNosConocio}</h6>
+                                    <h6>{selectedPaciente.from || "-"}</h6>
                                 </div>
 
                                 <div className={style.column}>
                                     <span>Observaciones</span>
-                                    <h6>{selectedPaciente.observaciones}</h6>
+                                    <h6>{selectedPaciente.observations || "-"}</h6>
                                 </div>
                             </div>
 
@@ -526,59 +439,6 @@ export default function Pacientes() {
                                 variant="primary"
                             />
                         </div>
-                    </div>
-                </div>
-            )}
-
-            {turnosModal && selectedPaciente && (
-                <div
-                    className={style.overlay}
-                    onClick={() => setTurnosModal(false)}
-                >
-                    <div
-                        className={style.modal}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button
-                            className={style.close}
-                            onClick={() => setTurnosModal(false)}
-                        >
-                            ✕
-                        </button>
-
-                        <h3>Turnos de {selectedPaciente.nombre}</h3>
-
-                        {/* 🧪 DATA MOCK (después backend) */}
-                        <div className={style.turnosList}>
-                            <div className={style.turnoItem}>
-                                <span>27/05/2026</span>
-                                <span>10:30</span>
-                                <span>Consulta general</span>
-                            </div>
-
-                            <div className={style.turnoItem}>
-                                <span>15/06/2026</span>
-                                <span>12:00</span>
-                                <span>Control</span>
-                            </div>
-
-                            <div className={style.turnoItem}>
-                                <span>02/07/2026</span>
-                                <span>09:15</span>
-                                <span>Seguimiento</span>
-                            </div>
-                        </div>
-
-                        {/* 🔙 volver */}
-                        <span
-                            className={style.back}
-                            onClick={() => {
-                                setTurnosModal(false);
-                                setViewModal(true);
-                            }}
-                        >
-                ← Volver al paciente
-            </span>
                     </div>
                 </div>
             )}
@@ -602,47 +462,43 @@ export default function Pacientes() {
                         <h3>Editar paciente</h3>
                         <p>Paso {editStep} de 3</p>
 
-                        {/* 🧍 PASO 1 */}
                         {editStep === 1 && (
                             <>
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Nombre completo: {editData.nombre}</span>
-
+                                    <span className={style.label}>Nombre completo: {editData.fullName}</span>
                                     <ProvInput
                                         placeholder="Nombre completo"
                                         type="text"
                                         className="inputBoxDefault"
-                                        value={editData.nombre}
+                                        value={editData.fullName}
                                         onChange={(e) =>
-                                            setEditData({...editData, nombre: e.target.value})
+                                            setEditData({...editData, fullName: e.target.value})
                                         }
                                     />
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Fecha de nacimiento: {editData.fechaNacimiento}</span>
-
+                                    <span className={style.label}>Fecha de nacimiento: {editData.birthDate || "-"}</span>
                                     <ProvInput
                                         placeholder="Fecha de nacimiento"
                                         type="date"
                                         className="inputBoxDefault"
-                                        value={editData.fechaNacimiento}
+                                        value={editData.birthDate}
                                         onChange={(e) =>
-                                            setEditData({...editData, fechaNacimiento: e.target.value})
+                                            setEditData({...editData, birthDate: e.target.value})
                                         }
                                     />
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Teléfono: {editData.telefono}</span>
-
+                                    <span className={style.label}>Teléfono: {editData.phone || "-"}</span>
                                     <ProvInput
                                         placeholder="Teléfono"
                                         type="text"
                                         className="inputBoxDefault"
-                                        value={editData.telefono}
+                                        value={editData.phone}
                                         onChange={(e) =>
-                                            setEditData({...editData, telefono: e.target.value})
+                                            setEditData({...editData, phone: e.target.value})
                                         }
                                     />
                                 </div>
@@ -652,93 +508,86 @@ export default function Pacientes() {
                         {editStep === 2 && (
                             <>
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Dirección: {editData.direccion}</span>
-
+                                    <span className={style.label}>Dirección: {editData.address || "-"}</span>
                                     <ProvInput
                                         placeholder="Dirección"
                                         type="text"
                                         className="inputBoxDefault"
-                                        value={editData.direccion}
+                                        value={editData.address}
                                         onChange={(e) =>
-                                            setEditData({...editData, direccion: e.target.value})
+                                            setEditData({...editData, address: e.target.value})
                                         }
                                     />
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Localidad: {editData.localidad}</span>
-
+                                    <span className={style.label}>Localidad: {editData.city || "-"}</span>
                                     <ProvInput
                                         placeholder="Localidad"
                                         type="text"
                                         className="inputBoxDefault"
-                                        value={editData.localidad}
+                                        value={editData.city}
                                         onChange={(e) =>
-                                            setEditData({...editData, localidad: e.target.value})
+                                            setEditData({...editData, city: e.target.value})
                                         }
                                     />
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Obra Social: {editData.obraSocial}</span>
-
+                                    <span className={style.label}>Obra Social: {editData.obraSocial || "-"}</span>
                                     <ProvInput
                                         placeholder="Obra social"
                                         as="select"
                                         className="inputBoxDefault"
                                         value={editData.obraSocial}
                                         onChange={(e) =>
-                                            setEditData({...editData, obraSocial: e.target.value})
+                                            setEditData({...editData, obraSocial: e.target.value as any})
                                         }
                                         options={[
                                             {value: "OSDE", label: "OSDE"},
                                             {value: "IOMA", label: "IOMA"},
-                                            {value: "Particular", label: "Particular"}
+                                            {value: "PARTICULAR", label: "Particular"}
                                         ]}
                                     />
                                 </div>
                             </>
                         )}
 
-                        {/* 🏥 PASO 3 */}
                         {editStep === 3 && (
                             <>
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>Observaciones: {editData.observaciones}</span>
-
+                                    <span className={style.label}>Observaciones: {editData.observations || "-"}</span>
                                     <ProvInput
                                         placeholder="Observaciones"
                                         type="text"
                                         className="inputBoxBig"
-                                        value={editData.observaciones}
+                                        value={editData.observations}
                                         onChange={(e) =>
-                                            setEditData({...editData, observaciones: e.target.value})
+                                            setEditData({...editData, observations: e.target.value})
                                         }
                                     />
                                 </div>
 
                                 <div className={style.inputGroup}>
-                                    <span className={style.label}>¿Cómo nos conoció?: {editData.comoNosConocio}</span>
-
+                                    <span className={style.label}>¿Cómo nos conoció?: {editData.from || "-"}</span>
                                     <ProvInput
                                         placeholder="¿Cómo nos conoció?"
                                         as="select"
                                         className="inputBoxDefault"
-                                        value={editData.comoNosConocio}
+                                        value={editData.from}
                                         onChange={(e) =>
-                                            setEditData({...editData, comoNosConocio: e.target.value})
+                                            setEditData({...editData, from: e.target.value as any})
                                         }
                                         options={[
-                                            {value: "Instagram", label: "Instagram"},
-                                            {value: "Facebook", label: "Facebook"},
-                                            {value: "Recomendación", label: "Recomendación"}
+                                            {value: "INSTAGRAM", label: "Instagram"},
+                                            {value: "FACEBOOK", label: "Facebook"},
+                                            {value: "RECOMMENDATION", label: "Recomendación"}
                                         ]}
                                     />
                                 </div>
                             </>
                         )}
 
-                        {/* 🔘 ACTIONS */}
                         <div className={style.modalActions}>
                             <div className={style.buttons}>
                                 <LightGreyButton
@@ -761,157 +610,65 @@ export default function Pacientes() {
                 </div>
             )}
 
-              {historiasModal && selectedPaciente && (
-                <div
-                    className={style.overlay}
-                    onClick={() => setHistoriasModal(false)}
-                >
-                    <div
-                        className={style.modal}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button
-                            className={style.close}
-                            onClick={() => setHistoriasModal(false)}
-                        >
-                            ✕
-                        </button>
+            {turnosModal && selectedPaciente && (
+                <div className={style.overlay} onClick={() => setTurnosModal(false)}>
+                    <div className={style.modal} onClick={(e) => e.stopPropagation()}>
+                        <button className={style.close} onClick={() => setTurnosModal(false)}>✕</button>
+                        <h3>Turnos de {selectedPaciente.fullName}</h3>
+                        <div className={style.turnosList}>
+                            <div className={style.turnoItem}><span>27/05/2026</span><span>10:30</span><span>Consulta general</span></div>
+                        </div>
+                        <span className={style.back} onClick={() => { setTurnosModal(false); setViewModal(true); }}>← Volver al paciente</span>
+                    </div>
+                </div>
+            )}
 
-                        <h3>Historias clínicas de {selectedPaciente.nombre}</h3>
+            {historiasModal && selectedPaciente && (
+                <div className={style.overlay} onClick={() => setHistoriasModal(false)}>
+                    <div className={style.modal} onClick={(e) => e.stopPropagation()}>
+                        <button className={style.close} onClick={() => setHistoriasModal(false)}>✕</button>
+                        <h3>Historias clínicas de {selectedPaciente.fullName}</h3>
 
                         {!creatingHistoria ? (
                             <>
                                 <div className={style.turnosList}>
-                                    {historias
-                                        .filter(h => h.pacienteId === selectedPaciente.id)
-                                        .map(h => (
-                                            <div key={h.id} className={style.turnoItem}>
-
-                                                <div>
-                                                    Fecha: {h.fecha}
-                                                </div>
-
-                                                <div>
-                                                    Evaluación: {h.evaluacion}
-                                                </div>
-
-                                                <div>
-                                                    Doctor: {h.doctorId === 1 ? "Dr. Pérez" : "Dra. Gómez"}
-                                                </div>
-
-                                                {h.archivo && (
-                                                    <div>
-                                                        Archivo: {h.archivo}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
+                                    {historias.filter(h => h.pacienteId === selectedPaciente.id).map(h => (
+                                        <div key={h.id} className={style.turnoItem}>
+                                            <div>Fecha: {h.fecha}</div>
+                                            <div>Evaluación: {h.evaluacion}</div>
+                                            <div>Doctor: {h.doctorId === 1 ? "Dr. Pérez" : "Dra. Gómez"}</div>
+                                            {h.archivo && <div>Archivo: {h.archivo}</div>}
+                                        </div>
+                                    ))}
                                 </div>
-
-                                <LightGreyButton
-                                    text="Nueva historia clínica"
-                                    onClick={() => setCreatingHistoria(true)}
-                                    variant="primary"
-                                />
+                                <LightGreyButton text="Nueva historia clínica" onClick={() => setCreatingHistoria(true)} variant="primary" />
                             </>
                         ) : (
                             <div className={style.formModal}>
-
-                                <ProvInput
-                                    placeholder="Fecha (opcional)"
-                                    type="date"
-                                    className="inputBoxDefault"
-                                    value={newHistoria.fecha || ""}
-                                    onChange={(e) =>
-                                        setNewHistoria({...newHistoria, fecha: e.target.value})
-                                    }
-                                />
-
-                                <ProvInput
-                                    placeholder="Evaluación"
-                                    type="text"
-                                    className="inputBoxBig"
-                                    value={newHistoria.evaluacion || ""}
-                                    onChange={(e) =>
-                                        setNewHistoria({...newHistoria, evaluacion: e.target.value})
-                                    }
-                                />
-
+                                <ProvInput placeholder="Fecha (opcional)" type="date" className="inputBoxDefault" value={newHistoria.fecha || ""} onChange={(e) => setNewHistoria({...newHistoria, fecha: e.target.value})} />
+                                <ProvInput placeholder="Evaluación" type="text" className="inputBoxBig" value={newHistoria.evaluacion || ""} onChange={(e) => setNewHistoria({...newHistoria, evaluacion: e.target.value})} />
+                                
                                 <div className={style.fileUpload}>
                                     <label className={style.fileLabel}>
-                                        <input
-                                            type="file"
-                                            onChange={(e) => {
+                                        <input type="file" onChange={(e) => {
                                                 const file = e.target.files?.[0];
-                                                if (file) {
-                                                    setNewHistoria({
-                                                        ...newHistoria,
-                                                        archivo: file.name
-                                                    });
-                                                }
-                                            }}
-                                        />
+                                                if (file) setNewHistoria({...newHistoria, archivo: file.name});
+                                            }} />
                                         📎 Subir archivo
                                     </label>
-
-                                    {newHistoria.archivo && (
-                                        <span className={style.fileName}>
-                                            {newHistoria.archivo}
-                                        </span>
-                                    )}
+                                    {newHistoria.archivo && <span className={style.fileName}>{newHistoria.archivo}</span>}
                                 </div>
 
-                                <ProvInput
-                                    placeholder="Doctor"
-                                    as="select"
-                                    className="inputBoxDefault"
-                                    value={newHistoria.doctorId || ""}
-                                    onChange={(e) =>
-                                        setNewHistoria({
-                                            ...newHistoria,
-                                            doctorId: Number(e.target.value)
-                                        })
-                                    }
-                                    options={[
-                                        { value: "1", label: "Dr. Pérez" },
-                                        { value: "2", label: "Dra. Gómez" }
-                                    ]}
-                                />
-
-                                <LightGreyButton
-                                    text="Guardar"
-                                    onClick={() => {
-                                        if (!newHistoria.evaluacion || !newHistoria.doctorId) {
-                                            alert("Completá evaluación y doctor");
-                                            return;
-                                        }
-
-                                        const nuevaHistoria: HistoriaClinica = {
-                                            id: Date.now(),
-                                            fecha: newHistoria.fecha || new Date().toISOString().split("T")[0],
-                                            evaluacion: newHistoria.evaluacion,
-                                            archivo: newHistoria.archivo || "",
-                                            pacienteId: selectedPaciente.id,
-                                            doctorId: newHistoria.doctorId
-                                        };
-
+                                <ProvInput placeholder="Doctor" as="select" className="inputBoxDefault" value={newHistoria.doctorId || ""} onChange={(e) => setNewHistoria({...newHistoria, doctorId: Number(e.target.value)})} options={[{ value: "1", label: "Dr. Pérez" }, { value: "2", label: "Dra. Gómez" }]} />
+                                
+                                <LightGreyButton text="Guardar" onClick={() => {
+                                        if (!newHistoria.evaluacion || !newHistoria.doctorId) { alert("Completá evaluación y doctor"); return; }
+                                        const nuevaHistoria: HistoriaClinica = { id: Date.now(), fecha: newHistoria.fecha || new Date().toISOString().split("T")[0], evaluacion: newHistoria.evaluacion, archivo: newHistoria.archivo || "", pacienteId: selectedPaciente.id, doctorId: newHistoria.doctorId };
                                         setHistorias(prev => [...prev, nuevaHistoria]);
-
-                                        setCreatingHistoria(false);
-                                        setNewHistoria({});
-                                    }}
-                                    variant="primary"
-                                />
-
-                                <span
-                                    className={style.back}
-                                    onClick={() => {
-                                        setCreatingHistoria(false);
-                                        setNewHistoria({});
-                                    }}
-                                >
-                                    ← Cancelar
-                                </span>
+                                        setCreatingHistoria(false); setNewHistoria({});
+                                    }} variant="primary" />
+                                
+                                <span className={style.back} onClick={() => { setCreatingHistoria(false); setNewHistoria({}); }}>← Cancelar</span>
                             </div>
                         )}
                     </div>

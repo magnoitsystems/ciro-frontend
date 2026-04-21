@@ -34,7 +34,7 @@ export interface ReceiptCreateDTO {
     observations?: string;
     currencyType: CurrencyType;
     patientId: number;
-    userId: number;
+    doctorId: number;
     exchangeRate?: number;
     paymentMethod: PaymentMethod;
     payDollarDebtWithPesos: boolean; 
@@ -49,6 +49,7 @@ export interface ReceiptResponseDTO {
     convertedAmount?: number;
     patientFullName: string; 
     patientDni: string;
+    doctorFullName: string;
 }
 
 export interface VoucherDetailDTO {

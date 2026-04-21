@@ -1,14 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import style from './CuentaCorriente.module.css';
 import SaldosResume from "../../components/CtaCorriente/saldosResume.tsx";
 import Register from "../../components/CtaCorriente/Register.tsx";
 import DebtButton from "../../components/Buttons/CancelDebtButton/cancelDebtButton.tsx";
-import {NavLink} from "react-router-dom";
+import {NavLink, useParams} from "react-router-dom";
 import ProvInput from "../../components/Forms/NewProvForm/ProvInput.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import GreenFormButton from "../../components/Buttons/GreenFormButton/greenFormButton.tsx";
+import { currentAccountService } from "../../services/currentAccount.service"; 
+import type { CurrentAccountResponseDTO } from "../../types/currentAccount.types"; 
 
 export default function CuentaCorriente() {
+    const { patientId } = useParams<{ patientId: string }>();
+    
+    const [accountData, setAccountData] = useState<CurrentAccountResponseDTO | null>(null);
+    const [loading, setLoading] = useState(true);
     const [comprobanteData, setComprobanteData] = useState({
         fecha: "",
         observaciones: "",
@@ -19,6 +26,23 @@ export default function CuentaCorriente() {
             { detalle: "", cantidad: 1, precioUnitario: 0 }
         ]
     });
+
+    useEffect(() => {
+        const fetchCurrentAccount = async () => {
+            if (!patientId) return;
+            try {
+                setLoading(true);
+                const data = await currentAccountService.getPatientCurrentAccount(Number(patientId));
+                setAccountData(data);
+            } catch (error) {
+                console.error("Error al obtener la cuenta corriente:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCurrentAccount();
+    }, [patientId]);
 
     const recibosMock = [
         {
@@ -55,6 +79,7 @@ export default function CuentaCorriente() {
         }));
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateDetail = (index: number, field: string, value: any) => {
         const newDetails = [...comprobanteData.details];
         newDetails[index] = {
@@ -71,6 +96,7 @@ export default function CuentaCorriente() {
     const [showComprobanteModal, setShowComprobanteModal] = useState(false);
     const [showReciboModal, setShowReciboModal] = useState(false);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleSubmit = () => {
         const payload = {
             fecha: comprobanteData.fecha || null,
@@ -94,10 +120,14 @@ export default function CuentaCorriente() {
     const [viewReciboModal, setViewReciboModal] = useState(false);
     const [selectedRecibo, setSelectedRecibo] = useState<any>(null);
 
+    if (loading) return <div>Cargando cuenta corriente...</div>;
+    
+    if (!accountData) return <div>No se pudo cargar la cuenta corriente.</div>;
+
     return(
         <main className={style.main}>
             <WelcomeText
-                sectionText={'Acá la Cta. Corriente de Milagros Alvarez'}
+                sectionText={`Acá la Cta. Corriente de ${accountData.patientFullName || 'Paciente'}`}
                 className={'darkStyle'}
             />
 

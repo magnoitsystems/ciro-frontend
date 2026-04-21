@@ -38,7 +38,7 @@ function App() {
                     <Route path="/proveedores" element={<Proveedores />} />
                     <Route path="/sueldos" element={<Sueldos />} />
                     <Route path="/tareas" element={<Tareas />} />
-                    <Route path="/cuentacorriente" element={<CuentaCorriente />} />
+                    <Route path="/cuentacorriente/:patientId" element={<CuentaCorriente />} />
                     <Route path="/estadisticas" element={<Estadisticas />} />
                 </Routes>
             </div>
