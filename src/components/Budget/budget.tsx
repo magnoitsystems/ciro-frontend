@@ -29,12 +29,10 @@ export default function Budget() {
             <div className={styles.budgetContentProperties}>
 
                 {!showFormBudget ? (
-
-                    budgets.map((budget) => (
                         <div className={styles.tableContainerPropeties}>
-                            <BudgetInfo archivo={{ nombre: budget.fileUrl, estado: budget.status }} fecha={budget.date} nombre_paciente={budget.patientFullName} id_paciente={budget.patientId}></BudgetInfo>
+                            <BudgetInfo budgets={budgets}></BudgetInfo>
                         </div>
-                    ))
+                  
 
                 ) : (
                     <div className={styles.tableContainerPropeties}>

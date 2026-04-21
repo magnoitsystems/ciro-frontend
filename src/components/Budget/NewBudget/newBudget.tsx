@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import type { BudgetCreateDTO } from '../../../types/budgets.types';
 import type { PatientResponseDTO } from '../../../types/patients.types';
 import { patientService } from '../../../services/patient.service';
+import type { BudgetStatus } from '../../../types/enums.types';
 
 type Prop = {
     onNuevoPacienteClick: () => void;
@@ -13,6 +14,12 @@ type Prop = {
 export default function NewBudget({ onNuevoPacienteClick }: Prop) {
     const [patient, setPatient] = useState<PatientResponseDTO[]>([]);
     const navigate = useNavigate()
+    const [status, setStatus] = useState<BudgetStatus>('ENVIADO')
+    const [patientId, setPatientId] = useState(-1)
+    const [file, setFile] = useState<File>()
+    const [date, setDate] = useState('')
+    const [title, setTitle] = useState('')
+    const estados = ['ENVIADO', 'ACEPTADO', 'ACEPTADO_PARCIALMENTE', 'RECHAZADO', 'PENDIENTE_DE_RESPUESTA', 'SIN_ENVIAR', 'SIN_HACER']
 
     useEffect(() => {
         patientService.getAllPatients()
@@ -20,17 +27,19 @@ export default function NewBudget({ onNuevoPacienteClick }: Prop) {
             .catch(error => console.error('Error fetching patients:', error));
     }, [])
 
-    const [data, setData] = useState<BudgetCreateDTO>({} as BudgetCreateDTO);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setData({ ...data, [e.target.name]: e.target.value })
-    }
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        const newBudget: BudgetCreateDTO = {
+            patientId,
+            title,
+            date,
+            status,
+            file
+        }
+
         try {
-            await budgetService.createBudget(data) 
-            navigate('/budget.tsx') 
+            await budgetService.createBudget(newBudget)
+            navigate('/presupuestos')
         } catch (error) {
             console.error(error)
         }
@@ -45,24 +54,12 @@ export default function NewBudget({ onNuevoPacienteClick }: Prop) {
             <div className={styles.formContainer}>
                 <form onSubmit={handleSubmit} className={styles.formContainer}>
                     <div>
-                        <label htmlFor="date">Fecha de carga</label>
-                        <div className={styles.fileInputContainer}>
-                            <input type="date" id="date" name="date" onClick={() => handleChange} required />
-                        </div>
-                    </div>
-                    <div>
-                        <label htmlFor="file">Ajunte el presupuesto</label>
-                        <div className={styles.fileInputContainer}>
-                            <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png" required placeholder='Suba un archivo' onClick={() => handleChange} />
-                        </div>
-                    </div>
-                    <div>
                         <label htmlFor="patient">Paciente destinatario</label>
                         <select id="patient" name="patient" onChange={(e) => {
                             if (e.target.value === 'nuevo') {
                                 onNuevoPacienteClick();
                             } else {
-                                handleChange(e)
+                                setPatientId(Number(e.target.value))
                             }
                         }}>
                             <option value="">Seleccione un paciente</option>
@@ -72,7 +69,37 @@ export default function NewBudget({ onNuevoPacienteClick }: Prop) {
                             <option value="nuevo">Crear nuevo paciente +</option>
                         </select>
                     </div>
-
+                    <div>
+                        <label htmlFor="date">Fecha de carga</label>
+                        <div className={styles.fileInputContainer}>
+                            <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} required />
+                        </div>
+                    </div>
+                    <div>
+                        <label htmlFor="date">Título</label>
+                        <div className={styles.fileInputContainer}>
+                            <input type="text" id="title" name="title" onChange={(e) => setTitle(e.target.value)} required />
+                        </div>
+                    </div>
+                    <div>
+                        <label htmlFor="state">Estado</label>
+                        <select id="state" name="state" onChange={(e) => setStatus(e.target.value as BudgetStatus)}>
+                            <option value="">Seleccione un paciente</option>
+                            {estados.map((estado) => (
+                                <option key={estado} value={estado}>{estado}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <label htmlFor="file">Ajunte el presupuesto</label>
+                        <div className={styles.fileInputContainer}>
+                            <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png" required placeholder='Suba un archivo' onChange={(e) => {
+                                if (e.target.files) {
+                                    setFile(e.target.files[0])
+                                }
+                            }} />
+                        </div>
+                    </div>
                     <button className={styles.buttonFormProperties} type="submit">Cargar presupuesto</button>
                 </form>
             </div>
