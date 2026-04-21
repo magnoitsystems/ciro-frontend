@@ -9,10 +9,11 @@ type Prop = {
     onLogin: () => void
 }
 
-export default function Login({onLogin} : Prop) {
+export default function Login({ onLogin }: Prop) {
     const navigate = useNavigate()
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false)
 
     const handleSumbit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -26,6 +27,7 @@ export default function Login({onLogin} : Prop) {
             console.log("Entro al try");
 
             console.log("Voy a logearme la task");
+            setLoading(true)
             // eslint-disable-next-line prefer-const, @typescript-eslint/no-unused-vars
             response = await authService.login(login);
             onLogin()
@@ -36,6 +38,7 @@ export default function Login({onLogin} : Prop) {
             console.error(error);
         }
     }
+
     return (
         <div className={styles.containerProperties}>
             <div className={styles.firstContainerProperties}>
@@ -56,6 +59,11 @@ export default function Login({onLogin} : Prop) {
                         <div className={styles.buttonProperties}>
                             <button>Iniciar sesión</button>
                         </div>
+                        {loading && (
+                            <div className={styles.loadingProperties}>
+                                <h3>Iniciando sesión...</h3>
+                            </div>
+                        )}
                     </form>
                 </div>
                 <div className={styles.imageProperties}>
