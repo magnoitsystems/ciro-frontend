@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import style from './CuentaCorriente.module.css';
 import SaldosResume from "../../components/CtaCorriente/saldosResume.tsx";
 import Register from "../../components/CtaCorriente/Register.tsx";
 import DebtButton from "../../components/Buttons/CancelDebtButton/cancelDebtButton.tsx";
-import {NavLink, useParams} from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import ProvInput from "../../components/Forms/NewProvForm/ProvInput.tsx";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import GreenFormButton from "../../components/Buttons/GreenFormButton/greenFormButton.tsx";
 import { currentAccountService } from "../../services/currentAccount.service"; 
 import type { CurrentAccountResponseDTO } from "../../types/currentAccount.types"; 
@@ -44,27 +45,6 @@ export default function CuentaCorriente() {
         fetchCurrentAccount();
     }, [patientId]);
 
-    const recibosMock = [
-        {
-            id: 1,
-            receiptDate: "2026-06-10",
-            amount: 15000,
-            currencyType: "PESOS",
-            exchangeRate: 1200,
-            convertedAmount: 12.5,
-            patientFullName: "Milagros Alvarez",
-            patientDni: "30123456"
-        },
-        {
-            id: 2,
-            receiptDate: "2026-06-15",
-            amount: 100,
-            currencyType: "DOLARES",
-            patientFullName: "Milagros Alvarez",
-            patientDni: "30123456"
-        }
-    ];
-
     const addDetail = () => {
         setComprobanteData(prev => ({
             ...prev,
@@ -79,7 +59,6 @@ export default function CuentaCorriente() {
         }));
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateDetail = (index: number, field: string, value: any) => {
         const newDetails = [...comprobanteData.details];
         newDetails[index] = {
@@ -96,7 +75,6 @@ export default function CuentaCorriente() {
     const [showComprobanteModal, setShowComprobanteModal] = useState(false);
     const [showReciboModal, setShowReciboModal] = useState(false);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleSubmit = () => {
         const payload = {
             fecha: comprobanteData.fecha || null,
@@ -120,9 +98,8 @@ export default function CuentaCorriente() {
     const [viewReciboModal, setViewReciboModal] = useState(false);
     const [selectedRecibo, setSelectedRecibo] = useState<any>(null);
 
-    if (loading) return <div>Cargando cuenta corriente...</div>;
-    
-    if (!accountData) return <div>No se pudo cargar la cuenta corriente.</div>;
+    if (loading) return <div style={{padding: '40px', color: 'white'}}>Cargando cuenta corriente...</div>;
+    if (!accountData) return <div style={{padding: '40px', color: 'white'}}>No se pudo cargar la cuenta corriente.</div>;
 
     return(
         <main className={style.main}>
@@ -131,13 +108,20 @@ export default function CuentaCorriente() {
                 className={'darkStyle'}
             />
 
-            <NavLink to={'/pacientes'}>
-                <p> Volver a la sección pacientes</p>
+            <NavLink to={'/pacientes'} style={{ textDecoration: 'none' }}>
+                <p style={{ cursor: 'pointer', color: 'var(--primary)', marginBottom: '20px' }}>
+                    ← Volver a la sección pacientes
+                </p>
             </NavLink>
 
             <div className={style.content}>
                 <div className={style.allInformation}>
-                    <SaldosResume/>
+                    
+                    {/* Pasamos los saldos reales */}
+                    <SaldosResume 
+                        saldoPesos={accountData.debtInPesos || 0} 
+                        saldoDolares={accountData.debtInDollars || 0} 
+                    />
 
                     <div className={style.registerContainer}>
                         <div className={style.columnNames}>
@@ -149,29 +133,31 @@ export default function CuentaCorriente() {
                             <h6>Saldo en USD</h6>
                         </div>
 
-                        <Register
-                            type={'Comprobante'}
-                        />
-                        <Register
-                            type={'Recibo'}
-                            onClick={() => {
-                                setSelectedRecibo(recibosMock[0]);
-                                setViewReciboModal(true);
-                            }}
-                        />
-                        <Register
-                            type={'Comprobante'}
-                        />
-                        <Register
-                            type={'Comprobante'}
-                        />
-                        <Register
-                            type={'Recibo'}
-                            onClick={() => {
-                                setSelectedRecibo(recibosMock[1]);
-                                setViewReciboModal(true);
-                            }}
-                        />
+                        {/* Mapeamos el historial real */}
+                        {accountData.movements && accountData.movements.length > 0 ? (
+                            accountData.movements.map((movement) => (
+                                <Register
+                                    key={movement.id}
+                                    movement={movement}
+                                    onClick={() => {
+                                        if (movement.type === 'RECEIPT') {
+                                            setSelectedRecibo({
+                                                receiptDate: movement.date,
+                                                amount: movement.transactionAmountPesos > 0 ? movement.transactionAmountPesos : movement.transactionAmountDollars,
+                                                currencyType: movement.transactionAmountDollars > 0 ? "DOLARES" : "PESOS",
+                                                patientFullName: accountData.patientFullName,
+                                                patientDni: "-"
+                                            });
+                                            setViewReciboModal(true);
+                                        } else {
+                                            console.log("Abrir detalle comprobante", movement.id);
+                                        }
+                                    }}
+                                />
+                            ))
+                        ) : (
+                            <p style={{ padding: '20px', color: 'var(--neutral-4)' }}>No hay movimientos registrados.</p>
+                        )}
 
                         <DebtButton/>
                     </div>
@@ -179,303 +165,103 @@ export default function CuentaCorriente() {
 
                 <div className={style.createRegisters}>
                     <div onClick={() => setShowComprobanteModal(true)}>
-                        <img src={'/icons/bigPlus.png'}/>
+                        <img src={'/icons/bigPlus.png'} alt="Crear Comprobante" />
                         <p>Crear nuevo comprobante</p>
                     </div>
 
                     <div onClick={() => setShowReciboModal(true)}>
-                        <img src={'/icons/bigPlus.png'}/>
+                        <img src={'/icons/bigPlus.png'} alt="Crear Recibo" />
                         <p>Crear nuevo recibo</p>
                     </div>
                 </div>
             </div>
 
             {showComprobanteModal && (
-                <div
-                    className={style.overlay}
-                    onClick={() => setShowComprobanteModal(false)}
-                >
-                    <div
-                        className={style.modal}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button
-                            className={style.close}
-                            onClick={() => setShowComprobanteModal(false)}
-                        >
-                            ✕
-                        </button>
-
+                <div className={style.overlay} onClick={() => setShowComprobanteModal(false)}>
+                    <div className={style.modal} onClick={(e) => e.stopPropagation()}>
+                        <button className={style.close} onClick={() => setShowComprobanteModal(false)}>✕</button>
                         <h3>Nuevo comprobante</h3>
-
                         <div className={style.form}>
-
-                            <ProvInput
-                                placeholder="Fecha"
-                                type="date"
-                                className="inputBoxDefault"
-                                value={comprobanteData.fecha}
-                                onChange={(e) =>
-                                    setComprobanteData({...comprobanteData, fecha: e.target.value})
-                                }
-                            />
-
-                            <ProvInput
-                                placeholder="Observaciones"
-                                type="text"
-                                className="inputBoxBig"
-                                value={comprobanteData.observaciones}
-                                onChange={(e) =>
-                                    setComprobanteData({...comprobanteData, observaciones: e.target.value})
-                                }
-                            />
-
-                            <ProvInput
-                                placeholder="Moneda"
-                                as="select"
-                                className="inputBoxDefault"
-                                value={comprobanteData.moneda}
-                                onChange={(e) =>
-                                    setComprobanteData({...comprobanteData, moneda: e.target.value})
-                                }
-                                options={[
-                                    {value: "PESOS", label: "Pesos (ARS)"},
-                                    {value: "DOLARES", label: "Dólares (USD)"},
-                                    {value: "REALES", label: "Reales (R)"},
-                                    {value: "EUROS", label: "Euros (EUR)"}
-                                ]}
-                            />
-
-                            {/* 🧾 DETAILS */}
+                            <ProvInput placeholder="Fecha" type="date" className="inputBoxDefault" value={comprobanteData.fecha} onChange={(e) => setComprobanteData({...comprobanteData, fecha: e.target.value})} />
+                            <ProvInput placeholder="Observaciones" type="text" className="inputBoxBig" value={comprobanteData.observaciones} onChange={(e) => setComprobanteData({...comprobanteData, observaciones: e.target.value})} />
+                            <ProvInput placeholder="Moneda" as="select" className="inputBoxDefault" value={comprobanteData.moneda} onChange={(e) => setComprobanteData({...comprobanteData, moneda: e.target.value})} options={[{value: "PESOS", label: "Pesos (ARS)"}, {value: "DOLARES", label: "Dólares (USD)"}, {value: "REALES", label: "Reales (R)"}, {value: "EUROS", label: "Euros (EUR)"}]} />
+                            
                             <div className={style.detailsContainer}>
                                 <div className={style.detailsHeader}>
                                     <h5>Detalles</h5>
                                     <span onClick={addDetail}>+ Agregar</span>
                                 </div>
-
                                 <div className={style.detailsTable}>
                                     <div className={style.detailsColumns}>
-                                        <span>Detalle</span>
-                                        <span>Cant.</span>
-                                        <span>Precio</span>
-                                        <span>Total</span>
-                                        <span></span>
+                                        <span>Detalle</span><span>Cant.</span><span>Precio</span><span>Total</span><span></span>
                                     </div>
-
                                     {comprobanteData.details.map((d, i) => (
                                         <div key={i} className={style.detailRow}>
-
-                                            <input
-                                                type="text"
-                                                placeholder="Ej: Consulta"
-                                                value={d.detalle}
-                                                onChange={(e) => updateDetail(i, "detalle", e.target.value)}
-                                            />
-
-                                            <input
-                                                type="number"
-                                                value={d.cantidad}
-                                                onChange={(e) => updateDetail(i, "cantidad", Number(e.target.value))}
-                                            />
-
-                                            <input
-                                                type="number"
-                                                value={d.precioUnitario}
-                                                onChange={(e) => updateDetail(i, "precioUnitario", Number(e.target.value))}
-                                            />
-
-                                            <span className={style.rowTotal}>
-                    ${(d.cantidad * d.precioUnitario).toFixed(2)}
-                </span>
-
-                                            {comprobanteData.details.length > 1 && (
-                                                <button onClick={() => removeDetail(i)}>✕</button>
-                                            )}
+                                            <input type="text" placeholder="Ej: Consulta" value={d.detalle} onChange={(e) => updateDetail(i, "detalle", e.target.value)} />
+                                            <input type="number" value={d.cantidad} onChange={(e) => updateDetail(i, "cantidad", Number(e.target.value))} />
+                                            <input type="number" value={d.precioUnitario} onChange={(e) => updateDetail(i, "precioUnitario", Number(e.target.value))} />
+                                            <span className={style.rowTotal}>${(d.cantidad * d.precioUnitario).toFixed(2)}</span>
+                                            {comprobanteData.details.length > 1 && (<button onClick={() => removeDetail(i)}>✕</button>)}
                                         </div>
                                     ))}
                                 </div>
-
                                 <div className={style.totalBox}>
                                     Total: <strong>${total.toFixed(2)}</strong>
                                 </div>
                             </div>
                         </div>
-
                         <div className={style.submitButton}>
-                            <GreenFormButton
-                                text="Guardar comprobante"
-                                onClick={() => {
-                                    console.log("guardar comprobante");
-                                    setShowComprobanteModal(false);
-                                }}
-                            />
+                            <GreenFormButton text="Guardar comprobante" onClick={() => { console.log("guardar comprobante"); setShowComprobanteModal(false); }} />
                         </div>
                     </div>
                 </div>
             )}
 
             {showReciboModal && (
-                <div
-                    className={style.overlay}
-                    onClick={() => setShowReciboModal(false)}
-                >
-                    <div
-                        className={style.modal}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button
-                            className={style.close}
-                            onClick={() => setShowReciboModal(false)}
-                        >
-                            ✕
-                        </button>
-
+                <div className={style.overlay} onClick={() => setShowReciboModal(false)}>
+                    <div className={style.modal} onClick={(e) => e.stopPropagation()}>
+                        <button className={style.close} onClick={() => setShowReciboModal(false)}>✕</button>
                         <h3>Nuevo recibo</h3>
-
                         <div className={style.form}>
-
-                            <ProvInput
-                                placeholder="Fecha"
-                                type="date"
-                                className="inputBoxDefault"
-                            />
-
-                            <ProvInput
-                                placeholder="Cantidad"
-                                type="number"
-                                className="inputBoxDefault"
-                            />
-
-                            <ProvInput
-                                placeholder="Observaciones"
-                                type="text"
-                                className="inputBoxBig"
-                            />
-
-                            <ProvInput
-                                placeholder="Moneda"
-                                as="select"
-                                className="inputBoxDefault"
-                                options={[
-                                    {value: "PESOS", label: "Pesos (ARS)"},
-                                    {value: "DOLARES", label: "Dólares (USD)"},
-                                    {value: "REALES", label: "Reales (R)"},
-                                    {value: "EUROS", label: "Euros (EUR)"}
-                                ]}
-                            />
-
-                            <ProvInput
-                                placeholder="Tipo de cambio al día"
-                                type="number"
-                                className="inputBoxDefault"
-                            />
-
-                            <ProvInput
-                                placeholder="Método de pago"
-                                as="select"
-                                className="inputBoxDefault"
-                                options={[
-                                    {value: "EFECTIVO", label: "Efectivo"},
-                                    {value: "TRANSFERENCIA", label: "Transferencia"},
-                                    {value: "TARJETA_CREDITO", label: "Tarjeta de crédito"},
-                                    {value: "TARJETA_DEBITO", label: "Tarjeta de débito"},
-                                    {value: "MERCADO_PAGO", label: "Mercado Pago"},
-                                    {value: "DOLARES", label: "Dolares"},
-                                    {value: "CHEQUE", label: "Cheque"}
-                                ]}
-                            />
-
+                            <ProvInput placeholder="Fecha" type="date" className="inputBoxDefault" />
+                            <ProvInput placeholder="Cantidad" type="number" className="inputBoxDefault" />
+                            <ProvInput placeholder="Observaciones" type="text" className="inputBoxBig" />
+                            <ProvInput placeholder="Moneda" as="select" className="inputBoxDefault" options={[{value: "PESOS", label: "Pesos (ARS)"}, {value: "DOLARES", label: "Dólares (USD)"}, {value: "REALES", label: "Reales (R)"}, {value: "EUROS", label: "Euros (EUR)"}]} />
+                            <ProvInput placeholder="Tipo de cambio al día" type="number" className="inputBoxDefault" />
+                            <ProvInput placeholder="Método de pago" as="select" className="inputBoxDefault" options={[{value: "EFECTIVO", label: "Efectivo"}, {value: "TRANSFERENCIA", label: "Transferencia"}, {value: "TARJETA_CREDITO", label: "Tarjeta de crédito"}, {value: "TARJETA_DEBITO", label: "Tarjeta de débito"}, {value: "MERCADO_PAGO", label: "Mercado Pago"}, {value: "DOLARES", label: "Dolares"}, {value: "CHEQUE", label: "Cheque"}]} />
+                            
                             <div className={style.checkboxContainer}>
                                 <label className={style.checkboxLabel}>
-                                    <input
-                                        type="checkbox"
-                                        checked={pagarEnDolares}
-                                        onChange={(e) => setPagarEnDolares(e.target.checked)}
-                                    />
+                                    <input type="checkbox" checked={pagarEnDolares} onChange={(e) => setPagarEnDolares(e.target.checked)} />
                                     <span>Pagar deuda en dólares</span>
                                 </label>
                             </div>
-
                         </div>
-
                         <div className={style.submitButton}>
-                            <GreenFormButton
-                                text="Guardar recibo"
-                                onClick={() => {
-                                    console.log("guardar recibo");
-                                    setShowReciboModal(false);
-                                }}
-                            />
+                            <GreenFormButton text="Guardar recibo" onClick={() => { console.log("guardar recibo"); setShowReciboModal(false); }} />
                         </div>
                     </div>
                 </div>
             )}
+
             {viewReciboModal && selectedRecibo && (
-                <div
-                    className={style.overlay}
-                    onClick={() => setViewReciboModal(false)}
-                >
-                    <div
-                        className={style.modal}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button
-                            className={style.close}
-                            onClick={() => setViewReciboModal(false)}
-                        >
-                            ✕
-                        </button>
-
+                <div className={style.overlay} onClick={() => setViewReciboModal(false)}>
+                    <div className={style.modal} onClick={(e) => e.stopPropagation()}>
+                        <button className={style.close} onClick={() => setViewReciboModal(false)}>✕</button>
                         <h3>Recibo</h3>
-
                         <div className={style.reciboContainer}>
-
-                            {/* 🧍 PACIENTE */}
                             <div className={style.reciboSection}>
                                 <h5>Paciente</h5>
-
-                                <div className={style.row}>
-                                    <span>Nombre</span>
-                                    <p>{selectedRecibo.patientFullName}</p>
-                                </div>
-
-                                <div className={style.row}>
-                                    <span>DNI</span>
-                                    <p>{selectedRecibo.patientDni}</p>
-                                </div>
+                                <div className={style.row}><span>Nombre</span><p>{selectedRecibo.patientFullName}</p></div>
+                                <div className={style.row}><span>DNI</span><p>{selectedRecibo.patientDni}</p></div>
                             </div>
-
-                            {/* 💰 INFO RECIBO */}
                             <div className={style.reciboSection}>
                                 <h5>Detalle</h5>
-
-                                <div className={style.row}>
-                                    <span>Fecha</span>
-                                    <p>{selectedRecibo.receiptDate}</p>
-                                </div>
-
-                                <div className={style.row}>
-                                    <span>Monto</span>
-                                    <p>
-                                        {selectedRecibo.currencyType} {selectedRecibo.amount}
-                                    </p>
-                                </div>
-
-                                {selectedRecibo.exchangeRate && (
-                                    <div className={style.row}>
-                                        <span>Tipo de cambio</span>
-                                        <p>{selectedRecibo.exchangeRate}</p>
-                                    </div>
-                                )}
-
-                                {selectedRecibo.convertedAmount && (
-                                    <div className={style.row}>
-                                        <span>Monto convertido</span>
-                                        <p>${selectedRecibo.convertedAmount}</p>
-                                    </div>
-                                )}
+                                <div className={style.row}><span>Fecha</span><p>{new Date(selectedRecibo.receiptDate).toLocaleDateString('es-AR')}</p></div>
+                                <div className={style.row}><span>Monto</span><p>{selectedRecibo.currencyType} {selectedRecibo.amount}</p></div>
+                                {selectedRecibo.exchangeRate && (<div className={style.row}><span>Tipo de cambio</span><p>{selectedRecibo.exchangeRate}</p></div>)}
+                                {selectedRecibo.convertedAmount && (<div className={style.row}><span>Monto convertido</span><p>${selectedRecibo.convertedAmount}</p></div>)}
                             </div>
-
                         </div>
                     </div>
                 </div>
