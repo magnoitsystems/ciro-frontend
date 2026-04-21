@@ -31,9 +31,12 @@
     width: 100%;
 }
 
-.formPatientLabelProperties input, .formPatientLabelProperties select{
-    width: 100%;
+.formPatientLabelProperties input{
     height: 30px;
+}
+
+.formPatientLabelProperties select, .formPatientLabelProperties input{
+    width: 100%;
     border-radius: 30px;
     border: none;
     padding: 10px;

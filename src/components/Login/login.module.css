@@ -84,3 +84,7 @@
     display: flex;
     margin-right: 5%;
 }
+
+.loadingProperties{
+    color: var(--neutral-1);
+}

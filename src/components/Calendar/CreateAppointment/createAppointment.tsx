@@ -16,7 +16,7 @@ type Props = {
     task?: TaskResponseDTO;
     component: string;
     onlyComment: boolean;
-    onTaskSaved: (task: TaskResponseDTO) => void;
+    onTaskSaved?: (task: TaskResponseDTO) => void;
 }
 
 export default function CreateAppointment({
@@ -82,8 +82,10 @@ export default function CreateAppointment({
             } else {
                 response = await taskService.update(task!.id, payload);
             }
-
-            onTaskSaved(response);
+            
+            if (onTaskSaved){
+                onTaskSaved(response);
+            }
             onClose();
 
         } catch (error: any) {
