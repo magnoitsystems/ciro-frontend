@@ -4,36 +4,44 @@
 
     height: 100vh;
 
+    padding-inline: var(--10px);
     gap: var(--30px);
 }
 
 .functionalities {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: start;
 
     width: 100%;
 
-    margin-top: var(--15px);
+    margin-top: 0;
+    gap: var(--10px);
 }
 
 .searchBar {
-    width: 40%;
+    width: 100%;
 }
 
 .secondFunctionalities {
     display: flex;
     flex-direction: row;
 
-    gap: var(--30px);
+    gap: var(--10px);
 }
 
-.estadistics, .newPacient, .filter {
+.secondFunctionalities img {
+    width: var(--20px);
+    height: var(--20px);
+}
+
+.estadistics, .newPacient {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 
+    padding: 3px;
     padding-inline: var(--20px);
 
     background-color: var(--neutral-4);
@@ -42,7 +50,7 @@
 
 .pacientCards {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     flex: 1;
     overflow-y: auto;
     align-content: start;
@@ -50,7 +58,7 @@
     width: 100%;
 
     margin-bottom: var(--50px);
-    row-gap: var(--20px);
+    row-gap: var(--10px);
     column-gap: var(--30px);
 }
 
@@ -78,35 +86,48 @@
     align-items: center;
     position: relative;
 
-    width: 35%;
+    width: 90%;
     height: 90%;
 
-    padding: var(--50px);
+    padding: var(--20px);
     padding-inline: var(--20px);
     border-radius: var(--5px);
 
     background-color: var(--blue-4);
     color: var(--neutral-1);
+    text-align: center;
 }
 
 .formModal, .miniModal {
     gap: var(--20px);
 }
 
+.formModal {
+    padding-inline: 0;
+}
+
 .miniModal{
+    justify-content: center;
     height: 250px;
 }
 
-.formModal input {
-    width: 80%;
-    min-width: 400px;
+.formModal input, .formModal select {
+    width: 100%;
+    min-width: 250px;
+
+    background-color: var(--blue-1);
+}
+
+.formModal button {
+    width: 250px;
 }
 
 .modalActions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
     align-items: center;
+
+    gap: 10px;
 }
 
 .buttons {
@@ -172,10 +193,6 @@
     font-size: 14px;
 }
 
-.row p {
-    font-weight: 500;
-}
-
 .column {
     display: flex;
     flex-direction: column;
@@ -199,6 +216,7 @@
     flex-direction: column;
     gap: var(--20px);
     margin: var(--40px);
+    margin-inline: 0;
 
 }
 
@@ -206,16 +224,20 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: start;
+    width: 100%;
     padding: 10px;
     background-color: var(--blue-3);
     border-radius: 8px;
     font-size: 14px;
     gap: var(--10px);
+    text-align: left;
 }
 
 .inputGroup {
     display: flex;
     flex-direction: column;
+    align-items: start;
     gap: 4px;
     margin-bottom: 12px;
 }
@@ -236,7 +258,7 @@
     flex-direction: column;
     gap: 8px;
 
-    width: 400px;
+    width: 250px;
 }
 
 .fileLabel {
@@ -247,7 +269,7 @@
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s ease;
-    width: 400px;
+    width: 250px;
 }
 
 .fileLabel input {
@@ -256,5 +278,57 @@
 
 .fileName {
     font-size: 13px;
-    color: #555;
+    color: var(--neutral-4);
+}
+
+@media (min-width: 768px) {
+    .pacientCards {
+        grid-template-columns: repeat(2, 1fr);
+
+        row-gap: var(--20px);
+    }
+
+    .functionalities {
+        flex-direction: row;
+        justify-content: space-between;
+
+        margin-top: var(--15px);
+        gap: 0;
+    }
+
+    .secondFunctionalities {
+        height: 40px;
+
+        gap: var(--20px);
+    }
+
+    .searchBar {
+        width: 40%;
+    }
+
+    .estadistics, .newPacient {
+        padding-inline: var(--30px);
+    }
+
+    /*modals*/
+    .modal, .miniModal, .formModal {
+        width: 35%;
+
+        padding: var(--50px);
+        padding-inline: var(--20px);
+        border-radius: var(--5px);
+    }
+
+    .formModal input {
+        width: 100%;
+        min-width: 400px;
+    }
+
+    .fileUpload, .fileLabel, .formModal button {
+        width: 400px;
+    }
+
+    .formModal input, .formModal select {
+        min-width: 280px;
+    }
 }

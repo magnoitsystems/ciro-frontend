@@ -1,14 +1,14 @@
 /*SALDOS RESUME*/
 .saldosResume {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
 
-    width: 100%;
+    width: 90%;
 
     padding: var(--10px);
-    padding-inline: var(--20px);
+    padding-inline: 0;
 
     background-color: var(--blue-2);
     border-radius: var(--5px);
@@ -16,7 +16,7 @@
 
 .saldoBox {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 
@@ -24,9 +24,8 @@
 }
 
 .saldo {
-    padding: var(--10px);
-    padding-inline: var(--40px);
-
+    padding: var(--5px);
+    padding-inline: var(--10px);
     background-color: var(--neutral-4);
     border-radius: var(--50px);
     color: var(--neutral-1);
@@ -75,4 +74,36 @@
 .Comprobante {
     background-color: var(--blue-1);
     color: var(--neutral-1);
+}
+
+@media (min-width: 768px) {
+    /*SALDOS RESUME*/
+    .saldosResume {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        width: 100%;
+
+        padding: var(--10px);
+        padding-inline: var(--20px);
+
+        background-color: var(--blue-2);
+        border-radius: var(--5px);
+    }
+
+    .saldo {
+        padding: var(--10px);
+        padding-inline: var(--40px);
+    }
+
+    .saldoBox {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        gap: var(--20px);
+    }
 }

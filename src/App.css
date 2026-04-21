@@ -12,8 +12,17 @@ html, body {
 }
 
 .content {
-     flex: 1;
-    padding: var(--30px);
-    padding-inline: var(--40px);
-    overflow: visible; /* sacale el scroll */
+    flex: 1;
+    overflow: visible;
+
+    padding-top: var(--30px);
+    padding-bottom: 70px;
+}
+
+@media (min-width: 768px) {
+    .content {
+        padding: var(--30px);
+
+        padding-bottom: 70px;
+    }
 }

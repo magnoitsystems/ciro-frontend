@@ -4,10 +4,10 @@
     align-items: center;
     width: 350px;
     height: fit-content;
-    border-radius: 5px;
-    background-color: rgba(212, 212, 212, 1);
+    background-color: var(--blue-3);
     font-size: 18px;
-
+    border-radius: var(--5px);
+    color: var(--neutral-1);
 }
 
 .containerProperties {
@@ -24,6 +24,10 @@
     justify-content: center;
     text-align: center;
     align-items: center;
+}
+
+.infoContainerProperties h5 {
+    color: var(--neutral-4);
 }
 
 .buttonsContainerProperties {
@@ -48,19 +52,35 @@
 }
 
 .selectProperties  {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     width: 190px;
     border-radius: 20px;
     height: var(--30px);
     text-align: center;
-    background-color: rgba(38, 38, 38, 1);
+    background-color: var(--blue-1);
     color: white;
 }
 
-.barraColor {
+.upperBarraColor, .bottomBarraColor {
     width: 100%;
     height: 20px;
 }
 
+.upperBarraColor {
+    border-radius: var(--5px) var(--5px) 0 0;
+}
+
+.bottomBarraColor {
+    border-radius: 0 0 var(--5px) var(--5px);
+}
+
 .formContainerProperties{
     background-color: rosybrown;
+}
+
+@media (min-width: 768px) {
+
 }

@@ -454,19 +454,19 @@ export default function Pacientes() {
 
                                 <div className={style.row}>
                                     <span>Nombre</span>
-                                    <p>{selectedPaciente.nombre}</p>
+                                    <h6>{selectedPaciente.nombre}</h6>
                                 </div>
 
                                 <div className={style.row}>
                                     <span>Documento</span>
-                                    <p>
+                                    <h6>
                                         {selectedPaciente.tipoDocumento} {selectedPaciente.numeroDocumento}
-                                    </p>
+                                    </h6>
                                 </div>
 
                                 <div className={style.row}>
                                     <span>Fecha de nacimiento</span>
-                                    <p>{selectedPaciente.fechaNacimiento}</p>
+                                    <h6>{selectedPaciente.fechaNacimiento}</h6>
                                 </div>
                             </div>
 
@@ -476,17 +476,17 @@ export default function Pacientes() {
 
                                 <div className={style.row}>
                                     <span>Teléfono</span>
-                                    <p>{selectedPaciente.telefono}</p>
+                                    <h6>{selectedPaciente.telefono}</h6>
                                 </div>
 
                                 <div className={style.row}>
                                     <span>Dirección</span>
-                                    <p>{selectedPaciente.direccion}</p>
+                                    <h6>{selectedPaciente.direccion}</h6>
                                 </div>
 
                                 <div className={style.row}>
                                     <span>Localidad</span>
-                                    <p>{selectedPaciente.localidad}</p>
+                                    <h6>{selectedPaciente.localidad}</h6>
                                 </div>
                             </div>
 
@@ -496,22 +496,22 @@ export default function Pacientes() {
 
                                 <div className={style.row}>
                                     <span>Obra social</span>
-                                    <p>{selectedPaciente.obraSocial}</p>
+                                    <h6>{selectedPaciente.obraSocial}</h6>
                                 </div>
 
                                 <div className={style.row}>
                                     <span>Secretaria</span>
-                                    <p>{selectedPaciente.secretaria}</p>
+                                    <h6>{selectedPaciente.secretaria}</h6>
                                 </div>
 
                                 <div className={style.row}>
                                     <span>¿Cómo nos conoció?</span>
-                                    <p>{selectedPaciente.comoNosConocio}</p>
+                                    <h6>{selectedPaciente.comoNosConocio}</h6>
                                 </div>
 
                                 <div className={style.column}>
                                     <span>Observaciones</span>
-                                    <p>{selectedPaciente.observaciones}</p>
+                                    <h6>{selectedPaciente.observaciones}</h6>
                                 </div>
                             </div>
 
@@ -619,7 +619,7 @@ export default function Pacientes() {
                                     />
                                 </div>
 
-                                <div>
+                                <div className={style.inputGroup}>
                                     <span className={style.label}>Fecha de nacimiento: {editData.fechaNacimiento}</span>
 
                                     <ProvInput
@@ -761,7 +761,7 @@ export default function Pacientes() {
                 </div>
             )}
 
-            {historiasModal && selectedPaciente && (
+              {historiasModal && selectedPaciente && (
                 <div
                     className={style.overlay}
                     onClick={() => setHistoriasModal(false)}
@@ -788,20 +788,20 @@ export default function Pacientes() {
                                             <div key={h.id} className={style.turnoItem}>
 
                                                 <div>
-                                                    <strong>Fecha:</strong> {h.fecha}
+                                                    Fecha: {h.fecha}
                                                 </div>
 
                                                 <div>
-                                                    <strong>Evaluación:</strong> {h.evaluacion}
+                                                    Evaluación: {h.evaluacion}
                                                 </div>
 
                                                 <div>
-                                                    <strong>Doctor:</strong> {h.doctorId === 1 ? "Dr. Pérez" : "Dra. Gómez"}
+                                                    Doctor: {h.doctorId === 1 ? "Dr. Pérez" : "Dra. Gómez"}
                                                 </div>
 
                                                 {h.archivo && (
                                                     <div>
-                                                        <strong>Archivo:</strong> {h.archivo}
+                                                        Archivo: {h.archivo}
                                                     </div>
                                                 )}
                                             </div>

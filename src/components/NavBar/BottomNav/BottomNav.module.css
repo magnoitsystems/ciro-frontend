@@ -1,0 +1,166 @@
+/* ── Solo visible en mobile ── */
+.bottomNav {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .bottomNav {
+        display: flex;
+        align-items: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+
+        background-color: var(--blue-4);
+        border-top: 1px solid rgba(79, 142, 247, 0.18);
+        padding: 8px 4px 12px;
+        gap: 2px;
+    }
+}
+
+/* ── Items ── */
+.bnItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 2px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    color: var(--neutral-2);
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.18s ease, background 0.18s ease;
+}
+
+.bnItem:hover {
+    background: rgba(79, 142, 247, 0.08);
+    color: var(--neutral-1);
+}
+
+.bnActive {
+    color: var(--neutral-4);
+}
+
+.bnActive::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 22%;
+    right: 22%;
+    height: 2px;
+    border-radius: 0 0 3px 3px;
+    background-color: var(--blue-1);
+}
+
+/* ── Íconos ── */
+.bnIcon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    opacity: 0.65;
+    transition: opacity 0.18s ease;
+}
+
+.bnActive .bnIcon {
+    opacity: 1;
+}
+
+/* ── Hamburger animado ── */
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3.5px;
+    width: 22px;
+    height: 22px;
+}
+
+.hamburger span {
+    display: block;
+    width: 16px;
+    height: 1.5px;
+    border-radius: 2px;
+    background-color: currentColor;
+    transition: transform 0.22s ease, opacity 0.22s ease;
+    transform-origin: center;
+}
+
+.hambOpen span:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+.hambOpen span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hambOpen span:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+
+/* ── Menú desplegable ── */
+.moreMenu {
+    position: fixed;
+    bottom: 62px;
+    left: 8px;
+    right: 8px;
+    background-color: var(--blue-3);
+    border: 1px solid rgba(79, 142, 247, 0.2);
+    border-radius: 16px;
+    padding: 10px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.45);
+
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 99;
+}
+
+.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.moreLabel {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--neutral-3);
+    padding: 6px 12px 2px;
+    font-weight: 600;
+}
+
+.moreRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--neutral-2);
+    text-decoration: none;
+    transition: background 0.16s ease, color 0.16s ease;
+}
+
+.moreRow:hover {
+    background: rgba(79, 142, 247, 0.1);
+    color: var(--neutral-1);
+}
+
+.moreActive {
+    color: var(--neutral-4);
+    background: rgba(79, 142, 247, 0.12);
+}
+
+.moreIcon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    opacity: 0.75;
+}

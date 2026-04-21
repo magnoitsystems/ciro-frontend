@@ -5,6 +5,7 @@
     justify-content: space-between;
 
     width: 100%;
+    height: var(--30px);
 
     padding: var(--10px);
     padding-inline: var(--30px);
@@ -15,9 +16,25 @@
     font-style: italic;
 }
 
+.main img {
+    width: var(--15px);
+    height: var(--15px);
+}
+
 .main input {
     width: 100%;
 
     background-color: transparent;
     border: none;
+}
+
+@media (min-width: 768px) {
+    .main {
+        height: fit-content;
+    }
+
+    .main img {
+        width: var(--20px);
+        height: var(--20px);
+    }
 }
