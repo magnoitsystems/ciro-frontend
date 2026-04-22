@@ -20,17 +20,13 @@ export default function CuentaCorriente() {
     const [users, setUsers] = useState<UserResponseDTO[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // --- ESTADO: COMPROBANTE ---
     const [comprobanteData, setComprobanteData] = useState({
         fecha: "",
         observaciones: "",
         moneda: "PESOS",
-        details: [
-            { detail: "", amount: 1, unitPrice: 0 }
-        ]
+        details: [{ detail: "", amount: 1, unitPrice: 0 }]
     });
 
-    // --- ESTADO: RECIBO ---
     const [reciboData, setReciboData] = useState({
         fecha: "",
         cantidad: "",
@@ -39,10 +35,9 @@ export default function CuentaCorriente() {
         tipoCambio: "",
         metodoPago: "EFECTIVO",
         pagarEnDolares: false,
-        doctorId: "" // Agregado para el select de usuarios
+        doctorId: "" 
     });
 
-    // --- MODALES ---
     const [showComprobanteModal, setShowComprobanteModal] = useState(false);
     const [showReciboModal, setShowReciboModal] = useState(false);
     
@@ -52,7 +47,6 @@ export default function CuentaCorriente() {
     const [viewVoucherModal, setViewVoucherModal] = useState(false);
     const [selectedVoucher, setSelectedVoucher] = useState<VoucherDTO | null>(null);
 
-    // 1. CARGA DE DATOS INICIALES (Cuenta Corriente + Usuarios)
     const loadData = async () => {
         if (!patientId) return;
         try {
@@ -74,7 +68,6 @@ export default function CuentaCorriente() {
         loadData();
     }, [patientId]);
 
-    // 2. CREAR COMPROBANTE
     const handleCreateVoucher = async () => {
         try {
             const userId = localStorage.getItem('userId');
@@ -103,7 +96,6 @@ export default function CuentaCorriente() {
         }
     };
 
-    // 3. CREAR RECIBO
     const handleCreateReceipt = async () => {
         if (!reciboData.doctorId) {
             alert("Por favor seleccioná el profesional que recibe el pago.");
@@ -134,7 +126,6 @@ export default function CuentaCorriente() {
         }
     };
 
-    // 4. CANCELAR DEUDA
     const handleCancelDebt = async () => {
         const confirmar = window.confirm("¿Seguro deseas cancelar la deuda por abandono de tratamiento?");
         if (!confirmar) return;
@@ -149,7 +140,6 @@ export default function CuentaCorriente() {
         }
     };
 
-    // 5. VER DETALLES
     const handleViewReceipt = async (id: number) => {
         try {
             const data = await currentAccountService.getReceiptById(id);
@@ -172,7 +162,6 @@ export default function CuentaCorriente() {
         }
     };
 
-    // --- Lógica de la tablita de detalles al crear comprobante ---
     const addDetail = () => setComprobanteData(prev => ({ ...prev, details: [...prev.details, { detail: "", amount: 1, unitPrice: 0 }] }));
     const removeDetail = (index: number) => setComprobanteData(prev => ({ ...prev, details: prev.details.filter((_, i) => i !== index) }));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -184,7 +173,6 @@ export default function CuentaCorriente() {
     
     const totalComprobante = comprobanteData.details.reduce((acc, d) => acc + (d.amount * d.unitPrice), 0);
 
-    // RENDERIZADO
     if (loading) return <div style={{padding: '40px', color: 'white'}}>Cargando cuenta corriente...</div>;
     if (!accountData) return <div style={{padding: '40px', color: 'white'}}>No se pudo cargar la cuenta corriente.</div>;
 
@@ -202,6 +190,10 @@ export default function CuentaCorriente() {
                     <SaldosResume saldoPesos={accountData.debtInPesos || 0} saldoDolares={accountData.debtInDollars || 0} />
 
                     <div className={style.registerContainer}>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', width: '100%' }}>
+                        <DebtButton onClick={handleCancelDebt} />
+                    </div>
+
                         <div className={style.columnNames}>
                             <h6>Tipo</h6><h6>Fecha</h6><h6>Importe en ARS</h6><h6>Importe en USD</h6><h6>Saldo en ARS</h6><h6>Saldo en USD</h6>
                         </div>
@@ -212,10 +204,10 @@ export default function CuentaCorriente() {
                                     key={movement.id}
                                     movement={movement}
                                     onClick={() => {
-                                        if (movement.type === 'RECEIPT') {
-                                            handleViewReceipt(movement.id);
-                                        } else if (movement.type === 'VOUCHER') {
-                                            handleViewVoucher(movement.id);
+                                        if (movement.type === 'RECEIPT' && movement.receiptId) {
+                                            handleViewReceipt(movement.receiptId);
+                                        } else if (movement.type === 'VOUCHER' && movement.voucherId) {
+                                            handleViewVoucher(movement.voucherId);
                                         }
                                     }}
                                 />
@@ -223,8 +215,6 @@ export default function CuentaCorriente() {
                         ) : (
                             <p style={{ padding: '20px', color: 'var(--neutral-4)' }}>No hay movimientos registrados.</p>
                         )}
-
-                        <DebtButton onClick={handleCancelDebt} />
                     </div>
                 </div>
 
@@ -241,7 +231,6 @@ export default function CuentaCorriente() {
                 </div>
             </div>
 
-            {/* --- MODAL COMPROBANTE --- */}
             {showComprobanteModal && (
                 <div className={style.overlay} onClick={() => setShowComprobanteModal(false)}>
                     <div className={style.modal} onClick={(e) => e.stopPropagation()}>
@@ -283,14 +272,12 @@ export default function CuentaCorriente() {
                 </div>
             )}
 
-            {/* --- MODAL RECIBO --- */}
             {showReciboModal && (
                 <div className={style.overlay} onClick={() => setShowReciboModal(false)}>
                     <div className={style.modal} onClick={(e) => e.stopPropagation()}>
                         <button className={style.close} onClick={() => setShowReciboModal(false)}>✕</button>
                         <h3>Nuevo recibo</h3>
                         <div className={style.form}>
-                            {/* SELECT DE USUARIOS */}
                             <ProvInput 
                                 placeholder="Profesional que recibe" 
                                 as="select" 
@@ -321,7 +308,6 @@ export default function CuentaCorriente() {
                 </div>
             )}
 
-            {/* --- MODAL VISTA RECIBO COMPLETÍSIMO --- */}
             {viewReciboModal && selectedRecibo && (
                 <div className={style.overlay} onClick={() => setViewReciboModal(false)}>
                     <div className={style.modal} onClick={(e) => e.stopPropagation()}>
@@ -346,7 +332,6 @@ export default function CuentaCorriente() {
                 </div>
             )}
 
-            {/* --- MODAL VISTA COMPROBANTE COMPLETÍSIMO --- */}
             {viewVoucherModal && selectedVoucher && (
                 <div className={style.overlay} onClick={() => setViewVoucherModal(false)}>
                     <div className={style.modal} onClick={(e) => e.stopPropagation()}>
@@ -367,15 +352,17 @@ export default function CuentaCorriente() {
                                         <span>Detalle</span><span>Cant.</span><span>Precio U.</span><span>Subtotal</span>
                                     </div>
                                     {selectedVoucher.details.map((d, i) => (
-                                        <div key={i} className={style.detailRow} style={{marginBottom: '5px'}}>
+                                        <div key={i} className={style.detailRow} style={{ marginBottom: "5px" }}>
                                             <span>{d.detail}</span>
                                             <span>{d.amount}</span>
                                             <span>${d.unitPrice}</span>
-                                            <span style={{fontWeight: 'bold'}}>${(d.amount * d.unitPrice).toFixed(2)}</span>
+                                            <span style={{ fontWeight: "bold" }}>
+                                                ${(d.amount * d.unitPrice).toFixed(2)}
+                                            </span>
                                         </div>
                                     ))}
                                 </div>
-                                <div className={style.totalBox} style={{marginTop: '15px', textAlign: 'right'}}>
+                                <div className={style.totalBox} style={{ marginTop: "15px", textAlign: "right" }}>
                                     Total: <strong>{selectedVoucher.currency} {selectedVoucher.totalAmount}</strong>
                                 </div>
                             </div>

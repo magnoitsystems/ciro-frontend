@@ -7,26 +7,36 @@ type Props = {
 }
 
 export default function Register({ movement, onClick }: Props) {
-    // El backend devuelve 'RECEIPT' o 'VOUCHER'. Lo mapeamos a español para la UI
     const displayType = movement.type === 'RECEIPT' ? 'Recibo' : 'Comprobante';
 
-    // Formateamos los números para que no se rompan si vienen en null/undefined
-    const amtPesos = movement.transactionAmountPesos ? movement.transactionAmountPesos.toLocaleString('es-AR', { minimumFractionDigits: 2 }) : "0,00";
-    const amtDollars = movement.transactionAmountDollars ? movement.transactionAmountDollars.toLocaleString('es-AR', { minimumFractionDigits: 2 }) : "0,00";
-    const balPesos = movement.balancePesos ? movement.balancePesos.toLocaleString('es-AR', { minimumFractionDigits: 2 }) : "0,00";
-    const balDollars = movement.balanceDollars ? movement.balanceDollars.toLocaleString('es-AR', { minimumFractionDigits: 2 }) : "0,00";
+    const formatCurrency = (value: number | null | undefined) => {
+        if (value === null || value === undefined) return "0,00";
+        return value.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
 
-    // Formateamos la fecha (ej: 2026-05-27 -> 27/05/2026)
+    const amtPesos = formatCurrency(movement.transactionAmountPesos);
+    const amtDollars = formatCurrency(movement.transactionAmountDollars);
+    const balPesos = formatCurrency(movement.balancePesos);
+    const balDollars = formatCurrency(movement.balanceDollars);
+
     const dateStr = movement.date ? new Date(movement.date).toLocaleDateString('es-AR') : "-";
 
+    const canceledStyle: React.CSSProperties = movement.canceled ? {
+        backgroundColor: 'rgba(255, 77, 77, 0.08)', 
+        borderLeft: '4px solid #ff4d4d',
+    } : {};
+
     return (
-        <main onClick={onClick} className={style.register}>
-            <div className={style[displayType] || style.defaultTag}>{displayType}</div>
+        <main onClick={onClick} className={style.register} style={canceledStyle}>
+            <div className={style[displayType] || style.defaultTag}>
+                {displayType}
+            </div>
+            
             <h6>{dateStr}</h6>
-            <h6>{amtPesos}</h6>
-            <h6>{amtDollars}</h6>
-            <h6>{balPesos}</h6>
-            <h6>{balDollars}</h6>
+            <h6 style={movement.canceled ? { textDecoration: 'line-through', opacity: 0.6 } : {}}>${amtPesos}</h6>
+            <h6 style={movement.canceled ? { textDecoration: 'line-through', opacity: 0.6 } : {}}>U$D {amtDollars}</h6>
+            <h6>${balPesos}</h6>
+            <h6>USD {balDollars}</h6>
         </main>
     )
 }

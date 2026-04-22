@@ -10,6 +10,8 @@ export interface CurrentAccountMovementDTO {
     balancePesos: number;
     balanceDollars: number;
     canceled: boolean;
+    receiptId?: number;
+    voucherId?: number;
 }
 
 export interface CurrentAccountResponseDTO {
