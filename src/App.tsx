@@ -1,6 +1,6 @@
 import './App.css'
 import NavBar from "./components/NavBar/navBar.tsx";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Panel from "./pages/panel/Panel.tsx";
 import Sueldos from "./pages/sueldos/Sueldos.tsx";
 import Proveedores from "./pages/proveedores/Proveedores.tsx";
@@ -15,16 +15,24 @@ import CuentaCorriente from "./pages/cuentacorriente/CuentaCorriente.tsx";
 import Estadisticas from "./pages/estadisticas/Estadisticas.tsx";
 import Login from './components/Login/login.tsx';
 import { useState } from 'react';
+import { authService } from "./services/auth.service";
 
 function App() {
-    const [isLogueado, setIsLogueado] = useState(false)
+    const [isLogueado, setIsLogueado] = useState<boolean>(authService.isAuthenticated());
+
+    if (!isLogueado) {
+        return (
+            <div className="appContainer">
+                <Routes>
+                    <Route path="*" element={<Login onLogin={() => setIsLogueado(true)} />} />
+                </Routes>
+            </div>
+        );
+    }
+
     return (
         <div className="appContainer">
-            {!isLogueado ? (
-                <Login onLogin={() => setIsLogueado(true)}/>
-            ): (
-                <NavBar />
-            )}
+            <NavBar />
 
             <div className="content">
                 <Routes>
@@ -40,6 +48,7 @@ function App() {
                     <Route path="/tareas" element={<Tareas />} />
                     <Route path="/cuentacorriente/:patientId" element={<CuentaCorriente />} />
                     <Route path="/estadisticas" element={<Estadisticas />} />
+                    <Route path="*" element={<Navigate to="/Panel" replace />} />
                 </Routes>
             </div>
         </div>
