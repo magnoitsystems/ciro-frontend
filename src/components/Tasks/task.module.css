@@ -23,7 +23,6 @@ body {
     display: flex;
     position: sticky;
     height: 95vh;
-    
 }
 
 .containerProperties{
@@ -64,4 +63,5 @@ body {
         flex-direction: row;
         justify-content: space-between;
     }
+
 }

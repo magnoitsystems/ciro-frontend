@@ -45,7 +45,7 @@ return (
             </div>
             <div className={styles.buttonsContainerProperties}>
                 <div className={styles.selectProperties}>
-                    <span>{state}</span>
+                    <h6>{state}</h6>
                 </div>
                 <div className={styles.buttonsProperties}>
                     <button onClick={() => onBotonClick({ tipo: 'edit' })}><img src='./icons/editIcon.png' width={20} height={20}></img></button>

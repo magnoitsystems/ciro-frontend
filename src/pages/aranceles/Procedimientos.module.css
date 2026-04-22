@@ -8,17 +8,20 @@
     gap: var(--20px);
     height: 100vh;
     overflow-y: auto;
+    padding-inline: var(--10px);
 }
 
 .procedimientosContainer {
     align-items: center;
-    width: 100%;
+    width: 95%;
     padding: var(--40px);
     padding-inline: var(--20px);
-    margin-top: var(--50px);
+    margin-top: var(--10px);
     gap: var(--10px);
     background-color: var(--blue-2);
     border-radius: var(--5px);
+
+    overflow-x: auto;
 }
 
 .formContainer {
@@ -141,4 +144,22 @@
 
 .confirmDeleteBtn:hover {
     background-color: #c9302c;
+}
+
+@media (min-width: 768px) {
+    .main {
+        padding-inline: 0;
+    }
+
+    .procedimientosContainer {
+        align-items: center;
+        width: 100%;
+        padding: var(--40px);
+        padding-inline: var(--20px);
+        margin-top: var(--50px);
+        gap: var(--10px);
+        background-color: var(--blue-2);
+        border-radius: var(--5px);
+    }
+
 }

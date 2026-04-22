@@ -18,6 +18,7 @@ export default function NewBudget({ onNuevoPacienteClick }: Prop) {
     const [patientId, setPatientId] = useState(-1)
     const [file, setFile] = useState<File>()
     const [date, setDate] = useState('')
+    const [title, setTitle] = useState('')
     const estados = ['ENVIADO', 'ACEPTADO', 'ACEPTADO_PARCIALMENTE', 'RECHAZADO', 'PENDIENTE_DE_RESPUESTA', 'SIN_ENVIAR', 'SIN_HACER']
 
     useEffect(() => {
@@ -30,6 +31,7 @@ export default function NewBudget({ onNuevoPacienteClick }: Prop) {
         e.preventDefault()
         const newBudget: BudgetCreateDTO = {
             patientId,
+            title,
             date,
             status,
             file
@@ -37,7 +39,7 @@ export default function NewBudget({ onNuevoPacienteClick }: Prop) {
 
         try {
             await budgetService.createBudget(newBudget)
-            navigate('/presupuestos.tsx')
+            navigate('/presupuestos')
         } catch (error) {
             console.error(error)
         }
@@ -70,7 +72,13 @@ export default function NewBudget({ onNuevoPacienteClick }: Prop) {
                     <div>
                         <label htmlFor="date">Fecha de carga</label>
                         <div className={styles.fileInputContainer}>
-                            <input type="date" id="uploadedDate" name="date" onChange={(e) => setDate(e.target.value)} required />
+                            <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} required />
+                        </div>
+                    </div>
+                    <div>
+                        <label htmlFor="date">Título</label>
+                        <div className={styles.fileInputContainer}>
+                            <input type="text" id="title" name="title" onChange={(e) => setTitle(e.target.value)} required />
                         </div>
                     </div>
                     <div>
