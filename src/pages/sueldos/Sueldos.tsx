@@ -18,7 +18,7 @@ export default function Sueldos() {
     const [activeTab, setActiveTab] = useState<"sueldos" | "gastos" | "reporte">("sueldos");
     const [bills, setBills] = useState<BillResponseDTO[]>([]);
     const [loading, setLoading] = useState(true);
-
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [users, setUsers] = useState<UserResponseDTO[]>([]);
     const [suppliers, setSuppliers] = useState<SupplierResponseDTO[]>([]);
 
@@ -27,6 +27,8 @@ export default function Sueldos() {
     const [selectedGasto, setSelectedGasto] = useState<BillResponseDTO | null>(null);
     
     const [isEditMode, setIsEditMode] = useState(false);
+
+    const [notificacion, setNotificacion] = useState<{ message: string, type: "success" | "error" } | null>(null);
 
     const initialGastoState = {
         employeeId: "",
@@ -43,6 +45,13 @@ export default function Sueldos() {
 
     const [newGasto, setNewGasto] = useState(initialGastoState);
 
+    useEffect(() => {
+        if (notificacion) {
+            const timer = setTimeout(() => setNotificacion(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [notificacion]);
+
     const fetchBills = async () => {
         setLoading(true);
         try {
@@ -53,6 +62,7 @@ export default function Sueldos() {
             }
         } catch (error) {
             console.error("Error al cargar los datos:", error);
+            setNotificacion({ message: "Error al cargar los registros.", type: "error" });
         } finally {
             setLoading(false);
         }
@@ -81,6 +91,7 @@ export default function Sueldos() {
             ...initialGastoState,
             billType: activeTab === "sueldos" ? "SUELDO" : "SERVICIO",
         }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab]);
 
     const handleSubmitBill = async () => {
@@ -100,8 +111,10 @@ export default function Sueldos() {
 
             if (isEditMode && selectedGasto) {
                 await billService.updateBill(selectedGasto.id, payload);
+                setNotificacion({ message: "Registro actualizado exitosamente.", type: "success" });
             } else {
                 await billService.createBill(payload);
+                setNotificacion({ message: "Registro creado exitosamente.", type: "success" });
             }
             
             closeFormModal();
@@ -109,7 +122,7 @@ export default function Sueldos() {
 
         } catch (error) {
             console.error("Error al guardar:", error);
-            alert("Ocurrió un error al guardar el registro.");
+            setNotificacion({ message: "Ocurrió un error al guardar el registro.", type: "error" });
         }
     };
 
@@ -134,19 +147,25 @@ export default function Sueldos() {
 
     const handleDeleteClick = async () => {
         if (!selectedGasto) return;
+        setShowDeleteModal(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!selectedGasto) return;
         
-        const confirm = window.confirm("¿Estás seguro de que querés eliminar este registro?");
-        if (confirm) {
-            try {
-                console.log(`Eliminando registro ID: ${selectedGasto.id}...`);
-                // Descomentar cuando haya hecho el eliminar en el back
-                // await billService.deleteBill(selectedGasto.id);
-                alert("Registro eliminado (funcionalidad preparada conectada al console.log)");
-                setViewGastoModal(false);
-                fetchBills();
-            } catch (error) {
-                console.error("Error al eliminar el registro:", error);
-            }
+        try {
+            console.log(`Eliminando registro ID: ${selectedGasto.id}...`);
+            // Descomentar cuando haya hecho el eliminar en el back
+            // await billService.deleteBill(selectedGasto.id);
+            
+            setNotificacion({ message: "Registro eliminado exitosamente.", type: "success" });
+            setShowDeleteModal(false);
+            setViewGastoModal(false);
+            fetchBills();
+        } catch (error) {
+            console.error("Error al eliminar el registro:", error);
+            setNotificacion({ message: "Ocurrió un error al eliminar el registro.", type: "error" });
+            setShowDeleteModal(false);
         }
     };
 
@@ -156,11 +175,17 @@ export default function Sueldos() {
         setNewGasto({...initialGastoState, billType: activeTab === "sueldos" ? "SUELDO" : "SERVICIO"});
     };
 
-    const handleGenerateReport = async (period: ReportPeriod, date?: string) => {
+    const handleGenerateReport = async (period: string, date?: string) => {
         try {
-            await billService.downloadBillsReport(period, date);
+            let javaFriendlyDate = date;
+            if (date && date.length === 7) {
+                javaFriendlyDate = `${date}-01`;
+            }
+
+            await billService.downloadBillsReport(period as ReportPeriod, javaFriendlyDate);
+            setNotificacion({ message: "Reporte generado con éxito.", type: "success" });
         } catch (error) {
-            alert("Error al descargar el reporte PDF.");
+            setNotificacion({ message: "Error al descargar el reporte PDF.", type: "error" });
         }
     };
 
@@ -170,6 +195,26 @@ export default function Sueldos() {
                 sectionText={'Acá los registros de sueldos y gastos'}
                 className={'darkStyle'}
             />
+
+            {notificacion && (
+                <div style={{
+                    padding: "12px 16px",
+                    margin: "0 auto 20px auto",
+                    width: "fit-content",
+                    minWidth: "300px",
+                    backgroundColor: notificacion.type === "error" ? "#fee2e2" : "#dcfce7",
+                    color: notificacion.type === "error" ? "#991b1b" : "#166534",
+                    borderRadius: "8px",
+                    border: `1px solid ${notificacion.type === "error" ? "#f87171" : "#86efac"}`,
+                    textAlign: "center",
+                    fontWeight: "500",
+                    fontSize: "14px",
+                    transition: "all 0.3s ease",
+                    zIndex: 100
+                }}>
+                    {notificacion.message}
+                </div>
+            )}
 
             <div className={style.newBill}>
                 <div onClick={() => setShowGastoModal(true)} className={style.button}><h3>+</h3></div>
@@ -446,6 +491,30 @@ export default function Sueldos() {
                                     )}
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showDeleteModal && (
+                <div className={style.overlay} onClick={() => setShowDeleteModal(false)} style={{ zIndex: 1000 }}>
+                    <div className={style.modal} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '400px', textAlign: 'center' }}>
+                        <h3 style={{ marginBottom: '15px' }}>¿Eliminar registro?</h3>
+                        <p style={{ marginBottom: '25px', color: '#ccc' }}>Esta acción no se puede deshacer.</p>
+                        
+                        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+                            <button 
+                                onClick={() => setShowDeleteModal(false)}
+                                style={{ padding: '10px 20px', borderRadius: '8px', border: '1px solid #555', backgroundColor: 'transparent', color: '#fff', cursor: 'pointer' }}
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                onClick={confirmDelete}
+                                style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', backgroundColor: '#ef4444', color: '#fff', cursor: 'pointer', fontWeight: 'bold' }}
+                            >
+                                Sí, eliminar
+                            </button>
                         </div>
                     </div>
                 </div>

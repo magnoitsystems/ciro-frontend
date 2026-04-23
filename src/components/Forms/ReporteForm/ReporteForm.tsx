@@ -1,27 +1,52 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProvInput from "../NewProvForm/ProvInput.tsx";
 import GreenFormButton from "../../Buttons/GreenFormButton/greenFormButton.tsx";
+
 interface ReporteFormProps {
-    onGenerate: (period: any, date?: string) => void;
+    onGenerate: (period: string, date?: string) => void;
 }
 
 export default function ReporteForm({ onGenerate }: ReporteFormProps) {
 
     const [tipo, setTipo] = useState("");
     const [rango, setRango] = useState("");
+    const [mensajeError, setMensajeError] = useState("");
+
+    useEffect(() => {
+        if (mensajeError) {
+            const timer = setTimeout(() => setMensajeError(""), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [mensajeError]);
 
     const handleSubmit = () => {
         if (!tipo || !rango) {
-            alert("Completá los campos");
+            setMensajeError("Por favor, completá todos los campos para generar el reporte.");
             return;
         }
 
+        setMensajeError(""); 
         onGenerate(tipo, rango);
     };
 
     return(
         <div style={{display: "flex", flexDirection: "column", gap: "20px"}}>
+
+            {mensajeError && (
+                <div style={{
+                    padding: "12px 16px",
+                    backgroundColor: "#fee2e2", 
+                    color: "#991b1b", 
+                    borderRadius: "8px",
+                    border: "1px solid #f87171",
+                    textAlign: "center",
+                    fontWeight: "500",
+                    fontSize: "14px",
+                    transition: "all 0.3s ease"
+                }}>
+                    {mensajeError}
+                </div>
+            )}
 
             <ProvInput
                 placeholder="Tipo de reporte"
@@ -30,17 +55,16 @@ export default function ReporteForm({ onGenerate }: ReporteFormProps) {
                 value={tipo}
                 onChange={(e) => {
                     setTipo(e.target.value);
-                    setRango("");
+                    setRango(""); 
                 }}
                 options={[
-                    { value: "diario", label: "Diario" },
-                    { value: "semanal", label: "Semanal" },
-                    { value: "mensual", label: "Mensual" },
-                    { value: "anual", label: "Anual" }
+                    { value: "DAY", label: "Diario" },
+                    { value: "WEEK", label: "Semanal" },
+                    { value: "MONTH", label: "Mensual" },
                 ]}
             />
 
-            {tipo === "diario" && (
+            {tipo === "DAY" && (
                 <ProvInput
                     placeholder="Seleccionar día"
                     type="date"
@@ -50,7 +74,7 @@ export default function ReporteForm({ onGenerate }: ReporteFormProps) {
                 />
             )}
 
-            {tipo === "semanal" && (
+            {tipo === "WEEK" && (
                 <ProvInput
                     placeholder="Seleccionar semana"
                     type="week"
@@ -60,20 +84,10 @@ export default function ReporteForm({ onGenerate }: ReporteFormProps) {
                 />
             )}
 
-            {tipo === "mensual" && (
+            {tipo === "MONTH" && (
                 <ProvInput
                     placeholder="Seleccionar mes"
                     type="month"
-                    className="inputBoxDefault"
-                    value={rango}
-                    onChange={(e) => setRango(e.target.value)}
-                />
-            )}
-
-            {tipo === "anual" && (
-                <ProvInput
-                    placeholder="Seleccionar año"
-                    type="number"
                     className="inputBoxDefault"
                     value={rango}
                     onChange={(e) => setRango(e.target.value)}
