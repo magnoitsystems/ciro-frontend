@@ -143,21 +143,42 @@
 }
 
 .form {
-    gap: var(--5px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--15px);
+}
+
+.submitButton {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
 }
 
 .modal {
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
-
     width: 60%;
-    max-height: 80vh;
-
-    padding: var(--30px) var(--20px);
-    gap: var(--20px);
-
+    max-height: 90vh; 
+    padding: var(--20px) var(--25px);
+    gap: var(--15px);
     background: var(--blue-4);
     color: var(--neutral-1);
-    border-radius: var(--5px);
+    border-radius: var(--10px);
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.5); 
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--blue-3);
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+}
+
+.modalHeader h3 {
+    margin: 0;
 }
 
 .modal input, .modal select {
@@ -166,18 +187,24 @@
 
 .close {
     display: flex;
-    flex-direction: row;
-    justify-content: end;
+    justify-content: center;
     align-items: center;
-
-    padding: 0;
-    margin: 0;
-
+    
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    
     background-color: transparent;
     color: var(--red);
     border: none;
-
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.close:hover {
+    background-color: rgba(255, 0, 0, 0.1);
 }
 
 .sharedInput {
@@ -214,7 +241,6 @@
     gap: var(--10px);
 }
 
-/* secciones tipo tarjeta */
 .reciboSection {
     background: var(--blue-2);
     padding: 15px;
@@ -254,4 +280,23 @@
 
 .pending {
     color: var(--red);
+}
+
+.headerActions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.actionIcon {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.8;
+}
+
+.actionIcon:hover {
+    opacity: 1;
+    transform: scale(1.1);
 }

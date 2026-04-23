@@ -1,8 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import ProvInput from "../NewProvForm/ProvInput.tsx";
 import GreenFormButton from "../../Buttons/GreenFormButton/greenFormButton.tsx";
+interface ReporteFormProps {
+    onGenerate: (period: any, date?: string) => void;
+}
 
-export default function ReporteForm() {
+export default function ReporteForm({ onGenerate }: ReporteFormProps) {
 
     const [tipo, setTipo] = useState("");
     const [rango, setRango] = useState("");
@@ -13,7 +17,7 @@ export default function ReporteForm() {
             return;
         }
 
-        console.log("Generar reporte:", { tipo, rango });
+        onGenerate(tipo, rango);
     };
 
     return(
@@ -26,7 +30,7 @@ export default function ReporteForm() {
                 value={tipo}
                 onChange={(e) => {
                     setTipo(e.target.value);
-                    setRango(""); // reset cuando cambia tipo
+                    setRango("");
                 }}
                 options={[
                     { value: "diario", label: "Diario" },

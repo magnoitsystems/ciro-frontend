@@ -1,27 +1,26 @@
 .sueldo {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-
+    align-items: center;
     width: 100%;
-
-    padding: var(--5px);
-    padding-inline: var(--15px);
-
+    padding: var(--10px) var(--15px);
     background-color: var(--blue-3);
     border-radius: var(--50px);
     color: var(--neutral-1);
-
     cursor: pointer;
     transition: 0.2s ease;
 }
 
-/* Estado activo */
+.sueldo:hover {
+    background-color: var(--blue-2);
+    transform: scale(1.01);
+}
+
 .active {
     background-color: var(--blue-2);
     padding: var(--10px);
 }
 
-/* Botón eliminar */
 .delete {
     background: transparent;
     border: none;
@@ -30,13 +29,13 @@
 }
 
 .select {
-    padding: var(--5px);
-    padding-inline: var(--40px);
-
+    padding: var(--5px) var(--20px);
     border: none;
     border-radius: var(--20px);
     color: var(--neutral-1);
-    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
 }
 
 .pago {
@@ -54,4 +53,9 @@
     border-radius: var(--20px);
     cursor: pointer;
     margin-right: 5px;
+}
+
+.statusContainer {
+    display: flex;
+    justify-content: flex-start;
 }
