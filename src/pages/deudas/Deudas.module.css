@@ -4,6 +4,7 @@
 
     width: 100%;
 
+    padding-inline: var(--10px);
     gap: var(--30px);
 }
 
@@ -26,7 +27,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 
-    width: 95%;
+    width: 100%;
 
     padding: var(--5px);
     padding-inline: var(--40px);
@@ -34,4 +35,10 @@
     font-size: 14px;
     color: var(--neutral-4);
     background-color: var(--blue-3);
+}
+
+@media (min-width: 768px) {
+    .main {
+        padding-inline: 0;
+    }
 }
