@@ -3,7 +3,7 @@
     flex-direction: column;
 
     width: 100%;
-    height: 100%;
+    height: 50vh;
 
     padding: var(--20px);
     padding-inline: var(--30px);
@@ -12,6 +12,8 @@
     background-color: var(--blue-2);
     color: var(--neutral-1);
     border-radius: var(--5px);
+
+    overflow-y: auto;
 }
 
 .formContainer p {
@@ -31,8 +33,7 @@
     flex-direction: column;
     align-items: start;
 
-    min-width: 200px;
-    max-width: 100%;
+    width: 100%;
 
     gap: var(--5px);
 
@@ -72,13 +73,12 @@
 
 .sharedInputs {
     display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: start;
 
     width: 100%;
 
-    gap: var(--50px);
+    gap: var(--20px);
 }
 
 .back {
@@ -98,6 +98,10 @@
     border: 1px solid var(--red);
 }
 
+.sharedInputs button {
+    width: 100%;
+}
+
 @media (min-width: 768px) {
     .holeInput, .holeMiniInput {
         min-width: 400px;
@@ -105,5 +109,33 @@
 
     .holeInput select, .holeMiniInput select {
         min-width: 400px;
+    }
+
+    .sharedInputs {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+
+        width: 100%;
+
+        gap: var(--50px);
+    }
+
+    .formContainer {
+        height: 100%;
+    }
+
+    .holeInput, .holeMiniInput {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+
+        min-width: 200px;
+        max-width: 100%;
+
+        gap: var(--5px);
+
+        color: var(--neutral-1);
     }
 }
