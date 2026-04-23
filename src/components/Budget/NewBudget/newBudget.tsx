@@ -48,12 +48,12 @@ export default function NewBudget({ onNuevoPacienteClick }: Prop) {
     return (
         <div className={styles.newBudget}>
             <div className={styles.textContainer}>
-                <p>Para cargar un nuevo presupuesto complete los siguientes datos.</p>
-                <p>Si no se elige un paciente al que asignar el mismo, el estado del presupuesto sera “Pendiente” hasta que se determine a quien pertenece. De lo contrario, se catalogará como “Enviado”.</p>
+                <h6>Para cargar un nuevo presupuesto complete los siguientes datos.</h6>
+                <h6>Si no se elige un paciente al que asignar el mismo, el estado del presupuesto sera “Pendiente” hasta que se determine a quien pertenece. De lo contrario, se catalogará como “Enviado”.</h6>
             </div>
             <div className={styles.formContainer}>
                 <form onSubmit={handleSubmit} className={styles.formContainer}>
-                    <div>
+                    <div className={styles.holeInput}>
                         <label htmlFor="patient">Paciente destinatario</label>
                         <select id="patient" name="patient" onChange={(e) => {
                             if (e.target.value === 'nuevo') {
@@ -69,19 +69,19 @@ export default function NewBudget({ onNuevoPacienteClick }: Prop) {
                             <option value="nuevo">Crear nuevo paciente +</option>
                         </select>
                     </div>
-                    <div>
+                    <div className={styles.holeInput}>
                         <label htmlFor="date">Fecha de carga</label>
                         <div className={styles.fileInputContainer}>
                             <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} required />
                         </div>
                     </div>
-                    <div>
+                    <div className={styles.holeInput}>
                         <label htmlFor="date">Título</label>
                         <div className={styles.fileInputContainer}>
                             <input type="text" id="title" name="title" onChange={(e) => setTitle(e.target.value)} required />
                         </div>
                     </div>
-                    <div>
+                    <div className={styles.holeInput}>
                         <label htmlFor="state">Estado</label>
                         <select id="state" name="state" onChange={(e) => setStatus(e.target.value as BudgetStatus)}>
                             <option value="">Seleccione un paciente</option>
@@ -90,7 +90,7 @@ export default function NewBudget({ onNuevoPacienteClick }: Prop) {
                             ))}
                         </select>
                     </div>
-                    <div>
+                    <div className={styles.holeInput}>
                         <label htmlFor="file">Ajunte el presupuesto</label>
                         <div className={styles.fileInputContainer}>
                             <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png" required placeholder='Suba un archivo' onChange={(e) => {

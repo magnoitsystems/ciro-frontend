@@ -27,7 +27,7 @@ export default function BudgetInfo({ budgets }: Prop) {
                     {budgets.map(budget => (
                         <tr className={styles.tableTrPropertiesTbody}>
                         <td>
-                            <span style={{ backgroundColor: '#FFFEFB', height: '40px', display: 'flex', alignItems: 'center', padding: '10px', margin: '0px', width: '150px', borderTopLeftRadius: '10px', borderBottomLeftRadius: '10px', color: 'black' }}>
+                            <span style={{ backgroundColor: '#FFFEFB', height: '30px', display: 'flex', alignItems: 'center', padding: '10px', margin: '0px', width: '150px', borderTopLeftRadius: '10px', borderBottomLeftRadius: '10px', color: 'black' }}>
                                 <a href={''} target='_blank' rel='noreferrer'>
                                     <img src='/icons/fileIcon.png' /> {budget.title}</a>
                             </span>

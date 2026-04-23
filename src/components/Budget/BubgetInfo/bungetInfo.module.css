@@ -2,26 +2,29 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 10px;
+    border-radius: var(--5px);
     height: 100%;
     width: 100%;
     background-color: var(--blue-2);
-    padding: 50px;
-    gap: var(--10px);
-    overflow: hidden; 
+    padding: var(--20px);
+    padding-inline: 0;
+    gap: var(--30px);
+    overflow: hidden;
 }
 
 .tableBodyProperties{
     display: flex;
     flex-direction: column;
     width: 90%;
-    gap: var(--20px);
+    gap: var(--15px);
     overflow-y: auto; 
     max-height: 100%;
 }
 
 .tableHeaderProperties {
-    width: 80%;
+    width: 90%;
+
+    font-size: 14px;
 }
 
 .tableTrProperties, .tableTrPropertiesTbody{
@@ -34,14 +37,29 @@
 
 .tableTrPropertiesTbody{
     background-color: var(--neutral-2);
-    height: 40px;
+    height: var(--30px);
     align-items: center;
     border-radius: 5px;
     color: var(--blue-4);
+    width: 700px;
 }
 
 .stateProperties{
     width: 180px;
     height: 25px;
     border-radius: 100px;
+}
+
+@media (min-width: 768px) {
+    .tableContainerPropeties {
+        padding: var(--50px);
+    }
+
+    .tableBodyProperties{
+        width: 100%;
+    }
+
+    .tableTrPropertiesTbody {
+        width: 100%;
+    }
 }
