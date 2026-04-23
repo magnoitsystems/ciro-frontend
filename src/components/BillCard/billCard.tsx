@@ -1,38 +1,37 @@
 import { useState } from "react";
-import style from './BillCard.module.css'
+import style from './BillCard.module.css';
+import type { BillResponseDTO } from "../../types/bills.types";
 
 type Props = {
-    onClick? : () => void;
+    bill: BillResponseDTO;
+    onClick?: () => void;
 }
 
-export default function BillCard({onClick}: Props) {
+export default function BillCard({ bill, onClick }: Props) {
     const [selected, setSelected] = useState(false);
-    const [estado, setEstado] = useState("pago");
+
+    const displayName = bill.billType === 'SUELDO' 
+        ? (bill.employeeFullName || "Empleado sin nombre") 
+        : (bill.supplierFullName || bill.entityName || "Sin entidad");
 
     return (
         <main
             className={`${style.sueldo} ${selected ? style.active : ""}`}
-            onClick={() => {setSelected(!selected)
-        }}
+            onClick={() => setSelected(!selected)}
         >
-            <div>Agostina Bidegain</div>
-            <h6>27/05/26</h6>
-            <h6>Transferencia</h6>
-            <h6>1.500.000</h6>
-            <h6>$</h6>
-            <h6>Milagros Alvarez</h6>
+            <div>{displayName}</div>
+            <h6>{bill.billDate}</h6>
+            <h6>{bill.paymentMethod.replace('_', ' ')}</h6>
+            <h6>{new Intl.NumberFormat('es-AR').format(bill.amount)}</h6>
+            <h6>{bill.currencyType === 'PESOS' ? '$' : bill.currencyType}</h6>
+            <h6>{bill.from}</h6>
 
-            <select
-                value={estado}
-                onChange={(e) => setEstado(e.target.value)}
-                onClick={(e) => e.stopPropagation()}
-                className={`${style.select} ${
-                    estado === "pago" ? style.pago : style.nopago
-                }`}
+            <div 
+                className={`${style.select} ${bill.status === "PAGADO" ? style.pago : style.nopago}`}
+                onClick={(e) => e.stopPropagation()} 
             >
-                <option value="pago">Pago</option>
-                <option value="nopago">No pago</option>
-            </select>
+                {bill.status}
+            </div>
 
             {selected && (
                 <>
@@ -50,7 +49,7 @@ export default function BillCard({onClick}: Props) {
                         className={style.delete}
                         onClick={(e) => {
                             e.stopPropagation();
-                            console.log("Eliminar sueldo");
+                            console.log(`Eliminar bill id: ${bill.id}`);
                         }}
                     >
                         Eliminar
