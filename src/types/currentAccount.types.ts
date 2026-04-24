@@ -52,6 +52,8 @@ export interface ReceiptResponseDTO {
     patientFullName: string; 
     patientDni: string;
     doctorFullName: string;
+    paymentMethod: PaymentMethod;
+    observations: string;
 }
 
 export interface VoucherDetailDTO {
