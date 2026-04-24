@@ -8,16 +8,19 @@
 .pages {
     display: flex;
     flex-direction: row;
+
+    justify-content: space-between;
+
+    width: 100%;
 }
 
 .main {
+    width: 100vw;
+
+    padding-inline: var(--10px);
     gap: var(--30px);
-}
 
-.pages {
-    justify-content: space-between;
-
-    width: 60%;
+    overflow: auto;
 }
 
 .pages h4 {
@@ -28,14 +31,20 @@
 
     color: var(--neutral-1);
     border-radius: var(--20px) var(--20px) 0 0;
+
+    font-size: var(--h6);
 }
 
 .content {
+    min-width: 1000px;
+
     padding: var(--30px);
     padding-inline: var(--20px);
     gap: var(--5px);
 
     background-color: var(--blue-3);
+
+    overflow: auto;
 }
 
 .columnNames {
@@ -158,7 +167,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    width: 60%;
+    width: 90%;
     max-height: 90vh; 
     padding: var(--20px) var(--25px);
     gap: var(--15px);
@@ -299,4 +308,31 @@
 .actionIcon:hover {
     opacity: 1;
     transform: scale(1.1);
+}
+
+.reportContainer {
+    display: flex;
+
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .main {
+        width: 100%;
+
+        padding-inline: 0;
+    }
+
+    .pages {
+        display: flex;
+        flex-direction: row;
+
+        justify-content: space-between;
+
+        width: 60%;
+    }
+
+    .modal {
+        width: 60%;
+    }
 }

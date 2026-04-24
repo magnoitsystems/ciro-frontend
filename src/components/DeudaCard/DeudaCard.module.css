@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 
-    width: 95%;
+    width: 100%;
 
     padding: var(--5px);
     padding-inline: var(--40px);

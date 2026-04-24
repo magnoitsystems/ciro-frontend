@@ -1,15 +1,21 @@
 .budget{
-    color: white;
+    display: flex;
+    flex-direction: column;
+
+    width: 100vw;
+
+    padding-inline: var(--10px);
+
+    color: var(--neutral-1);
 }
 
 .budgetContentProperties{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
-    height: 500px;
-    box-sizing: border-box; 
+    height: 50vh;
     margin-top: var(--30px);
-    gap: var(--30px);
+    gap: var(--10px);
 }
 
 .tableContainerPropeties{
@@ -17,25 +23,50 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
+    border-radius: var(--5px);
 }
 
 .buttonContainerProperties{
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 10px;
+    border-radius: var(--5px);
     background-color: var(--blue-2);
     height: 100%;
 }
 
 .buttonContainerProperties{
-    width: 25%;
+    width: 100%;
     justify-content: center;
-    color: white;
+    padding-bottom: var(--20px);
+    color: var(--neutral-1);
 }
 
 .buttonContainerProperties button{
     background-color: transparent;
     border: none;
     cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .budget {
+        width: 100%;
+
+        padding-inline: 0;
+    }
+    .budgetContentProperties{
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 500px;
+        box-sizing: border-box;
+        margin-top: var(--30px);
+        gap: var(--30px);
+    }
+
+    .buttonContainerProperties{
+        width: 25%;
+        justify-content: center;
+        color: white;
+    }
 }

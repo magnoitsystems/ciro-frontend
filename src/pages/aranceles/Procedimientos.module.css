@@ -4,7 +4,7 @@
 }
 
 .main {
-    width: 100%;
+    width: 100vw;
     gap: var(--20px);
     height: 100vh;
     overflow-y: auto;
@@ -13,7 +13,7 @@
 
 .procedimientosContainer {
     align-items: center;
-    width: 95%;
+    width: 100%;
     padding: var(--40px);
     padding-inline: var(--20px);
     margin-top: var(--10px);
@@ -30,6 +30,9 @@
     gap: var(--30px);
     background-color: var(--blue-2);
     border-radius: var(--5px);
+    max-height: 50vh;
+
+    overflow-y: auto;
 }
 
 .formContainer p {
@@ -65,9 +68,9 @@
 
 .sharedInput {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
-    gap: var(--50px);
+    gap: var(--10px);
 }
 
 .button {
@@ -148,18 +151,12 @@
 
 @media (min-width: 768px) {
     .main {
+        width: 100%;
         padding-inline: 0;
     }
 
-    .procedimientosContainer {
-        align-items: center;
-        width: 100%;
-        padding: var(--40px);
-        padding-inline: var(--20px);
-        margin-top: var(--50px);
-        gap: var(--10px);
-        background-color: var(--blue-2);
-        border-radius: var(--5px);
+    .sharedInput {
+        flex-direction: row;
+        gap: var(--50px);
     }
-
 }
