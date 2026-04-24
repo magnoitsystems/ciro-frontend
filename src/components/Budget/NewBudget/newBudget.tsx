@@ -9,9 +9,11 @@ import type { BudgetStatus } from '../../../types/enums.types';
 
 type Prop = {
     onNuevoPacienteClick: () => void;
+    type: 'create' | 'edit'
+    id?: number
 }
 
-export default function NewBudget({ onNuevoPacienteClick }: Prop) {
+export default function NewBudget({ onNuevoPacienteClick, type, id }: Prop) {
     const [patient, setPatient] = useState<PatientResponseDTO[]>([]);
     const navigate = useNavigate()
     const [status, setStatus] = useState<BudgetStatus>('ENVIADO')

@@ -50,6 +50,14 @@
     border-radius: 100px;
 }
 
+.buttonProperties{
+    display: flex;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding-right: 20px;
+}
+
 @media (min-width: 768px) {
     .tableContainerPropeties {
         padding: var(--50px);
