@@ -21,13 +21,10 @@ export default function Register({ movement, onClick }: Props) {
 
     const dateStr = movement.date ? new Date(movement.date).toLocaleDateString('es-AR') : "-";
 
-    const canceledStyle: React.CSSProperties = movement.canceled ? {
-        backgroundColor: 'rgba(255, 77, 77, 0.08)', 
-        borderLeft: '4px solid #ff4d4d',
-    } : {};
+    const registerClassName = `${style.register} ${movement.canceled ? style.canceled : ''}`;
 
     return (
-        <main onClick={onClick} className={style.register} style={canceledStyle}>
+        <main onClick={onClick} className={registerClassName}>
             <div className={style[displayType] || style.defaultTag}>
                 {displayType}
             </div>
