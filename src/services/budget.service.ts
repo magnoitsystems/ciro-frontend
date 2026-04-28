@@ -21,6 +21,14 @@ export const budgetService = {
     },
 
     /**
+     * Obtiene un presupuesto por su ID
+     */
+    findById: async (id: number): Promise<BudgetResponseDTO> => {
+        const response = await api.get<BudgetResponseDTO>(API_ENDPOINTS.BUDGETS.BY_ID(id));
+        return response.data;
+    },
+
+    /**
      * Crea un nuevo presupuesto (con envío de archivo sí o sí)
      */
     createBudget: async (dto: BudgetCreateDTO): Promise<BudgetResponseDTO> => {
@@ -28,10 +36,8 @@ export const budgetService = {
         formData.append('patientId', dto.patientId.toString());
         formData.append('status', dto.status);
         formData.append('date', dto.date);
+        formData.append('title', dto.title);
         
-        if (dto.uploadedDate) {
-            formData.append('uploadedDate', dto.uploadedDate);
-        }
         if (dto.file) {
             formData.append('file', dto.file);
         }
@@ -53,8 +59,8 @@ export const budgetService = {
         if (dto.patientId) {
             formData.append('patientId', dto.patientId.toString());
         }
-        if (dto.uploadedDate) {
-            formData.append('uploadedDate', dto.uploadedDate);
+        if(dto.title){
+            formData.append('title', dto.title);
         }
         if (dto.status) {
             formData.append('status', dto.status);

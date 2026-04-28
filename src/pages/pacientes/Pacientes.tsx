@@ -7,10 +7,9 @@ import { useState, useEffect } from "react";
 import ProvInput from "../../components/Forms/NewProvForm/ProvInput.tsx";
 import LightGreyButton from "../../components/Buttons/LightGreyButton/lightGreyButton.tsx";
 import {NavLink} from "react-router-dom";
-
-// Importamos el servicio y el DTO
 import { patientService } from "../../services/patient.service";
 import type { PatientResponseDTO } from "../../types/patients.types";
+import Patient from "../../components/patients/patient.tsx";
 
 type HistoriaClinica = {
     id: number;
@@ -28,20 +27,20 @@ export default function Pacientes() {
     const [pacientesState, setPacientesState] = useState<PatientResponseDTO[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchPacientes = async () => {
-            try {
-                setLoading(true);
-                const data = await patientService.getAllPatients();
-                setPacientesState(data);
-            } catch (error) {
-                console.error("Error al cargar los pacientes:", error);
-                alert("Hubo un error al cargar los pacientes.");
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchPacientes = async () => {
+        try {
+            setLoading(true);
+            const data = await patientService.getAllPatients();
+            setPacientesState(data);
+        } catch (error) {
+            console.error("Error al cargar los pacientes:", error);
+            alert("Hubo un error al cargar los pacientes.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchPacientes();
     }, []);
 
@@ -69,15 +68,6 @@ export default function Pacientes() {
     });
 
     const [openModal, setOpenModal] = useState(false);
-    const [step, setStep] = useState(1);
-
-    const handleNext = () => {
-        if (step < 3) {
-            setStep(step + 1);
-        } else {
-            console.log("CREAR PACIENTE (Próximamente conectado al back)");
-        }
-    };
 
     const [deleteModal, setDeleteModal] = useState(false);
     const [selectedPaciente, setSelectedPaciente] = useState<PatientResponseDTO | null>(null);
@@ -206,114 +196,12 @@ export default function Pacientes() {
             </div>
 
             {openModal && (
-                <div
-                    className={style.overlay}
-                    onClick={() => {
-                        setOpenModal(false);
-                        setStep(1);
-                    }}
-                >
-                    <div
-                        className={style.formModal}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-
-                        <button
-                            className={style.close}
-                            onClick={() => {
-                                setOpenModal(false);
-                                setStep(1);
-                            }}
-                        >
-                            ✕
-                        </button>
-
-                        <h3>Cargar nuevo paciente</h3>
-                        <p>Paso {step} de 3</p>
-
-                        {step === 1 && (
-                            <>
-                                <ProvInput placeholder="Nombre completo" type="text" className="inputBoxDefault"/>
-                                <ProvInput placeholder="Tipo de documento"
-                                           as="select"
-                                           className="inputBoxDefault"
-                                           options={[
-                                               { value: "DNI", label: "DNI" },
-                                               { value: "CUIT", label: "CUIT" },
-                                               { value: "PASAPORTE", label: "Pasaporte" },
-                                               { value: "OTRO", label: "Otro" }
-                                           ]}
-                                />
-                                <ProvInput placeholder="Número de documento" type="text" className="inputBoxDefault"/>
-                                <ProvInput placeholder="Fecha de nacimiento" type="date" className="inputBoxDefault"/>
-                            </>
-                        )}
-
-                        {step === 2 && (
-                            <>
-                                <ProvInput placeholder="Teléfono" type="text" className="inputBoxDefault"/>
-                                <ProvInput placeholder="Dirección" type="text" className="inputBoxDefault"/>
-                                <ProvInput placeholder="Localidad" type="text" className="inputBoxDefault"/>
-                                <ProvInput
-                                    placeholder="Obra social"
-                                    as="select"
-                                    className="inputBoxDefault"
-                                    options={[
-                                        { value: "PARTICULAR", label: "Particular" },
-                                        { value: "OSDE", label: "OSDE" },
-                                        { value: "IOMA", label: "IOMA" },
-                                        { value: "SWISS_MEDICAL", label: "Swiss Medical" },
-                                        { value: "GALENO", label: "GALENO" },
-                                        { value: "SANCOR_SALUD", label: "Sancor Salud" },
-                                        { value: "PAMI", label: "PAMI" },
-                                        { value: "OMINT", label: "OMINT" },
-                                        { value: "OTRA", label: "otra" }
-                                    ]}
-                                />
-                            </>
-                        )}
-
-                        {step === 3 && (
-                            <>
-                                <ProvInput placeholder="Observaciones" type="text" className="inputBoxBig"/>
-                                <ProvInput
-                                    placeholder="¿Cómo nos conoció?"
-                                    as="select"
-                                    className="inputBoxDefault"
-                                    options={[
-                                        { value: "RECOMMENDATION", label: "Recomendación" },
-                                        { value: "FACEBOOK", label: "Facebook" },
-                                        { value: "INSTAGRAM", label: "Instagram" },
-                                        { value: "TIKTOK", label: "Tik Tok" },
-                                        { value: "WEBSITE", label: "Sitio Web" },
-                                        { value: "ANOTHER", label: "Otro" }
-                                    ]}
-                                />
-                            </>
-                        )}
-
-                        <div className={style.modalActions}>
-
-                            <div className={style.buttons}>
-                                <LightGreyButton
-                                    text={step === 3 ? "Confirmar" : "Siguiente"}
-                                    onClick={handleNext}
-                                    variant={'primary'}
-                                />
-                            </div>
-
-                            {step > 1 && (
-                                <span
-                                    className={style.back}
-                                    onClick={() => setStep(step - 1)}
-                                >
-                                    ← Volver atrás
-                                </span>
-                            )}
-
-                        </div>
-                    </div>
-                </div>
+                <Patient 
+                    onNuevoPacienteClick={() => {
+                        setOpenModal(false); 
+                        fetchPacientes();    
+                    }} 
+                />
             )}
 
             {deleteModal && (

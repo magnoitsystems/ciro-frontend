@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import GreenFormButton from "../../components/Buttons/GreenFormButton/greenFormButton.tsx";
 import { currentAccountService } from "../../services/currentAccount.service"; 
 import { userService } from "../../services/user.service"; 
+import { receiptService } from "../../services/receipt.service";
 import type { CurrentAccountResponseDTO, ReceiptCreateDTO, VoucherCreateDTO, ReceiptResponseDTO, VoucherDTO } from "../../types/currentAccount.types"; 
 import type { CurrencyType, PaymentMethod } from "../../types/enums.types"; 
 import type { UserResponseDTO } from "../../types/users.types.ts";
@@ -148,6 +149,17 @@ export default function CuentaCorriente() {
         } catch (error) {
             console.error(error);
             alert("Error al obtener el recibo.");
+        }
+    };
+
+    const handleDownloadReceiptPdf = async (id: number) => {
+        try {
+            // Usamos el toast/alert que prefieras, acá te dejo un console.log de aviso
+            console.log(`Iniciando descarga del recibo ${id}...`);
+            await receiptService.downloadReceiptPdf(id);
+        } catch (error) {
+            console.error(error);
+            alert("Error al intentar descargar el PDF del recibo.");
         }
     };
 
@@ -313,20 +325,49 @@ export default function CuentaCorriente() {
                     <div className={style.modal} onClick={(e) => e.stopPropagation()}>
                         <button className={style.close} onClick={() => setViewReciboModal(false)}>✕</button>
                         <h3>Recibo #{selectedRecibo.id}</h3>
+                        
                         <div className={style.reciboContainer}>
-                            <div className={style.reciboSection}>
-                                <h5>Paciente</h5>
-                                <div className={style.row}><span>Nombre</span><p>{selectedRecibo.patientFullName}</p></div>
-                                <div className={style.row}><span>DNI</span><p>{selectedRecibo.patientDni || '-'}</p></div>
-                            </div>
                             <div className={style.reciboSection}>
                                 <h5>Detalles del Pago</h5>
                                 <div className={style.row}><span>Fecha</span><p>{selectedRecibo.receiptDate}</p></div>
                                 <div className={style.row}><span>Profesional</span><p>{selectedRecibo.doctorFullName || '-'}</p></div>
-                                <div className={style.row}><span>Monto</span><p>{selectedRecibo.currencyType} {selectedRecibo.amount}</p></div>
-                                {selectedRecibo.exchangeRate && (<div className={style.row}><span>Tipo de cambio</span><p>{selectedRecibo.exchangeRate}</p></div>)}
-                                {selectedRecibo.convertedAmount && (<div className={style.row}><span>Monto convertido</span><p>${selectedRecibo.convertedAmount}</p></div>)}
+                                <div className={style.row}><span>Método de pago</span><p>{selectedRecibo.paymentMethod}</p></div>
+                                <div className={style.row}><span>Monto original</span><p>{selectedRecibo.currencyType} {selectedRecibo.amount}</p></div>
+                                
+                                {selectedRecibo.exchangeRate && (
+                                    <div className={style.row}><span>Tipo de cambio</span><p>{selectedRecibo.exchangeRate}</p></div>
+                                )}
+                                {selectedRecibo.convertedAmount && (
+                                    <div className={style.row}><span>Monto convertido</span><p>${selectedRecibo.convertedAmount}</p></div>
+                                )}
                             </div>
+
+                            <div className={style.reciboSection}>
+                                <h5>Observaciones</h5>
+                                <p style={{ fontSize: '14px', color: '#ccc', marginTop: '5px' }}>
+                                    {selectedRecibo.observations || 'Sin observaciones.'}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '25px' }}>
+                            <button 
+                                onClick={() => handleDownloadReceiptPdf(selectedRecibo.id)}
+                                style={{
+                                    padding: '10px 20px',
+                                    backgroundColor: 'var(--primary)',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    fontWeight: 'bold',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+                                <span>📄</span> Descargar PDF
+                            </button>
                         </div>
                     </div>
                 </div>
