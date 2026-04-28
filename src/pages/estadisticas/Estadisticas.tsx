@@ -15,8 +15,8 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
-import { statisticsService } from "../../services/statistics.service"; // Ajusta el path si es necesario
-import type { StatisticsResponseDTO } from "../../types/statistics.types"; // Ajusta el path si es necesario
+import { statisticsService } from "../../services/statistics.service";
+import type { StatisticsResponseDTO } from "../../types/statistics.types"; 
 
 export default function Estadisticas() {
   const [stats, setStats] = useState<StatisticsResponseDTO | null>(null);
@@ -72,37 +72,31 @@ export default function Estadisticas() {
     "#14b8a6",
   ];
 
-  // Extraemos las listas de forma segura. Si stats.patients es undefined, usamos un array vacío []
     const patientsByOrigin = stats.patients?.patientsByOrigin || [];
     const patientsByCity = stats.patients?.patientsByCity || [];
 
-    // 1. Datos para el gráfico de Demografía
     const activeDemographicList = activeFilter === "origen" ? patientsByOrigin : patientsByCity;
     const demographicData = activeDemographicList.map(item => ({
         name: item.label,
         value: item.count || item.percentage || 0
     }));
 
-    // 2. Datos para Deudores vs No Deudores (si no hay datos, mostramos 0)
     const debtorsData = [
         { name: 'Al día', value: stats.patients?.totalNonDebtors || 0 },
         { name: 'Deudores', value: stats.patients?.totalDebtors || 0 }
     ];
 
-    // 3. Datos Financieros (Ingresos vs Egresos del Mes)
     const financialBalanceData = [
         { name: 'Pesos (ARS)', Ingresos: stats.financial?.currentMonthIncomePesos || 0, Egresos: stats.financial?.currentMonthExpensesPesos || 0 },
         { name: 'Dólares (USD)', Ingresos: stats.financial?.currentMonthIncomeDollars || 0, Egresos: stats.financial?.currentMonthExpensesDollars || 0 }
     ];
 
-    // 4. Datos Financieros (Desglose de ingresos)
     const incomeBreakdownList = stats.financial?.incomeBreakdown || [];
     const incomeBreakdownData = incomeBreakdownList.map(item => ({
         name: item.label,
         value: item.amount || 0
     }));
 
-    // Formateador de moneda para tooltips (con la corrección de TypeScript)
     const formatCurrency = (value: any) => {
         const numericValue = Number(value);
         if (isNaN(numericValue)) return "$0,00";
@@ -117,16 +111,15 @@ export default function Estadisticas() {
       />
 
       <div className={style.dashboardContainer}>
-        {/* FILA 1: TARJETAS DE RESUMEN Y DEMOGRAFÍA */}
         <section className={style.topSection}>
           <div className={style.summaryCards}>
             <div className={style.card}>
               <h3>Total Pacientes</h3>
-              <h2>{stats.patients.totalPatients}</h2>
+              <h2>{stats.patients?.totalPatients || 0}</h2>
             </div>
             <div className={style.card}>
               <h3>Implantes del Mes</h3>
-              <h2>{stats.implantsThisMonth}</h2>
+              <h2>{stats?.implantsThisMonth || 0}</h2>
             </div>
           </div>
 
@@ -175,9 +168,7 @@ export default function Estadisticas() {
           </div>
         </section>
 
-        {/* FILA 2: DEUDORES Y FINANZAS */}
         <section className={style.chartsGrid}>
-          {/* Gráfico de Deudores */}
           <div className={style.chartCard}>
             <h4>Estado de Cuenta de Pacientes</h4>
             <ResponsiveContainer width="100%" height={250}>
@@ -191,8 +182,8 @@ export default function Estadisticas() {
                   dataKey="value"
                   nameKey="name"
                 >
-                  <Cell fill="#22c55e" /> {/* Verde para Al día */}
-                  <Cell fill="#ef4444" /> {/* Rojo para Deudores */}
+                  <Cell fill="#22c55e" /> 
+                  <Cell fill="#ef4444" /> 
                 </Pie>
                 <Tooltip />
                 <Legend />
@@ -200,7 +191,6 @@ export default function Estadisticas() {
             </ResponsiveContainer>
           </div>
 
-          {/* Gráfico de Desglose de Ingresos */}
           <div className={style.chartCard}>
             <h4>Desglose de Ingresos</h4>
             <ResponsiveContainer width="100%" height={250}>
@@ -226,7 +216,6 @@ export default function Estadisticas() {
             </ResponsiveContainer>
           </div>
 
-          {/* Gráfico de Barras: Ingresos vs Egresos */}
           <div className={style.chartCard} style={{ gridColumn: "1 / -1" }}>
             <h4>Balance del Mes (Ingresos vs Egresos)</h4>
             <ResponsiveContainer width="100%" height={300}>
