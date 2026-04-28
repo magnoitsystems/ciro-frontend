@@ -1,157 +1,125 @@
-/* Overlay oscuro que ocupa toda la pantalla */
-.formPatientContainerProperties {
-    position: fixed; /* Mejor que absolute para que no se scrollee */
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(4px); /* Efecto cristalino moderno */
-    
-    /* Flexbox es la clave para centrar el modal perfecto */
+.overlay {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1000;
 }
 
-/* El cuadro del formulario */
-.formPatienProperties {
-    position: relative;
+.modal {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: 450px;
-    padding: 30px;
-    background-color: var(--blue-4, #1e293b);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    color: white;
+    overflow-y: auto;
+    width: 90%;
+    max-height: 90vh; 
+    padding: var(--20px) var(--25px);
+    gap: var(--15px);
+    background: var(--blue-4);
+    color: var(--neutral-1);
+    border-radius: var(--10px);
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.5); 
 }
 
-.closeIcon {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    background: transparent;
-    border: none;
-    color: #94a3b8;
-    font-size: 24px;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.closeIcon:hover {
-    color: white;
-}
-
-.formPatienProperties h3 {
-    text-align: center;
-    margin-bottom: 5px;
-    font-size: 1.5rem;
-}
-
-.subtitle {
-    text-align: center;
-    color: #94a3b8;
-    font-size: 0.9rem;
-    margin-bottom: 25px;
-}
-
-.containerPatientLabelProperties {
+.modalHeader {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.formPatientLabelProperties {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-    width: 100%;
-}
-
-.formPatientLabelProperties label {
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-    color: #e2e8f0;
-}
-
-.formPatientLabelProperties select, 
-.formPatientLabelProperties input,
-.formPatientLabelProperties textarea {
-    width: 100%;
-    border-radius: 8px; /* Menos redondeado se ve más profesional */
-    border: 1px solid #334155;
-    background-color: #0f172a;
-    color: white;
-    padding: 12px;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.2s ease;
-    font-family: inherit;
-}
-
-.formPatientLabelProperties textarea {
-    resize: none;
-}
-
-.formPatientLabelProperties select:focus, 
-.formPatientLabelProperties input:focus,
-.formPatientLabelProperties textarea:focus {
-    border-color: #3b82f6; /* Borde azul al hacer foco */
-}
-
-/* Estilos de botones unificados */
-.buttonsProperties {
-    display: flex;
-    flex-direction: row;
     justify-content: space-between;
-    width: 100%;
-    gap: 15px;
-    margin-top: 15px;
+    align-items: center;
+    border-bottom: 1px solid var(--blue-3);
+    padding-bottom: 10px;
+    margin-bottom: 5px;
 }
 
-.cancelButton, 
-.createButton, 
-.nextButton, 
-.lastButton {
-    flex: 1;
-    padding: 12px;
-    border-radius: 8px;
-    color: white;
-    font-weight: 600;
+.modalHeader h3 {
+    margin: 0;
+}
+
+.close {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    
+    background-color: transparent;
+    color: var(--red);
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.cancelButton {
-    background-color: transparent;
-    border: 1px solid #ef4444;
-    color: #ef4444;
+.close:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+    transform: scale(1.1);
 }
 
-.cancelButton:hover {
-    background-color: rgba(239, 68, 68, 0.1);
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--15px);
 }
 
-.createButton, .nextButton {
-    background-color: #3b82f6;
-    border: 1px solid #3b82f6;
+.modal input, .modal select {
+    background-color: var(--blue-2);
+    padding: 10px;
+    color: var(--neutral-1);
+    border: none;
+    border-radius: 8px;
 }
 
-.createButton:hover, .nextButton:hover {
-    background-color: #2563eb;
+.modal::-webkit-scrollbar {
+    width: 6px;
+}
+.modal::-webkit-scrollbar-thumb {
+    background-color: var(--primary); 
+    border-radius: var(--10px);
 }
 
-.lastButton {
-    background-color: transparent;
-    border: 1px solid #94a3b8;
-    color: #94a3b8;
+.submitButton {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 10px;
 }
 
-.lastButton:hover {
-    background-color: rgba(148, 163, 184, 0.1);
+.cancelButton, .lastButton {
+    padding: 10px 20px;
+    border-radius: var(--20px);
+    color: var(--red);
+    background: transparent;
+    border: 1px solid var(--red);
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.cancelButton:hover, .lastButton:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.nextButton, .createButton {
+    padding: 10px 20px;
+    border-radius: var(--20px);
+    color: white;
+    background: var(--primary); 
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.nextButton:hover, .createButton:hover {
+    opacity: 0.85;
+    transform: scale(1.02);
+}
+
+@media (min-width: 768px) {
+    .modal {
+        width: 60%;
+    }
 }
