@@ -6,7 +6,7 @@ body{
 
 /* Para estilos internos del calendario */
 :global(.fc-toolbar-title) {
-    font-size: 30px; 
+    font-size: 30px;
 }
 
 :global(.fc) {
@@ -92,7 +92,7 @@ body{
 }
 
 .calendarContainerProperties {
-    flex: 1;  
+    flex: 1;
     min-width: 0;
     position: relative;
 }
@@ -108,4 +108,67 @@ body{
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+/* Agregar al final del archivo */
+
+@media (max-width: 767px) {
+    .calendarAndButtonsContainerProperties {
+        flex-direction: column-reverse; /* ButtonsRod arriba en mobile */
+        gap: 12px;
+    }
+
+    .miniCalendarProperties {
+        position: fixed;
+        bottom: auto;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+    }
+
+    :global(.fc-col-header-cell-cushion) {
+        font-size: 12px;
+        height: 45px;
+    }
+
+    :global(.fc-toolbar-title) {
+        font-size: 18px;
+    }
+
+    :global(.fc-timegrid-slot) {
+        height: 40px !important;
+    }
+
+    .evento {
+        height: 70px;
+    }
+
+    .container {
+        padding: 4px;
+        gap: 4px;
+    }
+
+    .mainInfoProperties {
+        font-size: 10px;
+        gap: 2px;
+    }
+
+    .buttonsProperties {
+        gap: 4px;
+    }
+
+    .buttonsProperties button img {
+        width: 14px;
+        height: 14px;
+    }
+
+    .diaHeader span {
+        font-size: 11px;
+    }
+
+    .diaHeader button {
+        font-size: 14px;
+        padding: 0 4px;
+    }
 }

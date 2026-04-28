@@ -3,11 +3,8 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-
-    width: 800px;
-
+    width: 800px; /* ancho fijo para que el scroll de .content funcione */
     padding-right: var(--20px);
-
     color: var(--neutral-1);
     background-color: var(--blue-4);
     border-radius: var(--50px);
@@ -15,10 +12,8 @@
 
 .movimiento {
     height: 100%;
-
     padding: var(--5px);
     padding-inline: var(--50px);
-
     background-color: var(--green-30);
     border-radius: var(--50px);
 }

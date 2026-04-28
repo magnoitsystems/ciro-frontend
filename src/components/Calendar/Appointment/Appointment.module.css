@@ -1,47 +1,5 @@
-.mainContainerProperties{
-    display: flex;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(23, 22, 32, 0.7);
-    position: absolute;
-    z-index: 999;
-    align-items: center;
-    justify-content: center;
-
-    padding-right: 20%;
-}
-
-.infoContainerProperties{
-    display: flex;
-    flex-direction: column;
-
-    border: white 2px solid;
-    border-radius: 5px;
-    background-color: rgba(23, 22, 32, 1);
-    color: white;
-
-    width: 650px;
-    height: fit-content;
-
-    justify-content: center;
-    align-items: center;
-
-    gap: 20px;
-    padding: 30px;
-}
-
 .infoContainerProperties h3{
     font-size: 22px;
-}
-
-.infoAppointmentProperties{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding-left: 30px;
-    padding-top: 20px;
-
-    font-size: 18px;
 }
 
 .infoAppointmentProperties span{
@@ -68,4 +26,58 @@
 
 .editButton{
     background-color: rgba(255, 254, 251, 1);
+}
+
+.mainContainerProperties {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(23, 22, 32, 0.7);
+    position: absolute;
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 16px; /* mobile first: padding uniforme */
+}
+
+.infoContainerProperties {
+    display: flex;
+    flex-direction: column;
+    border: white 2px solid;
+    border-radius: 5px;
+    background-color: rgba(23, 22, 32, 1);
+    color: white;
+    width: 100%; /* mobile: full width */
+    max-width: 650px; /* desktop: se limita */
+    height: fit-content;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.infoAppointmentProperties {
+    display: grid;
+    grid-template-columns: 1fr; /* mobile: 1 columna */
+    gap: 10px;
+    padding-left: 0;
+    padding-top: 20px;
+    font-size: 16px;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .mainContainerProperties {
+        padding-right: 20%;
+    }
+
+    .infoContainerProperties {
+        padding: 30px;
+    }
+
+    .infoAppointmentProperties {
+        grid-template-columns: 1fr 1fr; /* desktop: 2 columnas */
+        padding-left: 30px;
+        font-size: 18px;
+    }
 }

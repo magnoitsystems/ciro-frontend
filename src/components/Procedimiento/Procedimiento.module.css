@@ -3,7 +3,7 @@
     grid-template-columns: 1fr 2fr 1fr 1fr 1fr 80px; 
     align-items: center;
 
-    width: 95%;
+    width: 900px;
 
     padding: var(--5px);
     padding-inline: var(--15px);
@@ -49,4 +49,10 @@
 
 .editInput:focus {
     border-color: var(--neutral-1);
+}
+
+@media (min-width: 768px) {
+    .main {
+        width: 95%;
+    }
 }
