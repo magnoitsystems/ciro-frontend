@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './newBudget.module.css';
 import { budgetService } from '../../../services/budget.service';
 import { useNavigate } from 'react-router-dom'
-import type { BudgetCreateDTO } from '../../../types/budgets.types';
+import type { BudgetCreateDTO, BudgetResponseDTO } from '../../../types/budgets.types';
 import type { PatientResponseDTO } from '../../../types/patients.types';
 import { patientService } from '../../../services/patient.service';
 import type { BudgetStatus } from '../../../types/enums.types';
@@ -11,9 +11,10 @@ type Prop = {
     onNuevoPacienteClick: () => void;
     type: 'create' | 'edit'
     id?: number
+    budget?: BudgetResponseDTO
 }
 
-export default function NewBudget({ onNuevoPacienteClick, type, id }: Prop) {
+export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Prop) {
     const [patient, setPatient] = useState<PatientResponseDTO[]>([]);
     const navigate = useNavigate()
     const [status, setStatus] = useState<BudgetStatus>('ENVIADO')
@@ -65,6 +66,7 @@ export default function NewBudget({ onNuevoPacienteClick, type, id }: Prop) {
                             }
                         }}>
                             <option value="">Seleccione un paciente</option>
+                            <option key={budget?.patientFullName} value={budget?.patientFullName}>{budget?.patientFullName}</option>
                             {patient.map((paciente) => (
                                 <option key={paciente.id} value={paciente.id}>{paciente.fullName}</option>
                             ))}
@@ -74,7 +76,7 @@ export default function NewBudget({ onNuevoPacienteClick, type, id }: Prop) {
                     <div className={styles.holeInput}>
                         <label htmlFor="date">Fecha de carga</label>
                         <div className={styles.fileInputContainer}>
-                            <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} required />
+                            <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)}  required />
                         </div>
                     </div>
                     <div className={styles.holeInput}>
@@ -99,7 +101,7 @@ export default function NewBudget({ onNuevoPacienteClick, type, id }: Prop) {
                                 if (e.target.files) {
                                     setFile(e.target.files[0])
                                 }
-                            }} />
+                            }}/>
                         </div>
                     </div>
                     <button className={styles.buttonFormProperties} type="submit">Cargar presupuesto</button>
