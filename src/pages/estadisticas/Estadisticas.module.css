@@ -1,87 +1,169 @@
-.main, .patients, .filters, .filterOptions, .graph {
+.main {
     display: flex;
     flex-direction: column;
-}
-
-.main {
-    height: 80vh;
-    gap: var(--30px);
-
+    height: 100vh; /* O el alto que maneje tu layout */
+    gap: var(--20px);
     color: var(--neutral-1);
+    overflow: hidden; /* Evitamos doble scroll general */
 }
 
-.patients {
-    padding: var(--20px) var(--30px);
-    gap: var(--15px);
+.dashboardContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    height: 100%;
+    overflow-y: auto; /* Scroll interno para el contenido del dashboard */
+    padding-bottom: 40px;
+    padding-right: 10px;
+}
 
+/* Scrollbar personalizada para el dashboard */
+.dashboardContainer::-webkit-scrollbar {
+    width: 8px;
+}
+.dashboardContainer::-webkit-scrollbar-thumb {
+    background: var(--blue-1);
+    border-radius: 10px;
+}
+
+/* --- SECCIÓN SUPERIOR (Tarjetas y Demografía) --- */
+.topSection {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+}
+
+.summaryCards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: var(--blue-3);
-    border-radius: var(--5px);
+    padding: 30px 20px;
+    border-radius: 8px;
+    text-align: center;
+    height: 100%;
 }
 
-.filters, .graph {
-    padding: var(--20px) var(--30px);
-
-    background-color: var(--blue-3);
-    border-radius: var(--5px);
+.card h3 {
+    font-size: 16px;
+    color: var(--neutral-4);
+    margin-bottom: 10px;
+    font-weight: 500;
 }
 
-.filters button {
-    width: 100%;
-    height: var(--40px);
-
-    padding: 0;
+.card h2 {
+    font-size: 42px;
+    color: var(--neutral-1);
     margin: 0;
 }
 
-.appliedFilters {
-    padding: var(--15px) var(--30px);
-    background-color: var(--blue-4);
-}
-
-.contentContainer {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+.demographicsContainer {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--blue-3);
+    border-radius: 8px;
+    padding: 20px;
     gap: 20px;
-
-    height: 100%;
-}
-
-.contentContainer > div {
-    height: 100%;
-}
-
-.patients {
-    border-radius: 6px;
-    padding: 15px;
-
-    overflow-y: auto;
 }
 
 .filters {
-    gap: var(--30px);
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    gap: 15px;
+}
+
+.filters h4 {
+    margin: 0;
+    color: var(--neutral-1);
 }
 
 .filterOptions {
-    gap: var(--10px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .filterOptions button {
     width: 100%;
-    padding: 8px;
-
-    background: var(--blue-1);
-    color: white;
-    border: none;
+    padding: 12px;
+    background: var(--blue-4);
+    color: var(--neutral-1);
+    border: 1px solid transparent;
     border-radius: 5px;
-
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.2s ease;
+    font-weight: 600;
 }
 
 .filterOptions button:hover {
-    transform: scale(1.05);
+    background: var(--blue-2);
 }
 
-.graph {
+.filterOptions button.activeBtn {
+    background: var(--blue-1);
+    color: white;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+.graphBox {
+    width: 65%;
+    display: flex;
     align-items: center;
+    justify-content: center;
+}
+
+/* --- SECCIÓN INFERIOR (Grillas de gráficos) --- */
+.chartsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.chartCard {
+    background-color: var(--blue-3);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.chartCard h4 {
+    align-self: flex-start;
+    margin: 0 0 10px 0;
+    color: var(--neutral-1);
+}
+
+/* Responsividad para pantallas más chicas */
+@media (max-width: 1024px) {
+    .topSection {
+        grid-template-columns: 1fr;
+    }
+    .summaryCards {
+        flex-direction: row;
+    }
+    .demographicsContainer {
+        flex-direction: column;
+    }
+    .filters, .graphBox {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .chartsGrid {
+        grid-template-columns: 1fr;
+    }
+    .summaryCards {
+        flex-direction: column;
+    }
 }
