@@ -25,28 +25,51 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
     const estados = ['ENVIADO', 'ACEPTADO', 'ACEPTADO_PARCIALMENTE', 'RECHAZADO', 'PENDIENTE_DE_RESPUESTA', 'SIN_ENVIAR', 'SIN_HACER']
 
     useEffect(() => {
-        patientService.getAllPatients()
-            .then(fetchedPatients => setPatient(fetchedPatients))
-            .catch(error => console.error('Error fetching patients:', error));
-    }, [])
+        if (type === 'edit' && budget) {
+            setDate(budget?.date ? budget.date.slice(0, 10) : '')
+            setPatientId(budget?.patientId ?? -1)
+            setTitle(budget?.title ?? '');
+            setStatus(budget?.status ?? 'ENVIADO')
+        }
+    }, [type, budget]);
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        const newBudget: BudgetCreateDTO = {
+        console.log("SUBMIT ejecutado");
+        e.preventDefault();
+
+        const payload: BudgetCreateDTO = {
             patientId,
             title,
             date,
             status,
             file
-        }
+        };
+
+        console.log("Creo la tarea");
 
         try {
-            await budgetService.createBudget(newBudget)
-            navigate('/presupuestos')
-        } catch (error) {
-            console.error(error)
+            let response;
+            console.log("Entro al try");
+
+            if (type === 'create') {
+                console.log("Voy a crear la task");
+                response = await budgetService.createBudget(payload);
+                navigate('/presupuestos')
+            } else {
+                response = await budgetService.updateBudget(budget!.id, payload);
+            }
+
+        } catch (error: any) {
+            console.error(error);
         }
-    }
+    };
+
+
+    useEffect(() => {
+        patientService.getAllPatients()
+            .then(fetchedPatients => setPatient(fetchedPatients))
+            .catch(error => console.error('Error fetching patients:', error));
+    }, [])
 
     return (
         <div className={styles.newBudget}>
@@ -76,13 +99,13 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
                     <div className={styles.holeInput}>
                         <label htmlFor="date">Fecha de carga</label>
                         <div className={styles.fileInputContainer}>
-                            <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)}  required />
+                            <input type="date" id="date" name="date" value={date} onChange={(e) => setDate(e.target.value)} required />
                         </div>
                     </div>
                     <div className={styles.holeInput}>
                         <label htmlFor="date">Título</label>
                         <div className={styles.fileInputContainer}>
-                            <input type="text" id="title" name="title" onChange={(e) => setTitle(e.target.value)} required />
+                            <input type="text" id="title" name="title" placeholder="Título" value={title} onChange={(e) => setTitle(e.target.value)} required />
                         </div>
                     </div>
                     <div className={styles.holeInput}>
@@ -101,7 +124,7 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
                                 if (e.target.files) {
                                     setFile(e.target.files[0])
                                 }
-                            }}/>
+                            }} />
                         </div>
                     </div>
                     <button className={styles.buttonFormProperties} type="submit">Cargar presupuesto</button>
