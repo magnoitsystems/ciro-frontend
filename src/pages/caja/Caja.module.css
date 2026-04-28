@@ -2,20 +2,23 @@
     display: flex;
     flex-direction: column;
 
-    width: 100%;
+    width: 100vw;
 
+    padding-inline: var(--10px);
     gap: var(--30px);
 }
 
 .content {
     margin-top: var(--30px);
+
+    overflow-x: auto;
 }
 
 .registers {
     display: flex;
     flex-direction: column;
 
-    width: 100%;
+    width: fit-content;
     max-height: 350px;
 
     padding: var(--30px);
@@ -32,7 +35,7 @@
     align-items: center;
     justify-content: space-between;
 
-    width: 95%;
+    width: 800px;
 
     margin-inline: auto;
 
@@ -94,4 +97,20 @@
 
 .back:hover {
     color: var(--neutral-1);
+}
+
+@media (min-width: 768px) {
+    .main {
+        width: 100%;
+
+        padding-inline: 0;
+    }
+
+    .registers {
+        width: 100%;
+    }
+
+    .columnNames {
+        width: 95%;
+    }
 }

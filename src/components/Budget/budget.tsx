@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import NewBudget from './NewBudget/newBudget';
 import { budgetService } from '../../services/budget.service';
 import type { BudgetResponseDTO } from '../../types/budgets.types';
-import Patient from '../../patients/patient';
+import Patient from '../patients/patient';
 import DeleteConfirmCard from '../DeleteConfirmCard/deleteConfirmCard';
 import { useNavigate } from 'react-router-dom';
 

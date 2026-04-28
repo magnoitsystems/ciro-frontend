@@ -1,201 +1,244 @@
-import style from './Estadisticas.module.css';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from "react";
+import style from "./Estadisticas.module.css";
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
-import PacientCard from "../../components/PacientCard/pacientCards.tsx";
-import {useState} from "react";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
-
-type Paciente = {
-    id: number;
-    nombre: string;
-    tipoDocumento: string;
-    numeroDocumento: string;
-    fechaNacimiento: string;
-
-    telefono: string;
-    direccion: string;
-    localidad: string;
-    obraSocial: string;
-
-    secretaria: string;
-    observaciones: string;
-    comoNosConocio: string;
-};
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts";
+import { statisticsService } from "../../services/statistics.service";
+import type { StatisticsResponseDTO } from "../../types/statistics.types"; 
 
 export default function Estadisticas() {
-    const pacientes: Paciente[] = [
-        {
-            id: 1,
-            nombre: "Agostina Bidegain",
-            tipoDocumento: "DNI",
-            numeroDocumento: "46185819",
-            fechaNacimiento: "1998-05-27",
+  const [stats, setStats] = useState<StatisticsResponseDTO | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [activeFilter, setActiveFilter] = useState<"ciudad" | "origen">(
+    "origen",
+  );
 
-            telefono: "2494567890",
-            direccion: "Av. Colón 123",
-            localidad: "Tandil",
-            obraSocial: "OSDE",
-
-            secretaria: "Milagros Alvarez",
-            observaciones: "Paciente con tratamiento en curso. Buena evolución.",
-            comoNosConocio: "Instagram"
-        },
-        {
-            id: 2,
-            nombre: "Juan Pérez",
-            tipoDocumento: "DNI",
-            numeroDocumento: "30123456",
-            fechaNacimiento: "1985-09-12",
-
-            telefono: "2494123456",
-            direccion: "San Martín 456",
-            localidad: "Tandil",
-            obraSocial: "IOMA",
-
-            secretaria: "Lucía Fernández",
-            observaciones: "Primera consulta realizada. Estudios pendientes.",
-            comoNosConocio: "Recomendación"
-        },
-        {
-            id: 3,
-            nombre: "María López",
-            tipoDocumento: "DNI",
-            numeroDocumento: "28999888",
-            fechaNacimiento: "1990-03-22",
-
-            telefono: "2494987654",
-            direccion: "Belgrano 789",
-            localidad: "Azul",
-            obraSocial: "Swiss Medical",
-
-            secretaria: "Carla Gómez",
-            observaciones: "Control mensual. Sin complicaciones.",
-            comoNosConocio: "Facebook"
-        },
-        {
-            id: 4,
-            nombre: "Carlos Gómez",
-            tipoDocumento: "DNI",
-            numeroDocumento: "33444555",
-            fechaNacimiento: "1978-11-02",
-
-            telefono: "2494332211",
-            direccion: "Rivadavia 321",
-            localidad: "Olavarría",
-            obraSocial: "Particular",
-
-            secretaria: "Milagros Alvarez",
-            observaciones: "Paciente derivado. Requiere seguimiento.",
-            comoNosConocio: "Sitio Web"
-        },
-        {
-            id: 5,
-            nombre: "Lucía Martínez",
-            tipoDocumento: "DNI",
-            numeroDocumento: "35222111",
-            fechaNacimiento: "1995-07-18",
-
-            telefono: "2494556677",
-            direccion: "España 654",
-            localidad: "Tandil",
-            obraSocial: "Avalian",
-
-            secretaria: "Lucía Fernández",
-            observaciones: "Turnos frecuentes. Muy puntual.",
-            comoNosConocio: "Tik Tok"
-        }
-    ];
-
-    const [activeFilter, setActiveFilter] = useState<"obraSocial" | "localidad" | "comoNosConocio">("obraSocial");
-
-    const getChartData = () => {
-        const counts: Record<string, number> = {};
-
-        pacientes.forEach((p) => {
-            const key = p[activeFilter];
-
-            if (!counts[key]) counts[key] = 0;
-            counts[key]++;
-        });
-
-        return Object.entries(counts).map(([name, value]) => ({
-            name,
-            value
-        }));
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await statisticsService.getDashboardStats();
+        setStats(data);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const chartData = getChartData();
-    const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#a855f7"];
+    fetchStats();
+  }, []);
 
-    return(
-        <main className={style.main}>
-            <WelcomeText
-                sectionText={'Acá las estadísticas de los pacientes.'}
-                className={'darkStyle'}
-            />
+  if (loading) {
+    return (
+      <main className={style.main}>
+        <WelcomeText
+          sectionText={"Cargando estadísticas..."}
+          className={"darkStyle"}
+        />
+      </main>
+    );
+  }
 
-            <div className={style.contentContainer}>
-                <div className={style.patients}>
-                    {pacientes.map((p) => (
-                        <PacientCard
-                            key={p.id}
-                            nombre={p.nombre}
-                            dni={p.numeroDocumento}
-                            onDelete={() => {
-                            }}
-                            onView={() => {
-                            }}
-                            onEdit={() => {
-                            }}
-                            attachments={false}
-                        />
-                    ))}
-                </div>
+  if (!stats) {
+    return (
+      <main className={style.main}>
+        <WelcomeText
+          sectionText={"Error al cargar las estadísticas."}
+          className={"darkStyle"}
+        />
+      </main>
+    );
+  }
 
-                <div className={style.filters}>
-                    <h4>Filtrar por</h4>
+  const COLORS = [
+    "#3b82f6",
+    "#22c55e",
+    "#f59e0b",
+    "#ef4444",
+    "#a855f7",
+    "#ec4899",
+    "#14b8a6",
+  ];
 
-                    <div className={style.filterOptions}>
-                        <button onClick={() => setActiveFilter("obraSocial")}>
-                            Obra social
-                        </button>
+    const patientsByOrigin = stats.patients?.patientsByOrigin || [];
+    const patientsByCity = stats.patients?.patientsByCity || [];
 
-                        <button onClick={() => setActiveFilter("localidad")}>
-                            Localidad
-                        </button>
+    const activeDemographicList = activeFilter === "origen" ? patientsByOrigin : patientsByCity;
+    const demographicData = activeDemographicList.map(item => ({
+        name: item.label,
+        value: item.count || item.percentage || 0
+    }));
 
-                        <button onClick={() => setActiveFilter("comoNosConocio")}>
-                            Cómo nos conoció
-                        </button>
-                    </div>
+    const debtorsData = [
+        { name: 'Al día', value: stats.patients?.totalNonDebtors || 0 },
+        { name: 'Deudores', value: stats.patients?.totalDebtors || 0 }
+    ];
 
-                    <div className={style.appliedFilters}>
-                        <span>Filtro activo:</span>
-                        <strong>{activeFilter}</strong>
-                    </div>
-                </div>
+    const financialBalanceData = [
+        { name: 'Pesos (ARS)', Ingresos: stats.financial?.currentMonthIncomePesos || 0, Egresos: stats.financial?.currentMonthExpensesPesos || 0 },
+        { name: 'Dólares (USD)', Ingresos: stats.financial?.currentMonthIncomeDollars || 0, Egresos: stats.financial?.currentMonthExpensesDollars || 0 }
+    ];
 
-                <div className={style.graph}>
-                    <h4>Distribución por {activeFilter}</h4>
+    const incomeBreakdownList = stats.financial?.incomeBreakdown || [];
+    const incomeBreakdownData = incomeBreakdownList.map(item => ({
+        name: item.label,
+        value: item.amount || 0
+    }));
 
-                    <PieChart width={300} height={300}>
-                        <Pie
-                            data={chartData}
-                            cx="50%"
-                            cy="50%"
-                            outerRadius={100}
-                            dataKey="value"
-                            nameKey="name"
-                        >
-                            {chartData.map((_, index) => (
-                                <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                        </Pie>
+    const formatCurrency = (value: any) => {
+        const numericValue = Number(value);
+        if (isNaN(numericValue)) return "$0,00";
+        return `$${numericValue.toLocaleString('es-AR', { minimumFractionDigits: 2 })}`;
+    };
 
-                        <Tooltip />
-                        <Legend />
-                    </PieChart>
-                </div>
+  return (
+    <main className={style.main}>
+      <WelcomeText
+        sectionText={"Acá las estadísticas generales de la clínica."}
+        className={"darkStyle"}
+      />
+
+      <div className={style.dashboardContainer}>
+        <section className={style.topSection}>
+          <div className={style.summaryCards}>
+            <div className={style.card}>
+              <h3>Total Pacientes</h3>
+              <h2>{stats.patients?.totalPatients || 0}</h2>
             </div>
-        </main>
-    )
+            <div className={style.card}>
+              <h3>Implantes del Mes</h3>
+              <h2>{stats?.implantsThisMonth || 0}</h2>
+            </div>
+          </div>
+
+          <div className={style.demographicsContainer}>
+            <div className={style.filters}>
+              <h4>Distribución de Pacientes</h4>
+              <div className={style.filterOptions}>
+                <button
+                  className={activeFilter === "origen" ? style.activeBtn : ""}
+                  onClick={() => setActiveFilter("origen")}
+                >
+                  Por Origen
+                </button>
+                <button
+                  className={activeFilter === "ciudad" ? style.activeBtn : ""}
+                  onClick={() => setActiveFilter("ciudad")}
+                >
+                  Por Localidad
+                </button>
+              </div>
+            </div>
+
+            <div className={style.graphBox}>
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={demographicData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    dataKey="value"
+                    nameKey="name"
+                  >
+                    {demographicData.map((_, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </section>
+
+        <section className={style.chartsGrid}>
+          <div className={style.chartCard}>
+            <h4>Estado de Cuenta de Pacientes</h4>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={debtorsData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  dataKey="value"
+                  nameKey="name"
+                >
+                  <Cell fill="#22c55e" /> 
+                  <Cell fill="#ef4444" /> 
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className={style.chartCard}>
+            <h4>Desglose de Ingresos</h4>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={incomeBreakdownData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  dataKey="value"
+                  nameKey="name"
+                >
+                  {incomeBreakdownData.map((_, index) => (
+                    <Cell
+                      key={`cell-inc-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip formatter={formatCurrency} />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className={style.chartCard} style={{ gridColumn: "1 / -1" }}>
+            <h4>Balance del Mes (Ingresos vs Egresos)</h4>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={financialBalanceData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                <XAxis dataKey="name" stroke="#ccc" />
+                <YAxis stroke="#ccc" />
+                <Tooltip
+                  formatter={formatCurrency}
+                  contentStyle={{
+                    backgroundColor: "#1e293b",
+                    border: "none",
+                    borderRadius: "5px",
+                  }}
+                />
+                <Legend />
+                <Bar dataKey="Ingresos" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Egresos" fill="#ef4444" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
 }
