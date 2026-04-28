@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: space-between;
 
-    width: 100%;
+    width: 800px;
 
     padding-right: var(--20px);
 
@@ -21,4 +21,10 @@
 
     background-color: var(--green-30);
     border-radius: var(--50px);
+}
+
+@media (min-width: 768px) {
+    .main {
+        width: 100%;
+    }
 }
