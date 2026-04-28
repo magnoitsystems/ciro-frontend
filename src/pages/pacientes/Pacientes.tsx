@@ -547,7 +547,7 @@ export default function Pacientes() {
                                     {newHistoria.archivo && <span className={style.fileName}>{newHistoria.archivo}</span>}
                                 </div>
 
-                                <ProvInput placeholder="Doctor" as="select" className="inputBoxDefault" value={newHistoria.doctorId || ""} onChange={(e) => setNewHistoria({...newHistoria, doctorId: Number(e.target.value)})} options={[{ value: "1", label: "Dr. Pérez" }, { value: "2", label: "Dra. Gómez" }]} />
+                                <ProvInput placeholder="Doctor" as="select" className="inputBoxDefault" value={String(newHistoria.doctorId) || ''} onChange={(e) => setNewHistoria({...newHistoria, doctorId: Number(e.target.value)})} options={[{ value: "1", label: "Dr. Pérez" }, { value: "2", label: "Dra. Gómez" }]} />
                                 
                                 <LightGreyButton text="Guardar" onClick={() => {
                                         if (!newHistoria.evaluacion || !newHistoria.doctorId) { alert("Completá evaluación y doctor"); return; }

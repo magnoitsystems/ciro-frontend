@@ -25,21 +25,21 @@ export default function Budget() {
             .catch(error => console.error('Error fetching budgets:', error));
     }, []);
 
-    /**
-     * 
-     *  const getBudget = async () => {
-            try {
-                await budgetService.f
-            }
-            catch (error) {
-                console.log(error)
-            }
+    const onEditBudget = async (id : number) => { 
+        setIdCard(id)
+        try {
+            const fetchedBudget = await budgetService.findById(id)
+            setBudget(fetchedBudget)
+            console.log(budget)
+            setEditCard(true)
+        } catch (error) {
+            console.error(error)
         }
-     * 
-     */
+    }
 
     const deleteBudget = async () => {
         try {
+            console.log("voy a eliminar el presupuesto")
             await budgetService.deleteBudget(idCard)
             navigate('/budget')
         }
@@ -51,7 +51,7 @@ export default function Budget() {
     return (
         <div className={styles.budget}>
             {deleteCard && (
-                <DeleteConfirmCard component='el presupuesto' onClose={() => setDeleteCard(false)} onAcceptButtonClick={() => deleteBudget}></DeleteConfirmCard>
+                <DeleteConfirmCard component='el presupuesto' onClose={() => setDeleteCard(false)} onAcceptButtonClick={() => deleteBudget()}></DeleteConfirmCard>
             )}
             <WelcomeText sectionText='Aca los presupuestos' className=''></WelcomeText>
             {showPatientForm && (
@@ -63,11 +63,11 @@ export default function Budget() {
 
                 {!showFormBudget && !editCard ? (
                     <div className={styles.tableContainerPropeties}>
-                        <BudgetInfo budgets={budgets} onDeletelick={(id) => { setDeleteCard(true), setIdCard(id) }} onEditBudget={(id) => { setIdCard(id), setEditCard(true) }} ></BudgetInfo>
+                        <BudgetInfo budgets={budgets} onDeletelick={(id) => { setDeleteCard(true), setIdCard(id) }} onEditBudget={(id) => onEditBudget(id) } ></BudgetInfo>
                     </div>
                 ) : (
                     editCard ? (
-                        <NewBudget type='edit' id={idCard} onNuevoPacienteClick={() => setShowPatientForm(true)}></NewBudget>
+                        <NewBudget budget={budget} type='edit' id={idCard} onNuevoPacienteClick={() => {setShowPatientForm(true)}}></NewBudget>
                     ) : (
                         <div className={styles.tableContainerPropeties}>
                             <NewBudget type='create' onNuevoPacienteClick={() => setShowPatientForm(true)}></NewBudget>

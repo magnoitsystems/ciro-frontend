@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './newBudget.module.css';
 import { budgetService } from '../../../services/budget.service';
 import { useNavigate } from 'react-router-dom'
-import type { BudgetCreateDTO } from '../../../types/budgets.types';
+import type { BudgetCreateDTO, BudgetResponseDTO } from '../../../types/budgets.types';
 import type { PatientResponseDTO } from '../../../types/patients.types';
 import { patientService } from '../../../services/patient.service';
 import type { BudgetStatus } from '../../../types/enums.types';
@@ -11,9 +11,10 @@ type Prop = {
     onNuevoPacienteClick: () => void;
     type: 'create' | 'edit'
     id?: number
+    budget?: BudgetResponseDTO
 }
 
-export default function NewBudget({ onNuevoPacienteClick, type, id }: Prop) {
+export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Prop) {
     const [patient, setPatient] = useState<PatientResponseDTO[]>([]);
     const navigate = useNavigate()
     const [status, setStatus] = useState<BudgetStatus>('ENVIADO')
@@ -24,28 +25,51 @@ export default function NewBudget({ onNuevoPacienteClick, type, id }: Prop) {
     const estados = ['ENVIADO', 'ACEPTADO', 'ACEPTADO_PARCIALMENTE', 'RECHAZADO', 'PENDIENTE_DE_RESPUESTA', 'SIN_ENVIAR', 'SIN_HACER']
 
     useEffect(() => {
-        patientService.getAllPatients()
-            .then(fetchedPatients => setPatient(fetchedPatients))
-            .catch(error => console.error('Error fetching patients:', error));
-    }, [])
+        if (type === 'edit' && budget) {
+            setDate(budget?.date ? budget.date.slice(0, 10) : '')
+            setPatientId(budget?.patientId ?? -1)
+            setTitle(budget?.title ?? '');
+            setStatus(budget?.status ?? 'ENVIADO')
+        }
+    }, [type, budget]);
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        const newBudget: BudgetCreateDTO = {
+        console.log("SUBMIT ejecutado");
+        e.preventDefault();
+
+        const payload: BudgetCreateDTO = {
             patientId,
             title,
             date,
             status,
             file
-        }
+        };
+
+        console.log("Creo la tarea");
 
         try {
-            await budgetService.createBudget(newBudget)
-            navigate('/presupuestos')
-        } catch (error) {
-            console.error(error)
+            let response;
+            console.log("Entro al try");
+
+            if (type === 'create') {
+                console.log("Voy a crear la task");
+                response = await budgetService.createBudget(payload);
+                navigate('/presupuestos')
+            } else {
+                response = await budgetService.updateBudget(budget!.id, payload);
+            }
+
+        } catch (error: any) {
+            console.error(error);
         }
-    }
+    };
+
+
+    useEffect(() => {
+        patientService.getAllPatients()
+            .then(fetchedPatients => setPatient(fetchedPatients))
+            .catch(error => console.error('Error fetching patients:', error));
+    }, [])
 
     return (
         <div className={styles.newBudget}>
@@ -65,6 +89,7 @@ export default function NewBudget({ onNuevoPacienteClick, type, id }: Prop) {
                             }
                         }}>
                             <option value="">Seleccione un paciente</option>
+                            <option key={budget?.patientFullName} value={budget?.patientFullName}>{budget?.patientFullName}</option>
                             {patient.map((paciente) => (
                                 <option key={paciente.id} value={paciente.id}>{paciente.fullName}</option>
                             ))}
@@ -74,13 +99,13 @@ export default function NewBudget({ onNuevoPacienteClick, type, id }: Prop) {
                     <div className={styles.holeInput}>
                         <label htmlFor="date">Fecha de carga</label>
                         <div className={styles.fileInputContainer}>
-                            <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} required />
+                            <input type="date" id="date" name="date" value={date} onChange={(e) => setDate(e.target.value)} required />
                         </div>
                     </div>
                     <div className={styles.holeInput}>
                         <label htmlFor="date">Título</label>
                         <div className={styles.fileInputContainer}>
-                            <input type="text" id="title" name="title" onChange={(e) => setTitle(e.target.value)} required />
+                            <input type="text" id="title" name="title" placeholder="Título" value={title} onChange={(e) => setTitle(e.target.value)} required />
                         </div>
                     </div>
                     <div className={styles.holeInput}>
