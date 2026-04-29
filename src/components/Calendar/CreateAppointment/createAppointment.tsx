@@ -63,8 +63,10 @@ export default function CreateAppointment({
     }, [type, task]);
 
     const handleSubmit = async (e: React.FormEvent) => {
-        handleSubmitComment(e);
-        if (component === 'calendar') {
+        if (onlyComment) {
+            handleSubmitComment(e);
+        }
+        else if (component === 'calendar') {
             handleSubmitShift(e);
             return;
         }
@@ -87,7 +89,9 @@ export default function CreateAppointment({
         };
 
         try {
+            console.log("voy a comentar")
             await noteService.create(payload);
+            console.log("comentario creado")
             onClose();
         } catch (error) {
             console.error("Error al guardar el comentario:", error);

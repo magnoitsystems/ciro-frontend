@@ -2,7 +2,7 @@ import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import styles from './Calendar.module.css'
 import WelcomeText from '../WelcomeText/welcomeText'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import CreateAppointment from './CreateAppointment/createAppointment'
@@ -13,6 +13,7 @@ import type { ButtonInfo } from '../../types/buttonInfo'
 import type { ShiftResponseDTO } from '../../types/clinical.types'
 import { shiftService } from '../../services/shift.service'
 import type { NoteResponseDTO } from '../../types/management.types'
+import { noteService } from '../../services/note.service'
 
 export default function CalendarioMedico() {
 
@@ -22,14 +23,28 @@ export default function CalendarioMedico() {
   const [mostarInfoTurno, setInfoTurno] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [turnos, setTurnos] = useState<ShiftResponseDTO[]>([])
-  const [comment, setComment] = useState<NoteResponseDTO>()
+  const [comments, setComments] = useState<Record<string, NoteResponseDTO>>({})
   const [dateCalendar, setDateCalendar] = useState<Date>(new Date())
+  const [mostrarInfoComment, setInfoComment] = useState(false);
 
   useEffect(() => {
     shiftService.getAll()
       .then(fetchedTurnos => setTurnos(fetchedTurnos))
       .catch(error => console.error('Error fetching turnos:', error));
     console.log(turnos)
+  }, [])
+
+  useEffect(() => {
+    noteService.getAll()
+      .then(fetchedComments => {
+        const commentMap: Record<string, NoteResponseDTO> = {}
+        fetchedComments.forEach(c => {
+          const key = c.date.slice(0, 10)
+          commentMap[key] = c
+        })
+        setComments(commentMap)
+      })
+      .catch(error => console.error(error))
   }, [])
 
   const coloresEstados: Record<string, string> = {
@@ -112,6 +127,12 @@ export default function CalendarioMedico() {
         </div>
       )}
 
+      {tipo === 'view' && mostrarInfoComment && (
+        <div>
+          <Appointment comment={comments} justComment={true} component='calendar' turnos={turnos} type='view' onClose={() => setInfoTurno(false)}></Appointment>
+        </div>
+      )}
+
       <div className={styles.calendarContainerProperties}>
         <WelcomeText sectionText='Aca el calendario de la semana' className='darkStyle'></WelcomeText>
         <div className={styles.calendarAndButtonsContainerProperties}>
@@ -126,19 +147,25 @@ export default function CalendarioMedico() {
               slotMinTime="06:00:00"
               slotMaxTime="20:00:00"
               slotDuration="00:30:00"
-              dayHeaderContent={(args) => (
-                <div className={styles.diaHeader}>
-                  <span>{args.text}</span>
-                  {comment ? <span className={styles.commentIcon}>💬</span> : (
-                    <button onClick={() => {
-                      setShowForm(true)
-                      setTipoForm('create')
-                      setDateCalendar(args.date)
-                    }}>+</button>
-                  )}
+              dayHeaderContent={(args) => {
+                const fechaKey = args.date.toISOString().slice(0, 10)
+                const comentarioDelDia = comments[fechaKey]
 
-                </div>
-              )}
+                return (
+                  <div className={styles.diaHeader}>
+                    <span>{args.text}</span>
+                    {comentarioDelDia ? (
+                      <button className={styles.commentIcon} onClick={() => setInfoComment(true)}>💬</button>
+                    ) : (
+                      <button onClick={() => {
+                        setShowForm(true)
+                        setTipoForm('create')
+                        setDateCalendar(args.date)
+                      }}>+</button>
+                    )}
+                  </div>
+                )
+              }}
               eventContent={(eventInfo) => (
                 <div className={styles.evento}>
                   <div className={styles.barraColor} style={{ backgroundColor: colorActual }}></div>
