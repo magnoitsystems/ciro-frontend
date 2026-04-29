@@ -2,83 +2,36 @@ import { useState } from "react";
 import style from './CajaForm.module.css';
 import ProvInput from "../NewProvForm/ProvInput.tsx";
 import GreenFormButton from "../../Buttons/GreenFormButton/greenFormButton.tsx";
+import type { ReportPeriod } from "../../../types/enums.types.ts";
 
-export function ReporteCaja() {
+type Props = {
+    onGenerate: (period: ReportPeriod) => void;
+}
 
-    const [tipo, setTipo] = useState("");
-    const [rango, setRango] = useState("");
+export function ReporteCaja({ onGenerate }: Props) {
+    const [period, setPeriod] = useState<ReportPeriod>("MONTH");
 
     const handleSubmit = () => {
-        if (!tipo || !rango) {
-            alert("Completá los campos");
-            return;
-        }
-
-        console.log("Reporte caja:", { tipo, rango });
+        onGenerate(period);
     };
 
     return (
         <div className={style.reportForm}>
-
             <ProvInput
-                placeholder="Tipo de reporte"
+                placeholder="Período del reporte"
                 as="select"
                 className="inputBoxDefault"
-                value={tipo}
-                onChange={(e) => {
-                    setTipo(e.target.value);
-                    setRango("");
-                }}
+                value={period}
+                onChange={(e) => setPeriod(e.target.value as ReportPeriod)}
                 options={[
-                    { value: "diario", label: "Diario" },
-                    { value: "semanal", label: "Semanal" },
-                    { value: "mensual", label: "Mensual" },
-                    { value: "anual", label: "Anual" }
+                    { value: "DAY", label: "Hoy" },
+                    { value: "WEEK", label: "Esta Semana" },
+                    { value: "MONTH", label: "Este Mes" }
                 ]}
             />
 
-            {tipo === "diario" && (
-                <ProvInput
-                    placeholder="Seleccionar día"
-                    type="date"
-                    className="inputBoxDefault"
-                    value={rango}
-                    onChange={(e) => setRango(e.target.value)}
-                />
-            )}
-
-            {tipo === "semanal" && (
-                <ProvInput
-                    placeholder="Seleccionar semana"
-                    type="week"
-                    className="inputBoxDefault"
-                    value={rango}
-                    onChange={(e) => setRango(e.target.value)}
-                />
-            )}
-
-            {tipo === "mensual" && (
-                <ProvInput
-                    placeholder="Seleccionar mes"
-                    type="month"
-                    className="inputBoxDefault"
-                    value={rango}
-                    onChange={(e) => setRango(e.target.value)}
-                />
-            )}
-
-            {tipo === "anual" && (
-                <ProvInput
-                    placeholder="Seleccionar año"
-                    type="number"
-                    className="inputBoxDefault"
-                    value={rango}
-                    onChange={(e) => setRango(e.target.value)}
-                />
-            )}
-
             <GreenFormButton
-                text="Generar reporte"
+                text="Descargar PDF"
                 onClick={handleSubmit}
             />
         </div>

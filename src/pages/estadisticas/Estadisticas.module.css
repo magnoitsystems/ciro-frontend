@@ -1,10 +1,10 @@
 .main {
     display: flex;
     flex-direction: column;
-    height: 100vh; /* O el alto que maneje tu layout */
+    height: 100vh; 
     gap: var(--20px);
     color: var(--neutral-1);
-    overflow: hidden; /* Evitamos doble scroll general */
+    overflow: hidden; 
 }
 
 .dashboardContainer {
@@ -12,12 +12,11 @@
     flex-direction: column;
     gap: 30px;
     height: 100%;
-    overflow-y: auto; /* Scroll interno para el contenido del dashboard */
+    overflow-y: auto;
     padding-bottom: 40px;
     padding-right: 10px;
 }
 
-/* Scrollbar personalizada para el dashboard */
 .dashboardContainer::-webkit-scrollbar {
     width: 8px;
 }
@@ -26,7 +25,6 @@
     border-radius: 10px;
 }
 
-/* --- SECCIÓN SUPERIOR (Tarjetas y Demografía) --- */
 .topSection {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -120,7 +118,6 @@
     justify-content: center;
 }
 
-/* --- SECCIÓN INFERIOR (Grillas de gráficos) --- */
 .chartsGrid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -143,7 +140,6 @@
     color: var(--neutral-1);
 }
 
-/* Responsividad para pantallas más chicas */
 @media (max-width: 1024px) {
     .topSection {
         grid-template-columns: 1fr;

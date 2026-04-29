@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios';
+import { api } from './api'; 
 import { API_ENDPOINTS } from './api.endpoints';
 import type { CashMovementDetailDTO } from '../types/cash.types';
 
@@ -11,13 +11,13 @@ class CashMovementService {
         if (doctorId) params.doctorId = doctorId;
         if (period) params.period = period;
 
-        const response = await axios.get(API_ENDPOINTS.CASH_MOVEMENTS.BASE, { params });
+        const response = await api.get(API_ENDPOINTS.CASH_MOVEMENTS.BASE, { params });
         return response.data;
     }
 
     // Obtiene el detalle de un movimiento específico con la información del objeto (receipt o bill) asociado
     async getMovementDetail(id: number): Promise<CashMovementDetailDTO> {
-        const response = await axios.get<CashMovementDetailDTO>(API_ENDPOINTS.CASH_MOVEMENTS.BY_ID(id));
+        const response = await api.get<CashMovementDetailDTO>(API_ENDPOINTS.CASH_MOVEMENTS.BY_ID(id));
         return response.data;
     }
 
@@ -27,18 +27,11 @@ class CashMovementService {
         if (doctorId) params.doctorId = doctorId;
         if (period) params.period = period;
 
-        const response = await axios.get(API_ENDPOINTS.CASH_MOVEMENTS.REPORT_PDF, { 
+        const response = await api.get(API_ENDPOINTS.CASH_MOVEMENTS.REPORT_PDF, { 
             params,
             responseType: 'blob' 
         });
         return response.data;
-    }
-
-    // Asigna un doctor a un movimiento
-    async assignDoctor(id: number, doctorId: number): Promise<void> {
-        await axios.patch(API_ENDPOINTS.CASH_MOVEMENTS.ASSIGN_DOCTOR(id), null, {
-            params: { doctorId }
-        });
     }
 }
 

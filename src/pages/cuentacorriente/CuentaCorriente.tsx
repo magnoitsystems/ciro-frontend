@@ -193,21 +193,19 @@ export default function CuentaCorriente() {
             <WelcomeText sectionText={`Acá la Cta. Corriente de ${accountData.patientFullName || 'Paciente'}`} className={'darkStyle'} />
 
             <NavLink to={'/pacientes'} style={{ textDecoration: 'none' }}>
-                <p style={{ cursor: 'pointer', color: 'var(--primary)', marginBottom: '20px' }}>← Volver a la sección pacientes</p>
+                <p style={{ cursor: 'pointer', color: 'var(--neutral-4)'}}>← Volver a la sección pacientes</p>
             </NavLink>
 
             <div className={style.content}>
                 <div className={style.allInformation}>
-                    
+
                     <SaldosResume saldoPesos={accountData.debtInPesos || 0} saldoDolares={accountData.debtInDollars || 0} />
 
                     <div className={style.registerContainer}>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', width: '100%' }}>
-                        <DebtButton onClick={handleCancelDebt} />
-                    </div>
 
                         <div className={style.columnNames}>
-                            <h6>Tipo</h6><h6>Fecha</h6><h6>Importe en ARS</h6><h6>Importe en USD</h6><h6>Saldo en ARS</h6><h6>Saldo en USD</h6>
+                            <h6>Tipo</h6><h6>Fecha</h6><h6>Importe en ARS</h6><h6>Importe en USD</h6><h6>Saldo en
+                            ARS</h6><h6>Saldo en USD</h6>
                         </div>
 
                         {accountData.movements && accountData.movements.length > 0 ? (
@@ -225,14 +223,21 @@ export default function CuentaCorriente() {
                                 />
                             ))
                         ) : (
-                            <p style={{ padding: '20px', color: 'var(--neutral-4)' }}>No hay movimientos registrados.</p>
+                            <p style={{padding: '20px', color: 'var(--neutral-4)'}}>No hay movimientos registrados.</p>
                         )}
+
+
+                        <div style={{display: 'flex', justifyContent: 'center', marginBottom: '15px', width: '100%'}}>
+                            <DebtButton onClick={handleCancelDebt}/>
+                        </div>
                     </div>
+
+
                 </div>
 
                 <div className={style.createRegisters}>
                     <div onClick={() => setShowComprobanteModal(true)}>
-                        <img src={'/icons/bigPlus.png'} alt="Crear Comprobante" />
+                    <img src={'/icons/bigPlus.png'} alt="Crear Comprobante" />
                         <p>Crear nuevo comprobante</p>
                     </div>
 

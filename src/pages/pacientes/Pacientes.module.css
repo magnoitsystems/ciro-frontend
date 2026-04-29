@@ -62,43 +62,139 @@
     column-gap: var(--30px);
 }
 
-
-/*NEW PACIENT box*/
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    background: rgba(0, 0, 0, 0.4);
-
     display: flex;
     justify-content: center;
     align-items: center;
-
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
     z-index: 1000;
 }
 
-.modal, .miniModal, .formModal {
+.modal {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    width: 90%;
+    max-height: 90vh; 
+    padding: var(--20px) var(--25px);
+    gap: var(--15px);
+    background: var(--blue-4);
+    color: var(--neutral-1);
+    border-radius: var(--10px);
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.5); 
+}
+
+.modal::-webkit-scrollbar {
+    width: 6px;
+}
+.modal::-webkit-scrollbar-thumb {
+    background-color: var(--primary); 
+    border-radius: var(--10px);
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--blue-3);
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.modalHeader h3 {
+    margin: 0;
+}
+
+.close {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    
+    background-color: transparent;
+    color: var(--red);
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.close:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+    transform: scale(1.1);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--15px);
+    width: 100%;
+}
+
+.modal input, .modal select {
+    background-color: var(--blue-2);
+    padding: 10px;
+    color: var(--neutral-1);
+    border: none;
+    border-radius: 8px;
+}
+
+.submitButton {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.cancelButton, .lastButton {
+    padding: 10px 20px;
+    border-radius: var(--20px);
+    color: var(--red);
+    background: transparent;
+    border: 1px solid var(--red);
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.cancelButton:hover, .lastButton:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.nextButton, .createButton {
+    padding: 10px 20px;
+    border-radius: var(--20px);
+    color: white;
+    background: var(--primary); 
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.nextButton:hover, .createButton:hover {
+    opacity: 0.85;
+    transform: scale(1.02);
+}
+
+.miniModal, .formModal {
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-
     width: 90%;
-    height: 90%;
-
     padding: var(--20px);
-    padding-inline: var(--20px);
     border-radius: var(--5px);
-
     background-color: var(--blue-4);
     color: var(--neutral-1);
     text-align: center;
-}
-
-.formModal, .miniModal {
     gap: var(--20px);
 }
 
@@ -106,7 +202,7 @@
     padding-inline: 0;
 }
 
-.miniModal{
+.miniModal {
     justify-content: center;
     height: 250px;
 }
@@ -114,7 +210,6 @@
 .formModal input, .formModal select {
     width: 100%;
     min-width: 250px;
-
     background-color: var(--blue-1);
 }
 
@@ -126,7 +221,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
     gap: 10px;
 }
 
@@ -137,31 +231,7 @@
 
 .back {
     color: var(--neutral-4);
-}
-
-.close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-
-    background: transparent;
-    border: none;
-    font-size: 18px;
     cursor: pointer;
-    color: var(--red);
-
-    opacity: 0.7;
-    transition: 0.2s;
-}
-.close:hover {
-    opacity: 1;
-}
-
-.details {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
 }
 
 .details {
@@ -175,6 +245,7 @@
     background-color: var(--blue-3);
     padding: 15px;
     border-radius: 10px;
+    text-align: left;
 }
 
 .section h5 {
@@ -215,9 +286,8 @@
     display: flex;
     flex-direction: column;
     gap: var(--20px);
-    margin: var(--40px);
-    margin-inline: 0;
-
+    margin: var(--40px) 0;
+    width: 100%;
 }
 
 .turnoItem {
@@ -257,7 +327,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-
     width: 250px;
 }
 
@@ -284,21 +353,18 @@
 @media (min-width: 768px) {
     .pacientCards {
         grid-template-columns: repeat(2, 1fr);
-
         row-gap: var(--20px);
     }
 
     .functionalities {
         flex-direction: row;
         justify-content: space-between;
-
         margin-top: var(--15px);
         gap: 0;
     }
 
     .secondFunctionalities {
         height: 40px;
-
         gap: var(--20px);
     }
 
@@ -310,10 +376,14 @@
         padding-inline: var(--30px);
     }
 
-    /*modals*/
-    .modal, .miniModal, .formModal {
-        width: 35%;
+    /* Modal lindo */
+    .modal {
+        width: 60%;
+    }
 
+    /* Modales de form chicos */
+    .miniModal, .formModal {
+        width: 35%;
         padding: var(--50px);
         padding-inline: var(--20px);
         border-radius: var(--5px);
