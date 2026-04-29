@@ -4,7 +4,6 @@ import TaskSummery from '../../components/TaskSummery/taskSummery'
 import WelcomeText from '../../components/WelcomeText/welcomeText'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 
 import { taskService } from '../../services/task.service' 
 import { shiftService } from '../../services/shift.service'
@@ -14,7 +13,6 @@ import { statisticsService } from '../../services/statistics.service'
 import type { TaskResponseDTO } from '../../types/management.types'
 import type { RevenueWidgetDTO } from '../../types/currentAccount.types'
 import type { ShiftWidgetDTO } from '../../types/clinical.types'
-import type { StatisticsResponseDTO } from '../../types/statistics.types'
 
 export default function Panel() {
     const navigate = useNavigate();
@@ -23,7 +21,6 @@ export default function Panel() {
     const [pendingTasks, setPendingTasks] = useState<TaskResponseDTO[]>([]);
     const [shiftData, setShiftData] = useState<ShiftWidgetDTO | null>(null);
     const [revenueData, setRevenueData] = useState<RevenueWidgetDTO | null>(null);
-    const [statsData, setStatsData] = useState<StatisticsResponseDTO | null>(null);
     const [currentTime, setCurrentTime] = useState<string>('');
 
     useEffect(() => {
@@ -36,7 +33,7 @@ export default function Panel() {
         }, 1000);
 
         const fetchDashboardData = async () => {
-            const [tasksResult, shiftsResult, revenueResult, statsResult] = await Promise.allSettled([
+            const [tasksResult, shiftsResult, revenueResult] = await Promise.allSettled([
                 taskService.getPendingWidget(),
                 shiftService.getDashboardWidget(),
                 receiptService.getWeeklyRevenueWidget(),
@@ -61,12 +58,6 @@ export default function Panel() {
             } else {
                 console.error("El backend falló al traer los ingresos", revenueResult.reason);
             }
-
-            if (statsResult.status === 'fulfilled') {
-                setStatsData(statsResult.value);
-            } else {
-                console.error("El backend falló al traer las estadísticas", statsResult.reason);
-            }
         };
 
         fetchDashboardData();
@@ -85,13 +76,6 @@ export default function Panel() {
         const dateStr = new Date().toLocaleDateString('es-AR', options);
         return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
     };
-
-    const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#a855f7", "#ec4899", "#14b8a6"];
-    const patientsByOrigin = statsData?.patients?.patientsByOrigin || [];
-    const demographicData = patientsByOrigin.map(item => ({
-        name: item.label,
-        value: item.count || item.percentage || 0
-    }));
 
     return(
         <main className={style.main}>
@@ -178,41 +162,38 @@ export default function Panel() {
                     </div>
                 </div>
 
-                <div className={style.estadistics}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
-                        <div>
-                            <h6 style={{ margin: '0 0 5px 0' }}>Origen de pacientes</h6>
-                            <p style={{ fontSize: '12px', color: 'var(--neutral-4)', margin: 0 }}>Distribución general</p>
-                        </div>
-                        
-                        <div onClick={() => navigate('/estadisticas')} style={{ cursor: 'pointer' }}>
-                            <PanelButton content={'Ver estadísticas ➝'} />
-                        </div>
-                    </div>
+                <div
+                    className={style.estadistics}
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                        height: "140px",
+                        boxSizing: "border-box",
+                    }}
+                    >
+                    <header style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                        <h6 style={{ margin: 0, fontStyle: "italic", color: "var(--blue-4)" }}>
+                        Origen de pacientes
+                        </h6>
+                        <p
+                        style={{
+                            fontSize: "13px",
+                            color: "var(--neutral-4)",
+                            margin: 0,
+                            lineHeight: "1.4",
+                        }}
+                        >
+                        Accedé al panel para ver la distribución general, gráficos detallados y más métricas.
+                        </p>
+                    </header>
 
-                    {demographicData.length > 0 ? (
-                        <div style={{ width: '100%', height: '120px', marginTop: '10px' }}>
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={demographicData}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={30}
-                                        outerRadius={50}
-                                        dataKey="value"
-                                        stroke="none"
-                                    >
-                                        {demographicData.map((_, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                    ) : (
-                        <p style={{ color: 'var(--neutral-4)', fontSize: '14px', marginTop: '20px' }}>No hay datos suficientes.</p>
-                    )}
+                    <span
+                        onClick={() => navigate("/estadisticas")}
+                        style={{ cursor: "pointer", alignSelf: "flex-end" }}
+                    >
+                        <PanelButton content={"Ver estadísticas completas ➝"} />
+                    </span>
                 </div>
             </div>
         </main>
