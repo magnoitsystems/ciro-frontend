@@ -11,7 +11,6 @@ import type { ReportPeriod } from "../../types/enums.types.ts";
 import { cashMovementService } from '../../services/cashMovement.service.ts';
 
 export default function Caja() {
-    const [showReport, setShowReport] = useState(false);
     const [movements, setMovements] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     
@@ -73,63 +72,45 @@ export default function Caja() {
                 className={'darkStyle'}
             />
 
-            {!showReport ? (
-                <>
-                    <div className={style.content}>
-                        <div className={style.columnNames}>
-                            <p>Movimiento</p>
-                            <p>Medio de pago</p>
-                            <p>Fecha</p>
-                            <p>Monto</p>
-                            <p>Moneda</p>
-                            <p style={{textAlign: 'right'}}>Acciones</p>
-                        </div>
-                        
-                        <div className={style.registers}>
-                            {loading ? (
-                                <p style={{ color: 'white', padding: '20px', textAlign: 'center' }}>Cargando movimientos...</p>
-                            ) : movements.length > 0 ? (
-                                movements.map((mov) => (
-                                    <CajaRegister 
-                                        key={mov.id}
-                                        id={mov.id}
-                                        type={mov.type}
-                                        paymentMethod={mov.paymentMethod}
-                                        amount={mov.amount}
-                                        currencyType={mov.currencyType}
-                                        movementDate={mov.movementDate || mov.date} 
-                                        onViewDetail={() => handleViewDetail(mov.id)}
-                                    />
-                                ))
-                            ) : (
-                                <p style={{ color: 'var(--neutral-4)', padding: '20px', textAlign: 'center' }}>No hay movimientos registrados.</p>
-                            )}
-                        </div>
-                    </div>
-
-                    {isAdmin && (
-                        <div
-                            className={style.createReport}
-                            onClick={() => setShowReport(true)}
-                        >
-                            <img src={'/icons/up.png'} alt="reporte"/>
-                            <h6>Generar reportes</h6>
-                        </div>
+            <div className={style.content}>
+                <div className={style.columnNames}>
+                    <p>Movimiento</p>
+                    <p>Medio de pago</p>
+                    <p>Fecha</p>
+                    <p>Monto</p>
+                    <p>Moneda</p>
+                    <p style={{textAlign: 'right'}}>Acciones</p>
+                </div>
+                
+                <div className={style.registers}>
+                    {loading ? (
+                        <p style={{ color: 'white', padding: '20px', textAlign: 'center' }}>Cargando movimientos...</p>
+                    ) : movements.length > 0 ? (
+                        movements.map((mov) => (
+                            <CajaRegister 
+                                key={mov.id}
+                                id={mov.id}
+                                type={mov.type}
+                                paymentMethod={mov.paymentMethod}
+                                amount={mov.amount}
+                                currencyType={mov.currencyType}
+                                movementDate={mov.movementDate || mov.date} 
+                                onViewDetail={() => handleViewDetail(mov.id)}
+                            />
+                        ))
+                    ) : (
+                        <p style={{ color: 'var(--neutral-4)', padding: '20px', textAlign: 'center' }}>No hay movimientos registrados.</p>
                     )}
-                </>
-            ) : (
+                </div>
+            </div>
+
+            {isAdmin && (
                 <div className={style.reportContainer}>
                     <div className={style.reportInfo}>
-                        <h4>Generar reporte</h4>
-                        <p>
+                        <h4 style={{ margin: '0 0 10px 0', color: 'white' }}>Generar reporte</h4>
+                        <p style={{ color: 'var(--neutral-4)', fontSize: '14px' }}>
                             Seleccioná el período para obtener un resumen en PDF de los movimientos de caja.
                         </p>
-                        <span
-                            className={style.back}
-                            onClick={() => setShowReport(false)}
-                        >
-                            ← Volver a movimientos
-                        </span>
                     </div>
                     <ReporteCaja onGenerate={handleDownloadReport} />
                 </div>
