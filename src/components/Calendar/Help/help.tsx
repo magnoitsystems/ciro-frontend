@@ -35,10 +35,8 @@ export default function Help({ type, component }: Prop) {
         ) : type == 'label' ? (
             component === 'calendar' && (
                 <div className={styles.helpContainerProperties}>
-                    <span><img src="./icons/confirmado.png" width="20px"></img> significa que el turno está confirmado</span>
-                    <span><img src="./icons/solicitado.png" width="20px"></img> significa que el turno está solicitado</span>
-                    <span><img src="./icons/descartado.png" width="20px"></img> significa que el turno está descartado</span>
-                    <span><img src="./icons/sinAvisar.png" width="20px"></img> significa que el turno no ha sido avisado</span>
+                    <span><img src="./icons/confirmado.png" width="20px"></img> Significa que el turno está ASIGNADO</span>
+                    <span><img src="./icons/descartado.png" width="20px"></img> Significa que el turno está REQUERIDO</span>
                 </div>
             )
         ) : null

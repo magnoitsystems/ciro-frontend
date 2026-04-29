@@ -201,7 +201,7 @@ export default function CalendarioMedico() {
                       <button className={styles.commentIcon} onClick={() => {
                         setDateCalendar(args.date)
                         setMostrarInfoComment(true)
-                      }}>💬</button>
+                      }}><img src='/icons/seeMoreIcon.png' /></button>
                     ) : (
                       <button className={styles.commentIcon} onClick={() => {
                         setShowCommentForm(true)

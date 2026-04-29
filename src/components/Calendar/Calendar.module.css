@@ -23,8 +23,6 @@ body {
     font-size: 20px;
 }
 
-
-
 /* Contenedor del evento */
 .evento {
     display: flex;
@@ -112,15 +110,13 @@ body {
     gap: 5px;
 }
 
-.diaHeader button {
+.commentIcon {
     background-color: transparent;
     border: none;
     cursor: pointer;
     color: white;
-}
-
-button {
-    background-color: transparent;
+    margin-left: 15px;
+    font-size: 30px;
 }
 
 .commentIcon button {
