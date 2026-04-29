@@ -1,4 +1,4 @@
-body{
+body {
     background-color: #171620;
 }
 
@@ -28,19 +28,19 @@ body{
 }
 
 /* Contenedor del evento */
-.evento{
+.evento {
     display: flex;
     flex-direction: column;
     height: 100px;
 }
 
 .barraColor {
-  width: 100%;
-  height: 10px;
-  border-radius: 3px;
+    width: 100%;
+    height: 10px;
+    border-radius: 3px;
 }
 
-.container{
+.container {
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -53,29 +53,35 @@ body{
 
 /* Hora del evento */
 :global(.fc-event-time) {
-  font-size: 0.75rem !important;
-  display: flex;
-  align-content: center;
+    font-size: 0.75rem !important;
+    display: flex;
+    align-content: center;
 
 }
 
 :global(.fc-event) {
-  background-color: transparent !important;
-  border: none !important;
+    background-color: transparent !important;
+    border: none !important;
 }
 
-:global(.fc-scrollgrid th), :global(.fc-scrollgrid td), :global(.fc-scrollgrid-section-header th), :global(.fc-scrollgrid), :global(.fc-col-header-cell), :global(.fc-timegrid-col), :global(.fc-timegrid-slot), .calendarContainerPropertiess :global(.fc-event)
-.calendarContainerProperties :global(.fc-toolbar-title) {
-  border-color: #292831 !important;
+:global(.fc-scrollgrid th),
+:global(.fc-scrollgrid td),
+:global(.fc-scrollgrid-section-header th),
+:global(.fc-scrollgrid),
+:global(.fc-col-header-cell),
+:global(.fc-timegrid-col),
+:global(.fc-timegrid-slot),
+.calendarContainerPropertiess :global(.fc-event) .calendarContainerProperties :global(.fc-toolbar-title) {
+    border-color: #292831 !important;
 }
 
-.buttonsProperties{
+.buttonsProperties {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.buttonsProperties button{
+.buttonsProperties button {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -97,14 +103,14 @@ body{
     position: relative;
 }
 
-.miniCalendarProperties{
+.miniCalendarProperties {
     position: absolute;
     z-index: 1000;
     bottom: 70px;
     right: 100px;
 }
 
-.mainInfoProperties{
+.mainInfoProperties {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -114,7 +120,8 @@ body{
 
 @media (max-width: 767px) {
     .calendarAndButtonsContainerProperties {
-        flex-direction: column-reverse; /* ButtonsRod arriba en mobile */
+        flex-direction: column-reverse;
+        /* ButtonsRod arriba en mobile */
         gap: 12px;
     }
 
@@ -132,6 +139,11 @@ body{
         height: 45px;
     }
 
+    :global(.fc-timegrid-event) {
+        border: none !important;
+        box-shadow: none !important;
+    }
+
     :global(.fc-toolbar-title) {
         font-size: 18px;
     }
@@ -142,6 +154,8 @@ body{
 
     .evento {
         height: 70px;
+        display: flex;
+        margin-bottom: 20px;
     }
 
     .container {
@@ -168,7 +182,24 @@ body{
     }
 
     .diaHeader button {
-        font-size: 14px;
-        padding: 0 4px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        color: white;
+    }
+
+    button {
+        background-color: transparent;
+    }
+
+    .commentIcon button {
+        background-color: black;
+
+    }
+
+    .commentIcon {
+        background-color: transparent !important;
+        border: none !important;
+        cursor: pointer !important;
     }
 }

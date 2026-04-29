@@ -20,15 +20,17 @@ const MORE_ITEMS = [
     { label: "Caja",            image: "/icons/caja.png",    to: "/caja" },
 ];
 
-export default function BottomNav() {
+type Props = {
+    onLogout: () => void;
+};
+
+export default function BottomNav({ onLogout }: Props) {
     const [menuOpen, setMenuOpen] = useState(false);
     const location = useLocation();
     const menuRef = useRef<HTMLDivElement>(null);
 
-    // Cerrar menú al navegar
     useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
-    // Cerrar al tocar fuera
     useEffect(() => {
         if (!menuOpen) return;
         const handler = (e: MouseEvent) => {
@@ -45,7 +47,6 @@ export default function BottomNav() {
 
     return (
         <nav className={style.bottomNav} ref={menuRef}>
-            {/* Menú desplegable */}
             <div className={`${style.moreMenu} ${menuOpen ? style.open : ""}`}>
                 {MORE_ITEMS.map((item, i) =>
                     item.section ? (
@@ -63,9 +64,18 @@ export default function BottomNav() {
                         </NavLink>
                     )
                 )}
+
+                {/* Subsección final para Sesión */}
+                <span className={style.moreLabel} style={{ marginTop: '10px' }}>Sesión</span>
+                <button 
+                    onClick={onLogout} 
+                    className={`${style.moreRow} ${style.logoutMobileRow}`} 
+                >
+                    <img src="/icons/logout.png" alt="Cerrar sesión" className={style.moreIcon} />
+                    Cerrar sesión
+                </button>
             </div>
 
-            {/* Items principales */}
             {PRIMARY_ITEMS.map(item => (
                 <NavLink
                     key={item.to}
@@ -79,7 +89,6 @@ export default function BottomNav() {
                 </NavLink>
             ))}
 
-            {/* Botón Más */}
             <button
                 className={`${style.bnItem} ${(menuOpen || moreIsActive) ? style.bnActive : ""}`}
                 onClick={() => setMenuOpen(prev => !prev)}

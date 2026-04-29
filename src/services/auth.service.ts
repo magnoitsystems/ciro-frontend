@@ -67,5 +67,12 @@ export const authService = {
     isAdmin: (): boolean => {
         const role = localStorage.getItem('userRole');
         return role === 'ADMIN'; 
+    },
+
+    /**
+     * Obtiene el nombre del usuario logueado
+     */
+    getUserName: (): string => {
+        return localStorage.getItem('userName') || 'Usuario';
     }
 };

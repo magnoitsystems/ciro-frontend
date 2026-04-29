@@ -8,6 +8,7 @@ import { shiftService } from '../../../services/shift.service';
 import type { UserResponseDTO } from '../../../types/users.types';
 import { userService } from '../../../services/user.service';
 import { noteService } from '../../../services/note.service';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
     name: string;
@@ -18,6 +19,7 @@ type Props = {
     component: string;
     onlyComment: boolean;
     onTaskSaved?: (task: TaskResponseDTO) => void;
+    onShiftSaved?: (shift: ShiftResponseDTO) => void;
     dateCalendar?: Date;
 }
 
@@ -30,8 +32,10 @@ export default function CreateAppointment({
     task,
     onlyComment,
     onTaskSaved,
+    onShiftSaved, 
     dateCalendar
 }: Props) {
+    const navigate = useNavigate();
     const [date, setDate] = useState('');
     const [comment, setComment] = useState('');
     const [description, setDescription] = useState('');
@@ -42,7 +46,6 @@ export default function CreateAppointment({
     const [patientDni, setPatientDni] = useState('');
     const [doctorId, setDoctorId] = useState(0);
     const [statusShift, setStatusShift] = useState<ShiftStatus>('REQUIRED');
-    /**const [noteContent, setNoteContent] = useState('');*/
     const [doctors, setDoctors] = useState<UserResponseDTO[]>([]);
 
     useEffect(() => {
@@ -63,9 +66,8 @@ export default function CreateAppointment({
     }, [type, task]);
 
     const handleSubmit = async (e: React.FormEvent) => {
-        if (onlyComment) {
-            handleSubmitComment(e);
-        }
+        if (onlyComment) handleSubmitComment(e); 
+        
         else if (component === 'calendar') {
             handleSubmitShift(e);
             return;
@@ -74,25 +76,21 @@ export default function CreateAppointment({
             handleSubmitTask(e);
             return;
         }
-    
     };
 
     const handleSubmitComment = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("fecha: ", dateCalendar);
-
         const payload = {
             description: comment,
             shiftId: turnos?.id,
             date: dateCalendar ? dateCalendar.toISOString() : new Date().toISOString(),
             taskId: task?.id,
         };
-
         try {
-            console.log("voy a comentar")
+            console.log("voy a crear el comentario")
             await noteService.create(payload);
-            console.log("comentario creado")
-            onClose();
+            navigate('/calendar');
+            console.log("ya cree el comentario")
         } catch (error) {
             console.error("Error al guardar el comentario:", error);
         }
@@ -115,14 +113,9 @@ export default function CreateAppointment({
             noteDescription: comment,
         };
 
-        console.log("Creo la tarea");
-
         try {
             let response;
-            console.log("Entro al try");
-
             if (type === 'create') {
-                console.log("Voy a crear la task");
                 response = await taskService.create(payload);
             } else {
                 response = await taskService.update(task!.id, payload);
@@ -132,6 +125,7 @@ export default function CreateAppointment({
                 onTaskSaved(response);
             }
             onClose();
+            navigate('/calendar');
 
         } catch (error: any) {
             console.error(error);
@@ -141,22 +135,30 @@ export default function CreateAppointment({
     const handleSubmitShift = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        const formattedDate = date.length === 16 ? `${date}:00` : date;
+
         const payload = {
             patientDni,
             doctorId,
-            shiftDate: date,
+            shiftDate: formattedDate,
             status: statusShift,
-            noteContent: comment,
+            noteDescription: comment,
         };
 
         try {
-            console.log("Payload para turno:", payload);
+            let response;
             if (type === 'create') {
-                await shiftService.create(payload);
+                response = await shiftService.create(payload);
             } else {
-                await shiftService.update(turnos!.id, payload);
+                response = await shiftService.update(turnos!.id, payload);
             }
+            
+            if (onShiftSaved) {
+                onShiftSaved(response); 
+            }
+            
             onClose();
+            navigate('/calendar');
         } catch (error) {
             console.error("Error al guardar el turno:", error);
         }

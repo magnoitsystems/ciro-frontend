@@ -164,3 +164,18 @@
     object-fit: contain;
     opacity: 0.75;
 }
+
+.logoutMobileRow {
+    background: transparent;
+    border: none;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--neutral-1);
+}
+
+.logoutMobileRow:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #da8181; 
+}
