@@ -2,10 +2,13 @@ import style from "./NavBar.module.css";
 import NavItem from "./NavItem/navItem.tsx";
 import BottomNav from "./BottomNav/BottomNav.tsx";
 
-export default function NavBar() {
+type NavBarProps = {
+    onLogout: () => void;
+};
+
+export default function NavBar({ onLogout }: NavBarProps) {
     return (
         <>
-            {/* Sidebar desktop */}
             <main className={style.navContainer}>
                 <img src={'/logo/whiteLogo.png'} alt={'ciro estetics logo'} />
 
@@ -38,10 +41,22 @@ export default function NavBar() {
                         <NavItem sectionName={'Caja'}           image={'/icons/caja.png'}    to={'/caja'} />
                     </div>
                 </div>
+
+                <div className={style.sectionsGroup} style={{ marginTop: 'auto' }}>
+                    <p>Sesión</p>
+                    <div className={style.navItems}>
+                        <div 
+                            className={`${style.navItem} ${style.logoutItem}`} 
+                            onClick={onLogout}
+                        >
+                            <img src={'/icons/logout.png'} alt="logout" />
+                            <h6>Cerrar sesión</h6>
+                        </div>
+                    </div>
+                </div>
             </main>
 
-            {/* Bottom nav mobile */}
-            <BottomNav />
+            <BottomNav onLogout={onLogout} />
         </>
     );
 }

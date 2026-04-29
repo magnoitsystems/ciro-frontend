@@ -6,14 +6,12 @@
     display: flex;
     flex-direction: column;
     justify-content: start;
-
     width: 100%;
-
     gap: var(--10px);
-
     font-size: 14px;
     color: var(--neutral-2);
 }
+
 .sectionsGroup p {
     padding-inline: var(--40px);
 }
@@ -22,25 +20,37 @@
     display: flex;
     flex-direction: column;
     justify-content: start;
-
     gap: var(--10px);
 }
 
-/*navItem properties*/
+/* navItem properties */
 .navItem {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: left;
-
     width: 100%;
     height: fit-content;
-
     padding: var(--5px);
     padding-inline: var(--40px);
     gap: var(--15px);
-
     font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--neutral-2);
+    transition: all 0.2s ease;
+}
+
+.navItem img {
+    width: 20px; /* Igualamos tamaños por las dudas */
+    height: 20px;
+    object-fit: contain;
+}
+
+.navItem h6 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .active {
@@ -49,19 +59,28 @@
     color: white;
 }
 
+.logoutItem {
+    color: var(--neutral-1); 
+}
+.logoutItem:hover {
+    background-color: rgba(239, 68, 68, 0.1); 
+    color: #c9a1a1; 
+    border-right: 5px solid #ef4444; 
+}
+.logoutItem:hover img {
+    filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.5)); 
+}
+
 @media (min-width: 768px) {
     .navContainer {
         display: flex;
         flex-direction: column;
         align-items: center;
-
         width: 17%;
         height: 100vh;
-
         padding: var(--40px);
         padding-inline: 0;
         gap: var(--40px);
-
         background-color: var(--blue-4);
         color: var(--neutral-1);
     }

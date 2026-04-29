@@ -20,6 +20,11 @@ import { authService } from "./services/auth.service";
 function App() {
     const [isLogueado, setIsLogueado] = useState<boolean>(authService.isAuthenticated());
 
+    const handleLogout = async () => {
+        await authService.logout(); 
+        setIsLogueado(false);      
+    };
+
     if (!isLogueado) {
         return (
             <div className="appContainer">
@@ -32,7 +37,7 @@ function App() {
 
     return (
         <div className="appContainer">
-            <NavBar />
+            <NavBar onLogout={handleLogout} />
 
             <div className="content">
                 <Routes>
@@ -55,4 +60,4 @@ function App() {
     )
 }
 
-export default App
+export default App;
