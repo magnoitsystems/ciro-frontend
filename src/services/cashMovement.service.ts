@@ -33,13 +33,6 @@ class CashMovementService {
         });
         return response.data;
     }
-
-    // Asigna un doctor a un movimiento
-    async assignDoctor(id: number, doctorId: number): Promise<void> {
-        await api.patch(API_ENDPOINTS.CASH_MOVEMENTS.ASSIGN_DOCTOR(id), null, {
-            params: { doctorId }
-        });
-    }
 }
 
 export const cashMovementService = new CashMovementService();

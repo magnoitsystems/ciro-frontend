@@ -19,7 +19,6 @@ export const API_ENDPOINTS = {
         BASE: '/api/v1/cash-movements',
         BY_ID: (id: number) => `/api/v1/cash-movements/${id}`,
         REPORT_PDF: '/api/v1/cash-movements/report/pdf',
-        ASSIGN_DOCTOR: (id: number) => `/api/v1/cash-movements/${id}/assign-doctor`,
     },
     CURRENT_ACCOUNTS: {
         BASE: '/api/v1/current-accounts',
