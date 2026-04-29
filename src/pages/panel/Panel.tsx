@@ -3,14 +3,20 @@ import PanelButton from '../../components/Buttons/PanelButton/panelButton'
 import TaskSummery from '../../components/TaskSummery/taskSummery'
 import WelcomeText from '../../components/WelcomeText/welcomeText'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 import { taskService } from '../../services/task.service' 
 import { shiftService } from '../../services/shift.service'
 import { receiptService } from '../../services/receipt.service'
+import { statisticsService } from '../../services/statistics.service'
+
 import type { TaskResponseDTO } from '../../types/management.types'
 import type { RevenueWidgetDTO } from '../../types/currentAccount.types'
 import type { ShiftWidgetDTO } from '../../types/clinical.types'
 
 export default function Panel() {
+    const navigate = useNavigate();
+    
     const [pendingCount, setPendingCount] = useState<number>(0);
     const [pendingTasks, setPendingTasks] = useState<TaskResponseDTO[]>([]);
     const [shiftData, setShiftData] = useState<ShiftWidgetDTO | null>(null);
@@ -30,7 +36,8 @@ export default function Panel() {
             const [tasksResult, shiftsResult, revenueResult] = await Promise.allSettled([
                 taskService.getPendingWidget(),
                 shiftService.getDashboardWidget(),
-                receiptService.getWeeklyRevenueWidget()
+                receiptService.getWeeklyRevenueWidget(),
+                statisticsService.getDashboardStats()
             ]);
 
             if (tasksResult.status === 'fulfilled') {
@@ -43,7 +50,7 @@ export default function Panel() {
             if (shiftsResult.status === 'fulfilled') {
                 setShiftData(shiftsResult.value);
             } else {
-                console.error("El backend falló al traer los turnos (Error 500)", shiftsResult.reason);
+                console.error("El backend falló al traer los turnos", shiftsResult.reason);
             }
 
             if (revenueResult.status === 'fulfilled') {
@@ -155,8 +162,38 @@ export default function Panel() {
                     </div>
                 </div>
 
-                <div className={style.estadistics}>
+                <div
+                    className={style.estadistics}
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                        height: "140px",
+                        boxSizing: "border-box",
+                    }}
+                    >
+                    <header style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                        <h6 style={{ margin: 0, fontStyle: "italic", color: "var(--blue-4)" }}>
+                        Origen de pacientes
+                        </h6>
+                        <p
+                        style={{
+                            fontSize: "13px",
+                            color: "var(--neutral-4)",
+                            margin: 0,
+                            lineHeight: "1.4",
+                        }}
+                        >
+                        Accedé al panel para ver la distribución general, gráficos detallados y más métricas.
+                        </p>
+                    </header>
 
+                    <span
+                        onClick={() => navigate("/estadisticas")}
+                        style={{ cursor: "pointer", alignSelf: "flex-end" }}
+                    >
+                        <PanelButton content={"Ver estadísticas completas ➝"} />
+                    </span>
                 </div>
             </div>
         </main>
