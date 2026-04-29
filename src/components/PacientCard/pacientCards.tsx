@@ -5,21 +5,17 @@ type Props = {
     id: number;
     nombre: string;
     dni: string;
-    onDelete: () => void;
     onView: () => void;
     onEdit: () => void;
     attachments: boolean;
 }
 
-export default function PacientCard({ id, nombre, dni, onDelete, onView, onEdit, attachments }: Props) {
+export default function PacientCard({ id, nombre, dni, onView, onEdit, attachments }: Props) {
     
     const getInitials = (nombreCompleto?: string) => {
         if (!nombreCompleto || typeof nombreCompleto !== 'string') return "??";
-        
         const partes = nombreCompleto.trim().split(" ").filter(Boolean); 
-        
         if (partes.length === 0) return "??";
-        
         if (partes.length === 1) return partes[0][0].toUpperCase();
         
         const primera = partes[0][0];
@@ -48,7 +44,6 @@ export default function PacientCard({ id, nombre, dni, onDelete, onView, onEdit,
                         <img src={'/icons/cash.png'} alt={'cash image'}/>
                     </NavLink>
 
-                    <img src={'/icons/trash.png'} alt={'trash image'} onClick={(e) => { e.stopPropagation(); onDelete(); }} />
                     <img src={'/icons/editGrey.png'} alt={'editGrey image'} onClick={(e) => { e.stopPropagation(); onEdit(); }} />
                     <img src={'/icons/eye.png'} alt={'eye image'} onClick={(e) => { e.stopPropagation(); onView(); }} />
                 </div>
