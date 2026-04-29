@@ -32,6 +32,7 @@ export default function Budget() {
             setBudget(fetchedBudget)
             console.log(budget)
             setEditCard(true)
+            navigate('/presupuestos')
         } catch (error) {
             console.error(error)
         }
@@ -41,7 +42,7 @@ export default function Budget() {
         try {
             console.log("voy a eliminar el presupuesto")
             await budgetService.deleteBudget(idCard)
-            navigate('/budget')
+            navigate('/presupuestos')
         }
         catch (error) {
             console.log(error)

@@ -17,6 +17,18 @@ const nombresEstados: Record<string, string> = {
     'ASSIGNED': 'Asignado',
 }
 
+const taskStatus: Record<string, string> = {
+    "PENDING": 'Pendiente',
+    "IN_PROGRESS": 'En proceso',
+    "COMPLETED": 'Completada',
+}
+
+const taskPriority: Record<string, string> = {
+    "HIGH": 'Alta',
+    "MEDIUM": 'Media',
+    "LOW": 'Baja',
+}
+
 export default function Appointment({ type, onClose, component, turnos, task, justComment, comment }: Prop) {
     return (
         <div className={styles.mainContainerProperties}>
@@ -24,7 +36,7 @@ export default function Appointment({ type, onClose, component, turnos, task, ju
                 <div>
                     <h3>{type === 'view' ? (component === 'calendar' ? 'Ciro, aca el resumen del turno.' : 'Ciro, aca el resumen de la tarea.') : component === 'calendar' ? 'Buenisimo, el turno se ha agendado correctamente!' : 'Buenisimo, la tarea se ha agendado correctamente!'}</h3>
                 </div>
-                {!justComment ? (
+                {!justComment && component === 'calendar' ? (
                     turnos?.map((turno) => (
                         <div className={styles.infoAppointmentProperties}>
                             <h4>Paciente: <span>{turno.patientFullName}</span></h4>
@@ -33,11 +45,20 @@ export default function Appointment({ type, onClose, component, turnos, task, ju
                             <h4>Estado: <span>{nombresEstados[turno.status] || turno.status}</span></h4>
                         </div>
                     ))
+                ) : component === 'task' ? (
+                    <div className={styles.infoAppointmentProperties}>
+                        <h4>Fecha: <span>{task?.taskDate ? new Date(task.taskDate).toLocaleDateString() : ''}</span></h4>
+                        <h4>Hora: <span>{task?.taskDate ? new Date(task.taskDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</span></h4>
+                        <h4>Estado: <span>{taskStatus[task?.status || ''] || task?.status}</span></h4>
+                        <h4>Prioridad: <span>{taskPriority[task?.priority || ''] || task?.priority}</span></h4>
+                        <h4>Título: <span>{task?.title}</span></h4>
+                        <h4>Doctor: <span>{task?.userFullName}</span></h4>
+                        
+                    </div>
                 ) : (
                     <div className={styles.infoCommentProperties}>
                         <h4>Comentario: <span>{comment?.description || 'No hay comentario disponible'}</span></h4>
                     </div>
-
                 )}
 
                 <div className={styles.buttonsProperties}>

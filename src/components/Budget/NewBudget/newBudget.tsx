@@ -22,6 +22,7 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
     const [file, setFile] = useState<File>()
     const [date, setDate] = useState('')
     const [title, setTitle] = useState('')
+    const [loading, setLoading] = useState(false)
     const estados = ['ENVIADO', 'ACEPTADO', 'ACEPTADO_PARCIALMENTE', 'RECHAZADO', 'PENDIENTE_DE_RESPUESTA', 'SIN_ENVIAR', 'SIN_HACER']
 
     useEffect(() => {
@@ -36,6 +37,7 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
     const handleSubmit = async (e: React.FormEvent) => {
         console.log("SUBMIT ejecutado");
         e.preventDefault();
+        setLoading(true);
 
         const payload: BudgetCreateDTO = {
             patientId,
@@ -54,6 +56,7 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
             if (type === 'create') {
                 console.log("Voy a crear la task");
                 response = await budgetService.createBudget(payload);
+                alert('Presupuesto creado exitosamente');
                 navigate('/presupuestos')
             } else {
                 response = await budgetService.updateBudget(budget!.id, payload);
@@ -111,7 +114,7 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
                     <div className={styles.holeInput}>
                         <label htmlFor="state">Estado</label>
                         <select id="state" name="state" onChange={(e) => setStatus(e.target.value as BudgetStatus)}>
-                            <option value="">Seleccione un paciente</option>
+                            <option value="">Seleccione un estado</option>
                             {estados.map((estado) => (
                                 <option key={estado} value={estado}>{estado}</option>
                             ))}
@@ -127,7 +130,9 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
                             }} />
                         </div>
                     </div>
-                    <button className={styles.buttonFormProperties} type="submit">Cargar presupuesto</button>
+                    <button className={styles.buttonFormProperties} type="submit" disabled={loading}>
+                        {loading ? 'Cargando...' : 'Cargar presupuesto'}
+                    </button>
                 </form>
             </div>
         </div>
