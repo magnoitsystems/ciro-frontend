@@ -2,7 +2,7 @@ import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import styles from './Calendar.module.css'
 import WelcomeText from '../WelcomeText/welcomeText'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import CreateAppointment from './CreateAppointment/createAppointment'
@@ -10,6 +10,9 @@ import Help from './Help/help'
 import Appointment from './Appointment/appointment'
 import ButtonsRod from '../Buttons/ButtonsRod/buttonsRod'
 import type { ButtonInfo } from '../../types/buttonInfo'
+import type { ShiftResponseDTO } from '../../types/clinical.types'
+import { shiftService } from '../../services/shift.service'
+import type { NoteResponseDTO } from '../../types/management.types'
 
 export default function CalendarioMedico() {
 
@@ -18,18 +21,21 @@ export default function CalendarioMedico() {
   const [tipoForm, setTipoForm] = useState<'create' | 'edit'>('create')
   const [mostarInfoTurno, setInfoTurno] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [turnos, setTurnos] = useState<ShiftResponseDTO[]>([])
+  const [comment, setComment] = useState<NoteResponseDTO>()
+  const [dateCalendar, setDateCalendar] = useState<Date>(new Date())
+
+  useEffect(() => {
+    shiftService.getAll()
+      .then(fetchedTurnos => setTurnos(fetchedTurnos))
+      .catch(error => console.error('Error fetching turnos:', error));
+    console.log(turnos)
+  }, [])
 
   const coloresEstados: Record<string, string> = {
-    'confirmado': '#77FF00',
-    'solicitado': '#FF00C8',
-    'descartado': '#FF2600',
-    'sin avisar': '#FFFF00',
+    'REQUIRED': '#FF2600',
+    'ASSIGNED': '#77FF00',
   }
-
-  const turnos = [
-    { title: 'Dro. Juan Pérez', start: '2026-03-20T09:00:00', estado: "solicitado", comment: 'hola, este es un comentario' },
-    { title: 'Dro. Ana García', start: '2026-03-20T10:00:00', estado: "solicitado", comment: 'hola, este es otro comentario' },
-  ]
 
   const [estadosTurnos, setEstadosTurnos] = useState<Record<number, string>>({
     0: 'solicitado',
@@ -39,9 +45,19 @@ export default function CalendarioMedico() {
   const [botonActivo, setBotonActivo] = useState<ButtonInfo | null>(null)
   const [showOptions, setShowOptions] = useState<number | null>(null)
 
-  const index = turnos.findIndex(t => t.title === turnos[0].title)
+  const index = turnos.findIndex(t => t.patientFullName === turnos[0].patientFullName)
   const estadoActual = estadosTurnos[index] ?? 'solicitado'
   const colorActual = coloresEstados[estadoActual] ?? '#FFFFFF'
+
+  const eventos = turnos.map((turno) => ({
+    id: String(turno.id),
+    fullNamePatient: turno.patientFullName,
+    start: turno.shiftDate,
+    extendedProps: {
+      barColor: coloresEstados[turno.status] ?? '#FFFFFF',
+      comment: turno.noteDescription
+    }
+  }))
 
   return (
     <div>
@@ -74,7 +90,7 @@ export default function CalendarioMedico() {
 
       {(botonActivo?.tipo === 'form' && botonActivo.subtipo === 'form') && (
         <div>
-          <CreateAppointment turnos={turnos[1]} type={tipoForm} component='calendar' name='Ana' onClose={() => {
+          <CreateAppointment type={tipoForm} component='calendar' name='Ana' onClose={() => {
             setBotonActivo(null)
             setTipoForm('create')
           }} onlyComment={false}></CreateAppointment>
@@ -83,16 +99,16 @@ export default function CalendarioMedico() {
 
       {showForm && (
         <div>
-          <CreateAppointment turnos={turnos[1]} type={tipoForm} component='calendar' name='Ana' onClose={() => {
+          <CreateAppointment type={tipoForm} component='calendar' name='Ana' onClose={() => {
             setBotonActivo(null)
             setTipoForm('create')
-          }} onlyComment={true}></CreateAppointment>
+          }} onlyComment={true} dateCalendar={dateCalendar}></CreateAppointment>
         </div>
       )}
 
       {tipo === 'view' && mostarInfoTurno && (
         <div>
-          <Appointment component='calendar' turnos={turnos[1]} type='view' onClose={() => setInfoTurno(false)}></Appointment>
+          <Appointment component='calendar' turnos={turnos} type='view' onClose={() => setInfoTurno(false)}></Appointment>
         </div>
       )}
 
@@ -104,7 +120,7 @@ export default function CalendarioMedico() {
               plugins={[timeGridPlugin]}
               initialView="timeGridWeek"
               allDaySlot={false}
-              events={turnos}
+              events={eventos}
               contentHeight={600}
               expandRows={true}
               slotMinTime="06:00:00"
@@ -113,10 +129,14 @@ export default function CalendarioMedico() {
               dayHeaderContent={(args) => (
                 <div className={styles.diaHeader}>
                   <span>{args.text}</span>
-                  <button onClick={() => {
-                    setShowForm(true)
-                    setTipoForm('create')
-                  }}>+</button>
+                  {comment ? <span className={styles.commentIcon}>💬</span> : (
+                    <button onClick={() => {
+                      setShowForm(true)
+                      setTipoForm('create')
+                      setDateCalendar(args.date)
+                    }}>+</button>
+                  )}
+
                 </div>
               )}
               eventContent={(eventInfo) => (

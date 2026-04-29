@@ -105,7 +105,7 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
                     <div className={styles.holeInput}>
                         <label htmlFor="date">Título</label>
                         <div className={styles.fileInputContainer}>
-                            <input type="text" id="title" name="title" placeholder="Título" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                            <input type="text" id="title" name="title" placeholder="Título" value={title} maxLength={15} onChange={(e) => setTitle(e.target.value)} required />
                         </div>
                     </div>
                     <div className={styles.holeInput}>

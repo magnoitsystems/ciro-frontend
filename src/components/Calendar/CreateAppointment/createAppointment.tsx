@@ -2,21 +2,23 @@ import { useState, useEffect } from 'react';
 import type { TaskCreateDTO, TaskResponseDTO } from '../../../types/management.types';
 import styles from './CreateAppointment.module.css';
 import { taskService } from '../../../services/task.service';
-import type { TaskPriority, TaskStatus } from '../../../types/enums.types';
+import type { ShiftStatus, TaskPriority, TaskStatus } from '../../../types/enums.types';
+import type { ShiftResponseDTO } from '../../../types/clinical.types';
+import { shiftService } from '../../../services/shift.service';
+import type { UserResponseDTO } from '../../../types/users.types';
+import { userService } from '../../../services/user.service';
+import { noteService } from '../../../services/note.service';
 
 type Props = {
     name: string;
     onClose: () => void;
     type: 'create' | 'edit';
-    turnos?: {
-        title: string;
-        start: string | Date;
-        comment: string;
-    };
+    turnos?: ShiftResponseDTO;
     task?: TaskResponseDTO;
     component: string;
     onlyComment: boolean;
     onTaskSaved?: (task: TaskResponseDTO) => void;
+    dateCalendar?: Date;
 }
 
 export default function CreateAppointment({
@@ -27,7 +29,8 @@ export default function CreateAppointment({
     component,
     task,
     onlyComment,
-    onTaskSaved
+    onTaskSaved,
+    dateCalendar
 }: Props) {
     const [date, setDate] = useState('');
     const [comment, setComment] = useState('');
@@ -36,9 +39,17 @@ export default function CreateAppointment({
     const [priority, setPriority] = useState<TaskPriority | ''>('');
     const [status, setStatus] = useState<TaskStatus>('PENDING');
 
-    const startValueTurno = turnos?.start instanceof Date
-        ? turnos.start.toISOString().slice(0, 16)
-        : turnos?.start ?? '';
+    const [patientDni, setPatientDni] = useState('');
+    const [doctorId, setDoctorId] = useState(0);
+    const [statusShift, setStatusShift] = useState<ShiftStatus>('REQUIRED');
+    /**const [noteContent, setNoteContent] = useState('');*/
+    const [doctors, setDoctors] = useState<UserResponseDTO[]>([]);
+
+    useEffect(() => {
+        userService.getAllUsers()
+        .then(fetchedDoctors => setDoctors(fetchedDoctors.filter(user => user.role === 'ADMIN' || user.role === 'USER')))
+        .catch(error => console.error('Error fetching doctors:', error));
+    }, []);
 
     useEffect(() => {
         if (type === 'edit' && task) {
@@ -52,15 +63,45 @@ export default function CreateAppointment({
     }, [type, task]);
 
     const handleSubmit = async (e: React.FormEvent) => {
-        console.log("SUBMIT ejecutado");
+        handleSubmitComment(e);
+        if (component === 'calendar') {
+            handleSubmitShift(e);
+            return;
+        }
+        else if (component === 'task') {
+            handleSubmitTask(e);
+            return;
+        }
+    
+    };
+
+    const handleSubmitComment = async (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log("fecha: ", dateCalendar);
+
+        const payload = {
+            description: comment,
+            shiftId: turnos?.id,
+            date: dateCalendar ? dateCalendar.toISOString() : new Date().toISOString(),
+            taskId: task?.id,
+        };
+
+        try {
+            await noteService.create(payload);
+            onClose();
+        } catch (error) {
+            console.error("Error al guardar el comentario:", error);
+        }
+    }
+
+    const handleSubmitTask = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!priority) {
             alert("Seleccioná una prioridad");
             return;
         }
-
-        const payload: TaskCreateDTO = {
+          const payload: TaskCreateDTO = {
             userId: task?.userId != null ? task.userId : 1,
             taskDate: date + "T00:00:00",
             title,
@@ -82,14 +123,38 @@ export default function CreateAppointment({
             } else {
                 response = await taskService.update(task!.id, payload);
             }
-            
-            if (onTaskSaved){
+
+            if (onTaskSaved) {
                 onTaskSaved(response);
             }
             onClose();
 
         } catch (error: any) {
             console.error(error);
+        }
+    }
+
+    const handleSubmitShift = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const payload = {
+            patientDni,
+            doctorId,
+            shiftDate: date,
+            status: statusShift,
+            noteContent: comment,
+        };
+
+        try {
+            console.log("Payload para turno:", payload);
+            if (type === 'create') {
+                await shiftService.create(payload);
+            } else {
+                await shiftService.update(turnos!.id, payload);
+            }
+            onClose();
+        } catch (error) {
+            console.error("Error al guardar el turno:", error);
         }
     };
 
@@ -105,7 +170,7 @@ export default function CreateAppointment({
 
                 <div className={styles.campsContainerProperties}>
 
-                    {!onlyComment && (
+                    {!onlyComment && component === 'task' && (
                         <div className={styles.labelAndInputProperties}>
                             <label>Fecha</label>
                             <input
@@ -113,6 +178,42 @@ export default function CreateAppointment({
                                 value={date}
                                 onChange={(e) => setDate(e.target.value)}
                             />
+                        </div>
+                    )}
+
+                    {!onlyComment && component === 'calendar' && (
+                        <div className={styles.labelAndInputProperties}>
+                            <label>DNI del paciente</label>
+                            <input
+                                type='text'
+                                value={patientDni}
+                                onChange={(e) => setPatientDni(e.target.value)}
+                                placeholder='DNI'
+                            />
+                        </div>
+                    )}
+
+                    {!onlyComment && component === 'calendar' && (
+                        <div className={styles.labelAndInputProperties}>
+                            <label>Estado</label>
+                            <select value={statusShift} onChange={(e) => setStatusShift(e.target.value as ShiftStatus)}>
+                                <option value="REQUIRED">Requerido</option>
+                                <option value="ASSIGNED">Asignado</option>
+                            </select>
+                        </div>
+                    )}
+
+                    {!onlyComment && component === 'calendar' && (
+                        <div className={styles.labelAndInputProperties}>
+                            <label>Doctor</label>
+                            <select value={doctorId} onChange={(e) => setDoctorId(Number(e.target.value))}>
+                                <option value={0}>Seleccione un doctor</option>
+                                {doctors.map((doctor) => (
+                                    <option key={doctor.id} value={doctor.id}>
+                                        {doctor.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     )}
 
@@ -182,7 +283,8 @@ export default function CreateAppointment({
                             <label>Horario</label>
                             <input
                                 type='datetime-local'
-                                placeholder={type === 'create' ? 'Horario' : startValueTurno}
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
                             />
                         </div>
                     )}
