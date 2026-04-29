@@ -2,9 +2,6 @@ body{
     background-color: #171620;
 }
 
-/* CALENDAR
-
-/* Para estilos internos del calendario */
 :global(.fc-toolbar-title) {
     font-size: 30px;
 }
@@ -14,7 +11,6 @@ body{
     border-radius: 10px;
 }
 
-/* Texto del día (ej: "lun. 20/3") */
 :global(.fc-col-header-cell-cushion) {
     display: flex;
     align-content: center;
@@ -27,7 +23,6 @@ body{
     font-size: 20px;
 }
 
-/* Contenedor del evento */
 .evento{
     display: flex;
     flex-direction: column;
@@ -51,7 +46,6 @@ body{
     height: 60px !important;
 }
 
-/* Hora del evento */
 :global(.fc-event-time) {
   font-size: 0.75rem !important;
   display: flex;
@@ -82,7 +76,6 @@ body{
     color: white;
 }
 
-/* CALENDAR AND BUTTONS */
 
 .calendarAndButtonsContainerProperties {
     display: flex;
@@ -110,11 +103,10 @@ body{
     gap: 5px;
 }
 
-/* Agregar al final del archivo */
 
 @media (max-width: 767px) {
     .calendarAndButtonsContainerProperties {
-        flex-direction: column-reverse; /* ButtonsRod arriba en mobile */
+        flex-direction: column-reverse; 
         gap: 12px;
     }
 
