@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import type { TaskCreateDTO, TaskResponseDTO } from '../../../types/management.types';
 import styles from './CreateAppointment.module.css';
 import { taskService } from '../../../services/task.service';
 import type { ShiftStatus, TaskPriority, TaskStatus } from '../../../types/enums.types';
-import type { ShiftResponseDTO } from '../../../types/clinical.types';
+import type { ShiftCreateDTO, ShiftResponseDTO } from '../../../types/clinical.types';
 import { shiftService } from '../../../services/shift.service';
 import type { UserResponseDTO } from '../../../types/users.types';
 import { userService } from '../../../services/user.service';
@@ -42,7 +43,6 @@ export default function CreateAppointment({
     const [patientDni, setPatientDni] = useState('');
     const [doctorId, setDoctorId] = useState(0);
     const [statusShift, setStatusShift] = useState<ShiftStatus>('REQUIRED');
-    /**const [noteContent, setNoteContent] = useState('');*/
     const [doctors, setDoctors] = useState<UserResponseDTO[]>([]);
 
     useEffect(() => {
@@ -137,12 +137,14 @@ export default function CreateAppointment({
     const handleSubmitShift = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const payload = {
+        const formattedDate = date.length === 16 ? `${date}:00` : date;
+
+        const payload: ShiftCreateDTO = {
             patientDni,
             doctorId,
-            shiftDate: date,
+            shiftDate: formattedDate,
             status: statusShift,
-            noteContent: comment,
+            noteDescription: comment, 
         };
 
         try {
@@ -152,9 +154,14 @@ export default function CreateAppointment({
             } else {
                 await shiftService.update(turnos!.id, payload);
             }
+            
+            alert("¡Turno guardado con éxito!");
             onClose();
+        
+            
         } catch (error) {
             console.error("Error al guardar el turno:", error);
+            alert("Hubo un error al guardar el turno. Revisá la consola.");
         }
     };
 

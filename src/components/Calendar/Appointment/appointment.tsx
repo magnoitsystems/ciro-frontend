@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { TaskResponseDTO } from '../../../types/management.types';
 import styles from './Appointment.module.css';
 import type { ShiftResponseDTO } from '../../../types/clinical.types';
@@ -19,7 +18,7 @@ export default function Appointment({ type, onClose, component, turnos, task }: 
                 <div>
                     <h3>{type === 'view' ? (component === 'calendar' ? 'Ciro, aca el resumen del turno.' : 'Ciro, aca el resumen de la tarea.') : component === 'calendar' ? 'Buenisimo, el turno se ha agendado correctamente!' : 'Buenisimo, la tarea se ha agendado correctamente!'}</h3>
                 </div>
-                {turnos?.map((turno, index) => (
+                {turnos?.map((turno) => (
                     <div className={styles.infoAppointmentProperties}>
                         <h4>Paciente: <span>{turno?.patientFullName || task?.userFullName}</span></h4>
                         <h4>Horario: <span>{'09:00'}</span></h4>

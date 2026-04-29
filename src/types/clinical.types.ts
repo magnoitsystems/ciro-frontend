@@ -5,9 +5,8 @@ export interface ShiftCreateDTO {
     doctorId: number;
     shiftDate: string; 
     status: ShiftStatus;
-    noteContent?: string; 
+    noteDescription?: string; 
 }
-
 export interface ShiftResponseDTO {
     id: number;
     shiftDate: string;
