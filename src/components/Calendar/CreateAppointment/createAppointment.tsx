@@ -4,7 +4,7 @@ import type { TaskCreateDTO, TaskResponseDTO } from '../../../types/management.t
 import styles from './CreateAppointment.module.css';
 import { taskService } from '../../../services/task.service';
 import type { ShiftStatus, TaskPriority, TaskStatus } from '../../../types/enums.types';
-import type { ShiftCreateDTO, ShiftResponseDTO } from '../../../types/clinical.types';
+import type { ShiftResponseDTO } from '../../../types/clinical.types';
 import { shiftService } from '../../../services/shift.service';
 import type { UserResponseDTO } from '../../../types/users.types';
 import { userService } from '../../../services/user.service';
@@ -19,6 +19,7 @@ type Props = {
     component: string;
     onlyComment: boolean;
     onTaskSaved?: (task: TaskResponseDTO) => void;
+    onShiftSaved?: (shift: ShiftResponseDTO) => void;
     dateCalendar?: Date;
 }
 
@@ -31,6 +32,7 @@ export default function CreateAppointment({
     task,
     onlyComment,
     onTaskSaved,
+    onShiftSaved, 
     dateCalendar
 }: Props) {
     const [date, setDate] = useState('');
@@ -63,7 +65,8 @@ export default function CreateAppointment({
     }, [type, task]);
 
     const handleSubmit = async (e: React.FormEvent) => {
-        handleSubmitComment(e);
+        if (comment) handleSubmitComment(e); 
+        
         if (component === 'calendar') {
             handleSubmitShift(e);
             return;
@@ -72,13 +75,10 @@ export default function CreateAppointment({
             handleSubmitTask(e);
             return;
         }
-    
     };
 
     const handleSubmitComment = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("fecha: ", dateCalendar);
-
         const payload = {
             description: comment,
             shiftId: turnos?.id,
@@ -88,7 +88,6 @@ export default function CreateAppointment({
 
         try {
             await noteService.create(payload);
-            onClose();
         } catch (error) {
             console.error("Error al guardar el comentario:", error);
         }
@@ -111,14 +110,9 @@ export default function CreateAppointment({
             noteDescription: comment,
         };
 
-        console.log("Creo la tarea");
-
         try {
             let response;
-            console.log("Entro al try");
-
             if (type === 'create') {
-                console.log("Voy a crear la task");
                 response = await taskService.create(payload);
             } else {
                 response = await taskService.update(task!.id, payload);
@@ -139,29 +133,29 @@ export default function CreateAppointment({
 
         const formattedDate = date.length === 16 ? `${date}:00` : date;
 
-        const payload: ShiftCreateDTO = {
+        const payload = {
             patientDni,
             doctorId,
             shiftDate: formattedDate,
             status: statusShift,
-            noteDescription: comment, 
+            noteDescription: comment,
         };
 
         try {
-            console.log("Payload para turno:", payload);
+            let response;
             if (type === 'create') {
-                await shiftService.create(payload);
+                response = await shiftService.create(payload);
             } else {
-                await shiftService.update(turnos!.id, payload);
+                response = await shiftService.update(turnos!.id, payload);
             }
             
-            alert("¡Turno guardado con éxito!");
-            onClose();
-        
+            if (onShiftSaved) {
+                onShiftSaved(response); 
+            }
             
+            onClose();
         } catch (error) {
             console.error("Error al guardar el turno:", error);
-            alert("Hubo un error al guardar el turno. Revisá la consola.");
         }
     };
 
