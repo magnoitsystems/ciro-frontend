@@ -53,6 +53,7 @@ export default function Appointment({ type, onClose, component, turnos, task, ju
                         <h4>Prioridad: <span>{taskPriority[task?.priority || ''] || task?.priority}</span></h4>
                         <h4>Título: <span>{task?.title}</span></h4>
                         <h4>Doctor: <span>{task?.userFullName}</span></h4>
+                        <h4>Descripción: <span>{task?.description}</span></h4>
                         
                     </div>
                 ) : (

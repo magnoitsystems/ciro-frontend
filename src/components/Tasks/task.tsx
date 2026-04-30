@@ -5,7 +5,7 @@ import TaskCard from "./TasksCards/taskCard";
 import { useEffect, useState } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import Help from './../Calendar/Help/help'
-import CreateAppointment from './../Calendar/CreateAppointment/createAppointment'
+import CreateAppointment from '../Calendar/CreateAppointment/create'
 import DatePicker from 'react-datepicker'
 import Appointment from "../Calendar/Appointment/appointment";
 import type { TaskResponseDTO } from "../../types/management.types";
@@ -26,6 +26,7 @@ export default function Task() {
   const [taskSeleccionada, setTaskSeleccionada] = useState<TaskResponseDTO | null>(null);
   const [cardEliminarTask, setCardEliminarTask] = useState(false)
   const [idCard, setIdCard] = useState(-1)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     taskService.getAll()
@@ -34,10 +35,11 @@ export default function Task() {
   }, []);
 
   const handleDelete = async () => {
+    setLoading(true);
     try {
       console.log(idCard)
       await taskService.delete(idCard)
-      navigate('/task.tsx')
+      navigate('/Tareas')
     }
     catch (error:any) {
       console.error(error.response?.data)
@@ -64,7 +66,7 @@ export default function Task() {
         <DeleteConfirmCard component="la tarea" onClose={() => setCardEliminarTask(false)}
           onAcceptButtonClick={() => {
             handleDelete()
-          }}></DeleteConfirmCard>
+          }} loading={loading}></DeleteConfirmCard>
       )}
       {botonActivo?.tipo === 'calendar' && botonActivo.subtipo === 'calendar' && (
         <div className={styles.miniCalendarProperties}>

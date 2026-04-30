@@ -2,12 +2,13 @@ import style from '../Buttons.module.css';
 
 type Props = {
     content: string;
+    linkTo?: string;
 }
 
-export default function PanelButton({content}: Props) {
+export default function PanelButton({content, linkTo}: Props) {
     return(
-        <button className={style.panelButton}>
+        <a className={style.panelButton} href={linkTo}>
             <h6>{content}</h6>
-        </button>
+        </a>
     )
 }

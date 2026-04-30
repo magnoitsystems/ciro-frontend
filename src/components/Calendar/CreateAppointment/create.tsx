@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { TaskCreateDTO, TaskResponseDTO } from '../../../types/management.types';
-import styles from './CreateAppointment.module.css';
+import styles from './Create.module.css';
 import { taskService } from '../../../services/task.service';
 import type { ShiftStatus, TaskPriority, TaskStatus } from '../../../types/enums.types';
 import type { ShiftResponseDTO } from '../../../types/clinical.types';
@@ -48,6 +48,8 @@ export default function CreateAppointment({
     const [statusShift, setStatusShift] = useState<ShiftStatus>('REQUIRED');
     const [doctors, setDoctors] = useState<UserResponseDTO[]>([]);
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         userService.getAllUsers()
         .then(fetchedDoctors => setDoctors(fetchedDoctors.filter(user => user.role === 'ADMIN' || user.role === 'USER')))
@@ -66,6 +68,7 @@ export default function CreateAppointment({
     }, [type, task]);
 
     const handleSubmit = async (e: React.FormEvent) => {
+        setLoading(true);
         if (onlyComment) handleSubmitComment(e); 
         
         else if (component === 'calendar') {
@@ -89,7 +92,7 @@ export default function CreateAppointment({
         try {
             console.log("voy a crear el comentario")
             await noteService.create(payload);
-            navigate('/calendar');
+            navigate('/Calendario');
             console.log("ya cree el comentario")
         } catch (error) {
             console.error("Error al guardar el comentario:", error);
@@ -125,7 +128,7 @@ export default function CreateAppointment({
                 onTaskSaved(response);
             }
             onClose();
-            navigate('/calendar');
+            navigate('/Tareas');
 
         } catch (error: any) {
             console.error(error);
@@ -158,7 +161,7 @@ export default function CreateAppointment({
             }
             
             onClose();
-            navigate('/calendar');
+            navigate('/Calendario');
         } catch (error) {
             console.error("Error al guardar el turno:", error);
         }
@@ -296,8 +299,8 @@ export default function CreateAppointment({
                     )}
 
                     <div className={styles.buttonsContainerProperties}>
-                        <button type="submit" className={styles.confirmButton}>
-                            {component === 'calendar' ? 'Confirmar turno' : 'Confirmar tarea'}
+                        <button type="submit" className={styles.confirmButton} disabled={loading}>
+                            {!loading && component === 'calendar' ? 'Confirmar turno' : !loading ? 'Confirmar tarea' : 'Confirmando...'}
                         </button>
 
                         <button type="button" className={styles.cancelButton} onClick={onClose}>

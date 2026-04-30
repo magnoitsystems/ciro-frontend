@@ -4,8 +4,9 @@ type Prop = {
     component: string
     onClose: () => void
     onAcceptButtonClick: () => void
+    loading?: boolean
 }
-export default function DeleteConfirmCard({ component, onClose, onAcceptButtonClick }: Prop) {
+export default function DeleteConfirmCard({ component, onClose, onAcceptButtonClick, loading }: Prop) {
     return (
         <div className={style.firstContainerProperties}>
             <div className={style.deleteConfirmCardContainerProperties}>
@@ -13,7 +14,9 @@ export default function DeleteConfirmCard({ component, onClose, onAcceptButtonCl
                     <h3>Seguro/a de que desea eliminar {component}. No se podrá reevertir la acción</h3>
                 </div>
                 <div className={style.buttonsContainerProperties}>
-                    <button onClick={() => onAcceptButtonClick()} className={style.acceptButtonProperties}>Aceptar</button>
+                    <button onClick={() => onAcceptButtonClick()} className={style.acceptButtonProperties} disabled={loading}>
+                        {loading ? 'Eliminando...' : 'Aceptar'}
+                    </button>
                     <button onClick={() => onClose()} className={style.cancelButtonProperties}>Cancelar</button>
                 </div>
             </div>
