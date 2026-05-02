@@ -10,6 +10,8 @@ export default function Proveedores() {
     const [showForm, setShowForm] = useState(false);
     const [proveedores, setProveedores] = useState<SupplierResponseDTO[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [viewModal, setViewModal] = useState(false);
+    const [selectedSupplier, setSelectedSupplier] = useState<SupplierResponseDTO | null>(null);
 
     const fetchProveedores = async () => {
         try {
@@ -27,6 +29,11 @@ export default function Proveedores() {
     useEffect(() => {
         fetchProveedores();
     }, []);
+
+    const handleRowClick = (prov: SupplierResponseDTO) => {
+        setSelectedSupplier(prov);
+        setViewModal(true);
+    };
 
     return(
         <main className={style.main}>
@@ -55,7 +62,7 @@ export default function Proveedores() {
                                     <p style={{ padding: '20px' }}>Cargando proveedores...</p>
                                 ) : proveedores.length > 0 ? (
                                     proveedores.map((prov) => (
-                                        <div key={prov.id} className={style.row}>
+                                        <div key={prov.id} className={style.row} onClick={() => handleRowClick(prov)}>
                                             <span>{prov.fullName}</span>
                                             <span>{prov.dni}</span>
                                             <span>{prov.address}</span>
@@ -95,6 +102,30 @@ export default function Proveedores() {
                 </div>
 
             </div>
+
+            {viewModal && selectedSupplier && (
+                <div className={style.overlay} onClick={() => setViewModal(false)}>
+                    <div className={style.modal} onClick={(e) => e.stopPropagation()}>
+                        <div className={style.modalHeader}>
+                            <h3>Detalle del proveedor</h3>
+                            <button className={style.close} onClick={() => setViewModal(false)}>✕</button>
+                        </div>
+                        <div className={style.details}>
+                            <div className={style.section}>
+                                <h5>Datos de la entidad</h5>
+                                <div className={style.detailRow}><span>Nombre</span><h6>{selectedSupplier.fullName}</h6></div>
+                                <div className={style.detailRow}><span>Documento</span><h6>DNI {selectedSupplier.dni}</h6></div>
+                            </div>
+                            <div className={style.section}>
+                                <h5>Contacto y otros</h5>
+                                <div className={style.detailRow}><span>Dirección</span><h6>{selectedSupplier.address || "-"}</h6></div>
+                                <div className={style.detailRow}><span>Localidad</span><h6>{selectedSupplier.city || "-"}</h6></div>
+                                <div className={style.detailRow}><span>Observaciones</span><h6>{selectedSupplier.observations || "-"}</h6></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
     )
 }
