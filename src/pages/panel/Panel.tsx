@@ -3,7 +3,6 @@ import PanelButton from '../../components/Buttons/PanelButton/panelButton'
 import TaskSummery from '../../components/TaskSummery/taskSummery'
 import WelcomeText from '../../components/WelcomeText/welcomeText'
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { taskService } from '../../services/task.service' 
 import { shiftService } from '../../services/shift.service'
@@ -15,7 +14,6 @@ import type { RevenueWidgetDTO } from '../../types/currentAccount.types'
 import type { ShiftWidgetDTO } from '../../types/clinical.types'
 
 export default function Panel() {
-    const navigate = useNavigate();
     
     const [pendingCount, setPendingCount] = useState<number>(0);
     const [pendingTasks, setPendingTasks] = useState<TaskResponseDTO[]>([]);
@@ -170,33 +168,31 @@ export default function Panel() {
                     style={{
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "space-between",
+                        justifyContent: "center", // Centra el contenido verticalmente
+                        alignItems: "center",     // Centra el contenido horizontalmente
+                        gap: "15px",              // Espacio limpio entre el texto y el botón
                         height: "140px",
                         boxSizing: "border-box",
+                        textAlign: "center"       // Asegura que el texto en sí se vea centrado
                     }}
                     >
-                    <header style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-                        <h6 style={{ margin: 0, fontStyle: "italic", color: "var(--blue-4)" }}>
-                        Origen de pacientes
-                        </h6>
-                        <p
+                    <p
                         style={{
                             fontSize: "13px",
                             color: "var(--neutral-4)",
                             margin: 0,
                             lineHeight: "1.4",
                         }}
-                        >
-                        Accedé al panel para ver la distribución general, gráficos detallados y más métricas.
-                        </p>
-                    </header>
-
-                    <span
-                        onClick={() => navigate("/estadisticas")}
-                        style={{ cursor: "pointer", alignSelf: "flex-end" }}
                     >
-                        <PanelButton content={"Ver estadísticas completas ➝"} />
-                    </span>
+                        Accedé al panel para ver la distribución general, gráficos detallados y más métricas.
+                    </p>
+
+                    <div style={{ width: "90%" }}>
+                        <PanelButton 
+                            content={"Ver estadísticas completas ➝"} 
+                            linkTo={"/estadisticas"} 
+                        />
+                    </div>
                 </div>
             </div>
         </main>
