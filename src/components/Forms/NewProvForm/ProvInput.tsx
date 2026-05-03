@@ -5,8 +5,8 @@ type Props = {
     type?: string;
     className: string;
     value?: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-    as?: "input" | "select";
+    onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+    as?: "input" | "select" | "textarea";
     options?: { value: string; label: string }[];
 }
 
@@ -30,6 +30,15 @@ export default function ProvInput({
                     className={style[className]}
                     value={value || ""}
                     onChange={onChange}
+                />
+            ) : as === "textarea" ? (
+                <textarea
+                    placeholder={placeholder}
+                    className={style[className]}
+                    value={value || ""}
+                    onChange={onChange}
+                    rows={4}
+                    style={{ resize: "none", padding: "10px", borderRadius: "8px", backgroundColor: "var(--blue-2)", color: "var(--neutral-1)", border: "none", width: "100%" }}
                 />
             ) : (
                 <select

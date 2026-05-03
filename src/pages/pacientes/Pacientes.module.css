@@ -184,6 +184,41 @@
     transform: scale(1.02);
 }
 
+.formModal input, .formModal select, .formModal textarea {
+    width: 100%; 
+    background-color: var(--blue-2);
+}
+
+.fileUpload {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 8px;
+    width: 100%;
+}
+
+.fileLabel {
+    display: inline-block;
+    padding: 10px 14px;
+    border-radius: var(--50px);
+    background-color: var(--neutral-4);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    width: 100%; 
+    text-align: center;
+}
+
+.modalActions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+
 .miniModal, .formModal {
     display: flex;
     flex-direction: column;
@@ -215,13 +250,6 @@
 
 .formModal button {
     width: 250px;
-}
-
-.modalActions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
 }
 
 .buttons {
@@ -350,6 +378,59 @@
     color: var(--neutral-4);
 }
 
+.actionButtonWrapper {
+    width: fit-content;
+    border-radius: var(--50px);
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.actionButtonWrapper:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    filter: brightness(1.1); 
+    cursor: pointer;
+}
+
+.feedbackSuccess, .feedbackError {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    animation: slideDown 0.3s ease-out;
+    margin-bottom: 10px;
+}
+
+.feedbackSuccess {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    border: 1px solid #22c55e;
+}
+
+.feedbackError {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid #ef4444;
+}
+
+.feedbackSuccess button, .feedbackError button {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 @media (min-width: 768px) {
     .pacientCards {
         grid-template-columns: repeat(2, 1fr);
@@ -376,29 +457,20 @@
         padding-inline: var(--30px);
     }
 
-    /* Modal lindo */
     .modal {
         width: 60%;
     }
 
-    /* Modales de form chicos */
     .miniModal, .formModal {
-        width: 35%;
-        padding: var(--50px);
-        padding-inline: var(--20px);
-        border-radius: var(--5px);
+        padding: var(--40px) var(--30px); 
+        border-radius: var(--10px);
     }
 
-    .formModal input {
-        width: 100%;
-        min-width: 400px;
+    .formModal input, .formModal select, .formModal textarea {
+        width: 100%; 
     }
 
     .fileUpload, .fileLabel, .formModal button {
-        width: 400px;
-    }
-
-    .formModal input, .formModal select {
-        min-width: 280px;
+        width: 100%;
     }
 }

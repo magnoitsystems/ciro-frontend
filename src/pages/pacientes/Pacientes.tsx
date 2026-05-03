@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import style from './Pacientes.module.css';
 import SearchBar from "../../components/SearchBar/searchBar.tsx";
@@ -11,15 +10,7 @@ import { patientService } from "../../services/patient.service";
 import type { PatientResponseDTO, PatientUpdateDTO } from "../../types/patients.types";
 import type { HealthInsurance, PatientFrom } from '../../types/enums.types';
 import Patient from "../../components/patients/patient.tsx";
-
-type HistoriaClinica = {
-    id: number;
-    fecha: string;
-    evaluacion: string;
-    archivo?: string;
-    pacienteId: number;
-    doctorId: number;
-};
+import HistoriaClinicaModal from "../../components/HistoriaClinica/HistoriaClinicaModal.tsx";
 
 export default function Pacientes() {
 
@@ -67,11 +58,6 @@ export default function Pacientes() {
     const [editNext, setEditNext] = useState(false);
 
     const [historiasModal, setHistoriasModal] = useState(false);
-    const [historias, setHistorias] = useState<HistoriaClinica[]>([
-        { id: 1, fecha: "2026-05-20", evaluacion: "Paciente con evolución favorable.", archivo: "estudio_lab.pdf", pacienteId: 1, doctorId: 1 }
-    ]);
-    const [newHistoria, setNewHistoria] = useState<Partial<HistoriaClinica>>({});
-    const [creatingHistoria, setCreatingHistoria] = useState(false);
 
     const himKnowOur: PatientFrom[] = ['RECOMMENDATION', 'FACEBOOK', 'INSTAGRAM', 'TIKTOK', 'WEBSITE', 'ANOTHER'];
     const healthInsurances: HealthInsurance[] = ['PARTICULAR', 'OSDE', 'SWISS_MEDICAL', 'GALENO', 'SANCOR_SALUD', 'IOMA', 'PAMI', 'OMINT', 'OTRA'];
@@ -103,6 +89,7 @@ export default function Pacientes() {
             alert("Hubo un error al guardar los cambios del paciente.");
         }
     };
+
 
     return(
         <main className={style.main}>
@@ -271,68 +258,12 @@ export default function Pacientes() {
                     </div>
                 </div>
             )}
-
+            
             {historiasModal && selectedPaciente && (
-                <div className={style.overlay} onClick={() => setHistoriasModal(false)}>
-                    <div className={style.modal} onClick={(e) => e.stopPropagation()}>
-                        <div className={style.modalHeader}>
-                            <h3>Historias Clínicas - {selectedPaciente.fullName}</h3>
-                            <button className={style.close} onClick={() => setHistoriasModal(false)}>✕</button>
-                        </div>
-
-                        {!creatingHistoria ? (
-                            <>
-                                <div className={style.turnosList}>
-                                    {historias.filter(h => h.pacienteId === selectedPaciente.id).length > 0 ? (
-                                        historias.filter(h => h.pacienteId === selectedPaciente.id).map(h => (
-                                            <div key={h.id} className={style.turnoItem}>
-                                                <div className={style.row}><span>Fecha:</span> <h6>{h.fecha}</h6></div>
-                                                <div className={style.row}><span>Doctor:</span> <h6>{h.doctorId === 1 ? "Dr. Pérez" : "Dra. Gómez"}</h6></div>
-                                                <div className={style.column}><span>Evaluación:</span> <p>{h.evaluacion}</p></div>
-                                                {h.archivo && (
-                                                    <div className={style.row}>
-                                                        <span>Archivo:</span> 
-                                                        <a href={`/uploads/${h.archivo}`} target="_blank" rel="noopener noreferrer">{h.archivo}</a>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p style={{textAlign: "center", opacity: 0.7}}>No hay historias clínicas registradas.</p>
-                                    )}
-                                </div>
-                                <LightGreyButton text="+ Nueva Evolución" onClick={() => setCreatingHistoria(true)} variant="primary" />
-                            </>
-                        ) : (
-                            <div className={style.formModal}>
-                                <h4>Nueva Evolución</h4>
-                                
-                                <ProvInput placeholder="Fecha" type="date" className="inputBoxDefault" value={newHistoria.fecha || ''} onChange={(e) => setNewHistoria({...newHistoria, fecha: e.target.value})} />
-                                
-                                <ProvInput placeholder="Evaluación médica..." as="textarea" className="inputBoxBig" value={newHistoria.evaluacion || ''} onChange={(e) => setNewHistoria({...newHistoria, evaluacion: e.target.value})} />
-                                
-                                <div className={style.fileUpload}>
-                                    <label className={style.fileLabel}>
-                                        📎 Adjuntar archivo (PDF, JPG)
-                                        <input type="file" onChange={(e) => setNewHistoria({...newHistoria, archivo: e.target.files?.[0]?.name})} />
-                                    </label>
-                                    {newHistoria.archivo && <span className={style.fileName}>{newHistoria.archivo}</span>}
-                                </div>
-
-                                <ProvInput placeholder="Doctor" as="select" className="inputBoxDefault" value={String(newHistoria.doctorId) || ''} onChange={(e) => setNewHistoria({...newHistoria, doctorId: Number(e.target.value)})} options={[{ value: "1", label: "Dr. Pérez" }, { value: "2", label: "Dra. Gómez" }]} />
-                                
-                                <LightGreyButton text="Guardar" onClick={() => {
-                                        if (!newHistoria.evaluacion || !newHistoria.doctorId) { alert("Completá evaluación y doctor"); return; }
-                                        const nuevaHistoria: HistoriaClinica = { id: Date.now(), fecha: newHistoria.fecha || new Date().toISOString().split("T")[0], evaluacion: newHistoria.evaluacion, archivo: newHistoria.archivo || "", pacienteId: selectedPaciente.id, doctorId: newHistoria.doctorId };
-                                        setHistorias(prev => [...prev, nuevaHistoria]);
-                                        setCreatingHistoria(false); setNewHistoria({});
-                                    }} variant="primary" />
-                                
-                                <span className={style.back} onClick={() => { setCreatingHistoria(false); setNewHistoria({}); }}>← Cancelar</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
+                <HistoriaClinicaModal 
+                    paciente={selectedPaciente} 
+                    onClose={() => setHistoriasModal(false)} 
+                />
             )}
         </main>
     )
