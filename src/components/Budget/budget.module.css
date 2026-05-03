@@ -1,24 +1,21 @@
-.budget{
+.budget {
     display: flex;
     flex-direction: column;
-
     width: 100vw;
-
     padding-inline: var(--10px);
-
     color: var(--neutral-1);
 }
 
-.budgetContentProperties{
+.budgetContentProperties {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 50vh;
+    min-height: 50vh; 
     margin-top: var(--30px);
     gap: var(--10px);
 }
 
-.tableContainerPropeties{
+.tableContainerPropeties {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -26,23 +23,19 @@
     border-radius: var(--5px);
 }
 
-.buttonContainerProperties{
+.buttonContainerProperties {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     border-radius: var(--5px);
     background-color: var(--blue-2);
-    height: 100%;
-}
-
-.buttonContainerProperties{
     width: 100%;
-    justify-content: center;
     padding-bottom: var(--20px);
     color: var(--neutral-1);
 }
 
-.buttonContainerProperties button{
+.buttonContainerProperties button {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -51,20 +44,21 @@
 @media (min-width: 768px) {
     .budget {
         width: 100%;
-
         padding-inline: 0;
     }
-    .budgetContentProperties{
+    
+    .budgetContentProperties {
         display: flex;
         flex-direction: row;
         width: 100%;
-        height: 500px;
+        min-height: 500px;
+        max-height: 85vh; 
         box-sizing: border-box;
         margin-top: var(--30px);
         gap: var(--30px);
     }
 
-    .buttonContainerProperties{
+    .buttonContainerProperties {
         width: 25%;
         justify-content: center;
         color: white;

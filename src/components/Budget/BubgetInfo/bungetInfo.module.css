@@ -1,4 +1,4 @@
-.tableContainerPropeties{
+.tableContainerPropeties {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,49 +8,51 @@
     background-color: var(--blue-2);
     padding: var(--20px);
     padding-inline: 0;
-    gap: var(--30px);
-    overflow: hidden;
+    gap: var(--20px); 
+    overflow-x: auto;
 }
 
-.tableBodyProperties{
+.tableBodyProperties {
     display: flex;
     flex-direction: column;
-    width: 90%;
-    gap: var(--15px);
+    width: 95%; 
+    gap: var(--10px);
     overflow-y: auto; 
     max-height: 100%;
+    padding-bottom: 10px;
 }
 
 .tableHeaderProperties {
-    width: 90%;
-
+    width: 95%;
     font-size: 14px;
+    min-width: 800px;
 }
 
-.tableTrProperties, .tableTrPropertiesTbody{
+.tableTrProperties, .tableTrPropertiesTbody {
     display: flex;
     flex-direction: row;
     width: 100%;
     justify-self: center;
     justify-content: space-between;
+    min-width: 800px; 
 }
 
-.tableTrPropertiesTbody{
+.tableTrPropertiesTbody {
     background-color: var(--neutral-2);
-    height: var(--30px);
+    height: 45px; 
     align-items: center;
     border-radius: 5px;
     color: var(--blue-4);
-    width: 700px;
+    padding-right: 10px;
 }
 
-.stateProperties{
+.stateProperties {
     width: 180px;
     height: 25px;
     border-radius: 100px;
 }
 
-.buttonProperties{
+.buttonProperties {
     display: flex;
     background-color: transparent;
     border: none;
@@ -60,10 +62,10 @@
 
 @media (min-width: 768px) {
     .tableContainerPropeties {
-        padding: var(--50px);
+        padding: var(--30px);
     }
 
-    .tableBodyProperties{
+    .tableBodyProperties {
         width: 100%;
     }
 

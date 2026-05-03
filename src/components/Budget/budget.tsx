@@ -7,47 +7,48 @@ import { budgetService } from '../../services/budget.service';
 import type { BudgetResponseDTO } from '../../types/budgets.types';
 import Patient from '../patients/patient';
 import DeleteConfirmCard from '../DeleteConfirmCard/deleteConfirmCard';
-import { useNavigate } from 'react-router-dom';
 
 export default function Budget() {
-    const navigate = useNavigate()
     const [showFormBudget, setShowFormBudget] = useState(false);
     const [showPatientForm, setShowPatientForm] = useState(false);
     const [budgets, setBudgets] = useState<BudgetResponseDTO[]>([]);
-    const [deleteCard, setDeleteCard] = useState(false)
-    const [editCard, setEditCard] = useState(false)
-    const [idCard, setIdCard] = useState(-1)
-    const [budget, setBudget] = useState<BudgetResponseDTO>()
+    const [deleteCard, setDeleteCard] = useState(false);
+    const [editCard, setEditCard] = useState(false);
+    const [idCard, setIdCard] = useState(-1);
+    const [budget, setBudget] = useState<BudgetResponseDTO>();
 
-    useEffect(() => {
+    const fetchBudgets = () => {
         budgetService.findAll()
             .then(fetchedBudgets => setBudgets(fetchedBudgets))
             .catch(error => console.error('Error fetching budgets:', error));
+    };
+
+     useEffect(() => {
+        fetchBudgets();
     }, []);
 
     const onEditBudget = async (id : number) => { 
-        setIdCard(id)
+        setIdCard(id);
         try {
-            const fetchedBudget = await budgetService.findById(id)
-            setBudget(fetchedBudget)
-            console.log(budget)
-            setEditCard(true)
-            navigate('/presupuestos')
+            const fetchedBudget = await budgetService.findById(id);
+            setBudget(fetchedBudget);
+            setEditCard(true);
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
-    }
+    };
 
     const deleteBudget = async () => {
         try {
-            console.log("voy a eliminar el presupuesto")
-            await budgetService.deleteBudget(idCard)
-            navigate('/presupuestos')
+            console.log("voy a eliminar el presupuesto");
+            await budgetService.deleteBudget(idCard);
+            setBudgets(budgets.filter(b => b.id !== idCard));
+            setDeleteCard(false); 
         }
         catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
 
     return (
         <div className={styles.budget}>
@@ -64,7 +65,7 @@ export default function Budget() {
 
                 {!showFormBudget && !editCard ? (
                     <div className={styles.tableContainerPropeties}>
-                        <BudgetInfo budgets={budgets} onDeletelick={(id) => { setDeleteCard(true), setIdCard(id) }} onEditBudget={(id) => onEditBudget(id) } ></BudgetInfo>
+                        <BudgetInfo budgets={budgets} onDeletelick={(id) => { setDeleteCard(true); setIdCard(id); }} onEditBudget={(id) => onEditBudget(id) } ></BudgetInfo>
                     </div>
                 ) : (
                     editCard ? (
@@ -77,10 +78,10 @@ export default function Budget() {
                 )}
 
                 <div className={styles.buttonContainerProperties}>
-                    <button onClick={() => setShowFormBudget(!showFormBudget)}>
+                    <button onClick={() => { setShowFormBudget(!showFormBudget); setEditCard(false); }}>
                         <img src='/icons/bigRight.png'></img>
                     </button>
-                    <span>{!showFormBudget ? 'Cargar presupuesto' : 'Ver presupuestos'}</span>
+                    <span>{!showFormBudget && !editCard ? 'Cargar presupuesto' : 'Ver presupuestos'}</span>
                 </div>
             </div>
         </div>

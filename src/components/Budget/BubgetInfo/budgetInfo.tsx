@@ -1,11 +1,10 @@
 import type { BudgetResponseDTO } from '../../../types/budgets.types';
-import styles from './bungetInfo.module.css';
+import styles from './bungetInfo.module.css'; 
 
 type Prop = {
     budgets: BudgetResponseDTO[]
     onDeletelick: (id: number) => void
     onEditBudget: (id: number) => void
-
 }
 
 export default function BudgetInfo({ budgets, onDeletelick, onEditBudget }: Prop) {
@@ -18,7 +17,7 @@ export default function BudgetInfo({ budgets, onDeletelick, onEditBudget }: Prop
         'SIN_HACER': '#EB0C0C',
         'EN PROCESO': '#FFFF00',
         'PENDIENTE_DE_RESPUESTA': '#FFFF00',
-    }
+    };
 
     const estado: Record<string, string> = {
         'ENVIADO': 'Enviado',
@@ -29,10 +28,10 @@ export default function BudgetInfo({ budgets, onDeletelick, onEditBudget }: Prop
         'SIN_HACER': 'Sin hacer',
         'EN PROCESO': 'En proceso',
         'PENDIENTE_DE_RESPUESTA': 'Pendiente',
-    }
+    };
 
     return (
-        <div style={{ height: '100%' }}>
+        <div style={{ height: '100%', width: '100%' }}>
             <table className={styles.tableContainerPropeties}>
                 <thead className={styles.tableHeaderProperties}>
                     <tr className={styles.tableTrProperties}>
@@ -46,11 +45,13 @@ export default function BudgetInfo({ budgets, onDeletelick, onEditBudget }: Prop
                 </thead>
                 <tbody className={styles.tableBodyProperties}>
                     {budgets.map(budget => (
-                        <tr className={styles.tableTrPropertiesTbody}>
+                        <tr key={budget.id} className={styles.tableTrPropertiesTbody}>
                             <td>
-                                <span style={{ backgroundColor: '#FFFEFB', height: '30px', display: 'flex', alignItems: 'center', padding: '10px', margin: '0px', width: '150px', borderTopLeftRadius: '10px', borderBottomLeftRadius: '10px', color: 'black' }}>
-                                    <a href={''} target='_blank' rel='noreferrer'>
-                                        <img src='/icons/fileIcon.png' /> {budget.title}</a>
+                                <span style={{ backgroundColor: '#FFFEFB', height: '35px', display: 'flex', alignItems: 'center', padding: '10px', margin: '0px', width: '150px', borderTopLeftRadius: '10px', borderBottomLeftRadius: '10px', color: 'black', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    <a href={budget.fileUrl || '#'} target='_blank' rel='noreferrer' style={{textDecoration: 'none', color: 'inherit'}}>
+                                        <img src='/icons/fileIcon.png' style={{marginRight: '5px'}} /> 
+                                        {budget.title}
+                                    </a>
                                 </span>
                             </td>
                             <td>{budget.date}</td>
