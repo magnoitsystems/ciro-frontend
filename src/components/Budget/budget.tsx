@@ -22,17 +22,18 @@ export default function Budget() {
             .then(fetchedBudgets => setBudgets(fetchedBudgets))
             .catch(error => console.error('Error fetching budgets:', error));
     };
-
-     useEffect(() => {
+    
+    useEffect(() => {
         fetchBudgets();
     }, []);
 
-    const onEditBudget = async (id : number) => { 
+
+    const onEditBudget = async (id: number) => { 
         setIdCard(id);
         try {
             const fetchedBudget = await budgetService.findById(id);
             setBudget(fetchedBudget);
-            setEditCard(true);
+            setEditCard(true); 
         } catch (error) {
             console.error(error);
         }
@@ -40,46 +41,72 @@ export default function Budget() {
 
     const deleteBudget = async () => {
         try {
-            console.log("voy a eliminar el presupuesto");
             await budgetService.deleteBudget(idCard);
             setBudgets(budgets.filter(b => b.id !== idCard));
-            setDeleteCard(false); 
+            setDeleteCard(false);
         }
         catch (error) {
             console.log(error);
         }
     };
 
+    const handleSuccess = () => {
+        setShowFormBudget(false);
+        setEditCard(false);       
+        fetchBudgets();
+    };
+
     return (
         <div className={styles.budget}>
             {deleteCard && (
-                <DeleteConfirmCard component='el presupuesto' onClose={() => setDeleteCard(false)} onAcceptButtonClick={() => deleteBudget()}></DeleteConfirmCard>
+                <DeleteConfirmCard 
+                    component='el presupuesto' 
+                    onClose={() => setDeleteCard(false)} 
+                    onAcceptButtonClick={() => deleteBudget()}
+                />
             )}
-            <WelcomeText sectionText='Aca los presupuestos' className=''></WelcomeText>
+            
+            <WelcomeText sectionText='Aca los presupuestos' className='' />
+            
             {showPatientForm && (
                 <div>
-                    <Patient onNuevoPacienteClick={() => setShowPatientForm(false)}></Patient>
+                    <Patient onNuevoPacienteClick={() => setShowPatientForm(false)} />
                 </div>
             )}
+            
             <div className={styles.budgetContentProperties}>
 
                 {!showFormBudget && !editCard ? (
                     <div className={styles.tableContainerPropeties}>
-                        <BudgetInfo budgets={budgets} onDeletelick={(id) => { setDeleteCard(true); setIdCard(id); }} onEditBudget={(id) => onEditBudget(id) } ></BudgetInfo>
+                        <BudgetInfo 
+                            budgets={budgets} 
+                            onDeletelick={(id) => { setDeleteCard(true); setIdCard(id); }} 
+                            onEditBudget={(id) => onEditBudget(id)} 
+                        />
                     </div>
                 ) : (
                     editCard ? (
-                        <NewBudget budget={budget} type='edit' id={idCard} onNuevoPacienteClick={() => {setShowPatientForm(true)}}></NewBudget>
+                        <NewBudget 
+                            budget={budget} 
+                            type='edit' 
+                            id={idCard} 
+                            onNuevoPacienteClick={() => {setShowPatientForm(true)}} 
+                            onSuccess={handleSuccess} 
+                        />
                     ) : (
                         <div className={styles.tableContainerPropeties}>
-                            <NewBudget type='create' onNuevoPacienteClick={() => setShowPatientForm(true)}></NewBudget>
+                            <NewBudget 
+                                type='create' 
+                                onNuevoPacienteClick={() => setShowPatientForm(true)} 
+                                onSuccess={handleSuccess}
+                            />
                         </div>
                     )
                 )}
 
                 <div className={styles.buttonContainerProperties}>
                     <button onClick={() => { setShowFormBudget(!showFormBudget); setEditCard(false); }}>
-                        <img src='/icons/bigRight.png'></img>
+                        <img src='/icons/bigRight.png' alt="Toggle form" />
                     </button>
                     <span>{!showFormBudget && !editCard ? 'Cargar presupuesto' : 'Ver presupuestos'}</span>
                 </div>

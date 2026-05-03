@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import styles from './newBudget.module.css';
 import { budgetService } from '../../../services/budget.service';
-import { useNavigate } from 'react-router-dom'
 import type { BudgetCreateDTO, BudgetResponseDTO } from '../../../types/budgets.types';
 import type { PatientResponseDTO } from '../../../types/patients.types';
 import { patientService } from '../../../services/patient.service';
@@ -9,33 +9,32 @@ import type { BudgetStatus } from '../../../types/enums.types';
 
 type Prop = {
     onNuevoPacienteClick: () => void;
-    type: 'create' | 'edit'
-    id?: number
-    budget?: BudgetResponseDTO
+    onSuccess: () => void;
+    type: 'create' | 'edit';
+    id?: number;
+    budget?: BudgetResponseDTO;
 }
 
-export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Prop) {
+export default function NewBudget({ onNuevoPacienteClick, onSuccess, type, budget }: Prop) {
     const [patient, setPatient] = useState<PatientResponseDTO[]>([]);
-    const navigate = useNavigate()
-    const [status, setStatus] = useState<BudgetStatus>('ENVIADO')
-    const [patientId, setPatientId] = useState(-1)
-    const [file, setFile] = useState<File>()
-    const [date, setDate] = useState('')
-    const [title, setTitle] = useState('')
-    const [loading, setLoading] = useState(false)
-    const estados = ['ENVIADO', 'ACEPTADO', 'ACEPTADO_PARCIALMENTE', 'RECHAZADO', 'PENDIENTE_DE_RESPUESTA', 'SIN_ENVIAR', 'SIN_HACER']
+    const [status, setStatus] = useState<BudgetStatus>('ENVIADO');
+    const [patientId, setPatientId] = useState(-1);
+    const [file, setFile] = useState<File>();
+    const [date, setDate] = useState('');
+    const [title, setTitle] = useState('');
+    const [loading, setLoading] = useState(false);
+    const estados = ['ENVIADO', 'ACEPTADO', 'ACEPTADO_PARCIALMENTE', 'RECHAZADO', 'PENDIENTE_DE_RESPUESTA', 'SIN_ENVIAR', 'SIN_HACER'];
 
     useEffect(() => {
         if (type === 'edit' && budget) {
-            setDate(budget?.date ? budget.date.slice(0, 10) : '')
-            setPatientId(budget?.patientId ?? -1)
+            setDate(budget?.date ? budget.date.slice(0, 10) : '');
+            setPatientId(budget?.patientId ?? -1);
             setTitle(budget?.title ?? '');
-            setStatus(budget?.status ?? 'ENVIADO')
+            setStatus(budget?.status ?? 'ENVIADO');
         }
     }, [type, budget]);
 
     const handleSubmit = async (e: React.FormEvent) => {
-        console.log("SUBMIT ejecutado");
         e.preventDefault();
         setLoading(true);
 
@@ -47,32 +46,28 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
             file
         };
 
-        console.log("Creo la tarea");
-
         try {
-            let response;
-            console.log("Entro al try");
-
             if (type === 'create') {
-                console.log("Voy a crear la task");
-                response = await budgetService.createBudget(payload);
+                await budgetService.createBudget(payload);
                 alert('Presupuesto creado exitosamente');
-                navigate('/presupuestos')
             } else {
-                response = await budgetService.updateBudget(budget!.id, payload);
+                await budgetService.updateBudget(budget!.id, payload);
+                alert('Presupuesto actualizado');
             }
-
+            onSuccess(); 
         } catch (error: any) {
             console.error(error);
+            alert('Hubo un error al guardar');
+        } finally {
+            setLoading(false);
         }
     };
-
 
     useEffect(() => {
         patientService.getAllPatients()
             .then(fetchedPatients => setPatient(fetchedPatients))
             .catch(error => console.error('Error fetching patients:', error));
-    }, [])
+    }, []);
 
     return (
         <div className={styles.newBudget}>
@@ -84,15 +79,14 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
                 <form onSubmit={handleSubmit} className={styles.formContainer}>
                     <div className={styles.holeInput}>
                         <label htmlFor="patient">Paciente destinatario</label>
-                        <select id="patient" name="patient" onChange={(e) => {
+                        <select id="patient" name="patient" value={patientId} onChange={(e) => {
                             if (e.target.value === 'nuevo') {
                                 onNuevoPacienteClick();
                             } else {
-                                setPatientId(Number(e.target.value))
+                                setPatientId(Number(e.target.value));
                             }
                         }}>
                             <option value="">Seleccione un paciente</option>
-                            <option key={budget?.patientFullName} value={budget?.patientFullName}>{budget?.patientFullName}</option>
                             {patient.map((paciente) => (
                                 <option key={paciente.id} value={paciente.id}>{paciente.fullName}</option>
                             ))}
@@ -106,14 +100,14 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
                         </div>
                     </div>
                     <div className={styles.holeInput}>
-                        <label htmlFor="date">Título</label>
+                        <label htmlFor="title">Título</label>
                         <div className={styles.fileInputContainer}>
-                            <input type="text" id="title" name="title" placeholder="Título" value={title} maxLength={15} onChange={(e) => setTitle(e.target.value)} required />
+                            <input type="text" id="title" name="title" placeholder="Título" value={title} maxLength={50} onChange={(e) => setTitle(e.target.value)} required />
                         </div>
                     </div>
                     <div className={styles.holeInput}>
                         <label htmlFor="state">Estado</label>
-                        <select id="state" name="state" onChange={(e) => setStatus(e.target.value as BudgetStatus)}>
+                        <select id="state" name="state" value={status} onChange={(e) => setStatus(e.target.value as BudgetStatus)}>
                             <option value="">Seleccione un estado</option>
                             {estados.map((estado) => (
                                 <option key={estado} value={estado}>{estado}</option>
@@ -121,11 +115,11 @@ export default function NewBudget({ onNuevoPacienteClick, type, id, budget }: Pr
                         </select>
                     </div>
                     <div className={styles.holeInput}>
-                        <label htmlFor="file">Ajunte el presupuesto</label>
+                        <label htmlFor="file">Adjunte el presupuesto</label>
                         <div className={styles.fileInputContainer}>
-                            <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png" required placeholder='Suba un archivo' onChange={(e) => {
+                            <input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png" required={type === 'create'} onChange={(e) => {
                                 if (e.target.files) {
-                                    setFile(e.target.files[0])
+                                    setFile(e.target.files[0]);
                                 }
                             }} />
                         </div>
