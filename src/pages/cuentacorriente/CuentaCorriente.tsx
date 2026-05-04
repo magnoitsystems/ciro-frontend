@@ -25,6 +25,7 @@ export default function CuentaCorriente() {
         fecha: "",
         observaciones: "",
         moneda: "PESOS",
+        doctorId: "", 
         details: [{ detail: "", amount: 1, unitPrice: 0 }]
     });
 
@@ -70,16 +71,15 @@ export default function CuentaCorriente() {
     }, [patientId]);
 
     const handleCreateVoucher = async () => {
-        try {
-            const userId = localStorage.getItem('userId');
-            if (!userId) {
-                alert("Error: No estás logueado.");
-                return;
-            }
+        if (!comprobanteData.doctorId) {
+            alert("Por favor seleccioná el profesional al que se le adeuda.");
+            return;
+        }
 
+        try {
             const payload: VoucherCreateDTO = {
                 patientId: Number(patientId),
-                userId: Number(userId),
+                userId: Number(comprobanteData.doctorId), 
                 voucherDate: comprobanteData.fecha || undefined,
                 observations: comprobanteData.observaciones || undefined,
                 currencyType: comprobanteData.moneda as CurrencyType,
@@ -88,7 +88,7 @@ export default function CuentaCorriente() {
 
             await currentAccountService.createVoucher(payload);
             setShowComprobanteModal(false);
-            setComprobanteData({ fecha: "", observaciones: "", moneda: "PESOS", details: [{ detail: "", amount: 1, unitPrice: 0 }] });
+            setComprobanteData({ fecha: "", observaciones: "", moneda: "PESOS", doctorId: "", details: [{ detail: "", amount: 1, unitPrice: 0 }] });
             loadData();
             
         } catch (error) {
@@ -154,7 +154,6 @@ export default function CuentaCorriente() {
 
     const handleDownloadReceiptPdf = async (id: number) => {
         try {
-            // Usamos el toast/alert que prefieras, acá te dejo un console.log de aviso
             console.log(`Iniciando descarga del recibo ${id}...`);
             await receiptService.downloadReceiptPdf(id);
         } catch (error) {
@@ -254,6 +253,14 @@ export default function CuentaCorriente() {
                         <button className={style.close} onClick={() => setShowComprobanteModal(false)}>✕</button>
                         <h3>Nuevo comprobante</h3>
                         <div className={style.form}>
+                            <ProvInput 
+                                placeholder="Profesional al que adeuda" 
+                                as="select" 
+                                className="inputBoxDefault" 
+                                value={comprobanteData.doctorId} 
+                                onChange={(e) => setComprobanteData({...comprobanteData, doctorId: e.target.value})} 
+                                options={users.map(u => ({ value: String(u.id), label: `${u.name} ${u.lastname}` }))} 
+                            />
                             <ProvInput placeholder="Fecha" type="date" className="inputBoxDefault" value={comprobanteData.fecha} onChange={(e) => setComprobanteData({...comprobanteData, fecha: e.target.value})} />
                             <ProvInput placeholder="Observaciones" type="text" className="inputBoxBig" value={comprobanteData.observaciones} onChange={(e) => setComprobanteData({...comprobanteData, observaciones: e.target.value})} />
                             <ProvInput placeholder="Moneda" as="select" className="inputBoxDefault" value={comprobanteData.moneda} onChange={(e) => setComprobanteData({...comprobanteData, moneda: e.target.value})} options={[{value: "PESOS", label: "Pesos (ARS)"}, {value: "DOLARES", label: "Dólares (USD)"}, {value: "REALES", label: "Reales (R)"}, {value: "EUROS", label: "Euros (EUR)"}]} />
