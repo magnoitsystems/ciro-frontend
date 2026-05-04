@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import style from "./BottomNav.module.css";
@@ -18,6 +19,7 @@ const MORE_ITEMS = [
     { label: "Sueldos y gastos",image: "/icons/sueldos.png", to: "/sueldos" },
     { label: "Deudas",          image: "/icons/deudas.png",  to: "/deudas" },
     { label: "Caja",            image: "/icons/caja.png",    to: "/caja" },
+    { label: "Panel Admin",     image: "/icons/supervisorAccount.png", to: "/admin" },
 ];
 
 type Props = {

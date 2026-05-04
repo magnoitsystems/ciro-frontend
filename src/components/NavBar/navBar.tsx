@@ -39,6 +39,7 @@ export default function NavBar({ onLogout }: NavBarProps) {
                         <NavItem sectionName={'Sueldos y gastos'} image={'/icons/sueldos.png'} to={'/sueldos'} />
                         <NavItem sectionName={'Deudas'}         image={'/icons/deudas.png'}  to={'/deudas'} />
                         <NavItem sectionName={'Caja'}           image={'/icons/caja.png'}    to={'/caja'} />
+                        <NavItem sectionName={'Panel Admin'}    image={'/icons/supervisorAccount.png'} to={'/admin'} />
                     </div>
                 </div>
 
