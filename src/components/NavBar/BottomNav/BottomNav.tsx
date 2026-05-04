@@ -67,7 +67,6 @@ export default function BottomNav({ onLogout }: Props) {
                     )
                 )}
 
-                {/* Subsección final para Sesión */}
                 <span className={style.moreLabel} style={{ marginTop: '10px' }}>Sesión</span>
                 <button 
                     onClick={onLogout} 

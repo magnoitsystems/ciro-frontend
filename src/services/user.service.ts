@@ -54,5 +54,18 @@ export const userService = {
             console.error(`Error al cambiar el rol del usuario con ID ${id}:`, error);
             throw error;
         }
+    },
+
+    /**
+     * Editar información de un usuario
+     */
+    updateUser: async  (id: number): Promise<UserCreateDTO> => {
+        try{
+            const response = await api.put<UserResponseDTO>(API_ENDPOINTS.USERS.BASE(id));
+            return response.data;
+        } catch(error){
+            console.error(`Error al editar el usuario con ID ${id}:`, error);
+            throw error;
+        }
     }
 };

@@ -16,6 +16,7 @@ import Estadisticas from "./pages/estadisticas/Estadisticas.tsx";
 import Login from './components/Login/login.tsx';
 import { useState } from 'react';
 import { authService } from "./services/auth.service";
+import AdminPanel from './pages/adminPanel/AdminPanel.tsx';
 
 function App() {
     const [isLogueado, setIsLogueado] = useState<boolean>(authService.isAuthenticated());
@@ -53,6 +54,7 @@ function App() {
                     <Route path="/tareas" element={<Tareas />} />
                     <Route path="/cuentacorriente/:patientId" element={<CuentaCorriente />} />
                     <Route path="/estadisticas" element={<Estadisticas />} />
+                    <Route path="/admin" element={<AdminPanel />} />
                     <Route path="*" element={<Navigate to="/Panel" replace />} />
                 </Routes>
             </div>
