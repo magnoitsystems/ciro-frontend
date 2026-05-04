@@ -3,18 +3,41 @@ import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import DeudaCard from "../../components/DeudaCard/deudaCard.tsx";
 import { useState, useEffect } from "react";
 import { patientService } from '../../services/patient.service';
+import { userService } from '../../services/user.service';
 import type { PatientDebtorDTO } from '../../types/patients.types.ts';
+import type { UserResponseDTO } from '../../types/users.types.ts'; 
 
 export default function Deudas() {
     
     const [deudores, setDeudores] = useState<PatientDebtorDTO[]>([]);
+    const [doctores, setDoctores] = useState<UserResponseDTO[]>([]);
+    const [selectedDoctor, setSelectedDoctor] = useState<number | "ALL">("ALL");
     const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchDoctores = async () => {
+            try {
+                const users = await userService.getAllUsers();
+                setDoctores(users);
+            } catch (error) {
+                console.error("Error al cargar los doctores:", error);
+            }
+        };
+        fetchDoctores();
+    }, []);
 
     useEffect(() => {
         const fetchDeudores = async () => {
             try {
                 setIsLoading(true);
-                const data = await patientService.getDebtorPatients();
+                let data;
+                
+                if (selectedDoctor === "ALL") {
+                    data = await patientService.getDebtorPatients();
+                } else {
+                    data = await patientService.getDebtorPatientsByDoctor(selectedDoctor);
+                }
+                
                 setDeudores(data);
             } catch (error) {
                 console.error("Error al cargar los deudores:", error);
@@ -25,7 +48,7 @@ export default function Deudas() {
         };
 
         fetchDeudores();
-    }, []);
+    }, [selectedDoctor]); 
 
     return(
         <main className={style.main}>
@@ -33,6 +56,26 @@ export default function Deudas() {
                 sectionText={'Acá el listado de deudores.'}
                 className={'darkStyle'}
             />
+
+            <div className={style.filterContainer}>
+                <label htmlFor="doctorFilter" className={style.filterLabel}>Filtrar por profesional:</label>
+                <select 
+                    id="doctorFilter" 
+                    className={style.doctorSelect}
+                    value={selectedDoctor} 
+                    onChange={(e) => {
+                        const val = e.target.value;
+                        setSelectedDoctor(val === "ALL" ? "ALL" : Number(val));
+                    }}
+                >
+                    <option value="ALL">Todos los doctores</option>
+                    {doctores.map(doc => (
+                        <option key={doc.id} value={doc.id}>
+                            Dr/a. {doc.name} {doc.lastname}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
             <div className={style.cardsContainer}>
                 <div className={style.columnNames}>
@@ -43,7 +86,7 @@ export default function Deudas() {
                 </div>
 
                 {isLoading ? (
-                    <p style={{ padding: '20px' }}>Cargando listado de deudores...</p>
+                    <p style={{ padding: '20px', color: 'var(--neutral-1)' }}>Cargando listado de deudores...</p>
                 ) : deudores.length > 0 ? (
                     deudores.map((deudor) => (
                         <DeudaCard 
@@ -52,7 +95,9 @@ export default function Deudas() {
                         />
                     ))
                 ) : (
-                    <p style={{ padding: '20px' }}>¡Excelente! No hay pacientes con deudas registradas.</p>
+                    <p style={{ padding: '20px', color: 'var(--neutral-1)' }}>
+                        ¡Excelente! No hay pacientes con deudas registradas {selectedDoctor !== "ALL" && "con este profesional"}.
+                    </p>
                 )}
             </div>
         </main>

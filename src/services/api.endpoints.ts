@@ -54,6 +54,7 @@ export const API_ENDPOINTS = {
         BY_ID: (id: number) => `/api/v1/patients/${id}`,
         SEARCH: '/api/v1/patients/search',
         DEBTORS: '/api/v1/patients/debtors',
+        DEBTORS_BY_DOCTOR: (doctorId: number) => `/patients/debtors/doctor/${doctorId}`,
     },
     TARIFFS: {
         BASE: '/api/v1/tariffs',

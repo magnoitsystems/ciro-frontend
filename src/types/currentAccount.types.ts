@@ -28,6 +28,8 @@ export interface PatientDebtorDTO {
     fullName: string;
     debtPesos: number;
     debtDolares: number;
+    doctorId?: number;
+    doctorName?: string;
 }
 
 export interface ReceiptCreateDTO {

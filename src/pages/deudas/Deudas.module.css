@@ -37,6 +37,36 @@
     background-color: var(--blue-3);
 }
 
+.filterContainer {
+    display: flex;
+    align-items: center;
+    gap: var(--15px);
+    padding-inline: 0; 
+}
+
+.filterLabel {
+    color: var(--neutral-1);
+    font-size: 16px; 
+    font-weight: 500;
+}
+
+.doctorSelect {
+    padding: 10px 15px; 
+    border-radius: var(--5px);
+    border: 1px solid var(--neutral-3);
+    background-color: var(--blue-2);
+    color: var(--neutral-1);
+    font-size: 16px; 
+    cursor: pointer;
+    outline: none;
+    min-width: 220px;
+    transition: border-color 0.2s ease;
+}
+
+.doctorSelect:focus {
+    border-color: var(--neutral-1);
+}
+
 @media (min-width: 768px) {
     .main {
         padding-inline: 0;

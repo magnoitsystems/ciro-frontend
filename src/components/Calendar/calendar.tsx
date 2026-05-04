@@ -69,15 +69,14 @@ export default function CalendarioMedico() {
   const [botonActivo, setBotonActivo] = useState<ButtonInfo | null>(null);
   const [showOptions, setShowOptions] = useState<number | null>(null);
 
-  // Mapeamos los eventos asegurándonos de pasarle toda la data individual a "extendedProps"
   const eventos = turnos.map((turno) => ({
     id: String(turno.id),
     title: turno.patientFullName,
     start: turno.shiftDate,
     extendedProps: {
-      barColor: coloresEstados[turno.status] ?? '#FFFFFF', // Cada evento se lleva su color
+      barColor: coloresEstados[turno.status] ?? '#FFFFFF', 
       comment: turno.noteDescription,
-      turnoCompleto: turno // Guardamos el objeto entero para el modal
+      turnoCompleto: turno 
     }
   }));
 
