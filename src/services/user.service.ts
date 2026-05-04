@@ -1,4 +1,4 @@
-import type { UserCreateDTO, UserResponseDTO } from '../types/users.types';
+import type { UserCreateDTO, UserResponseDTO, UserUpdateDTO } from '../types/users.types';
 import { api } from './api';
 import { API_ENDPOINTS } from './api.endpoints';
 
@@ -57,15 +57,15 @@ export const userService = {
     },
 
     /**
-     * Editar información de un usuario
+     * Actualiza un usuario existente
      */
-    updateUser: async  (id: number): Promise<UserCreateDTO> => {
-        try{
-            const response = await api.put<UserResponseDTO>(API_ENDPOINTS.USERS.BASE(id));
+    updateUser: async (id: number, userData: UserUpdateDTO): Promise<UserResponseDTO> => {
+        try {
+            const response = await api.put<UserResponseDTO>(API_ENDPOINTS.USERS.BY_ID(id), userData);
             return response.data;
-        } catch(error){
-            console.error(`Error al editar el usuario con ID ${id}:`, error);
+        } catch (error) {
+            console.error(`Error al actualizar el usuario con ID ${id}:`, error);
             throw error;
         }
-    }
+    },
 };

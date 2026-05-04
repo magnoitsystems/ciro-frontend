@@ -16,3 +16,12 @@ export interface UserResponseDTO {
     color: string;
     role: Role;
 }
+
+export interface UserUpdateDTO {
+    name?: string;
+    lastname?: string;
+    username?: string;
+    password?: string;
+    color?: string;
+    role?: Role;
+}
