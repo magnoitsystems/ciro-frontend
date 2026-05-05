@@ -23,6 +23,7 @@
     border-radius: var(--5px);
 
     overflow-x: auto;
+    overflow-y: auto;
 }
 
 .formContainer {
@@ -158,6 +159,7 @@
 
     .procedimientosContainer {
         align-items: center;
+        height: 55vh;
     }
 
     .sharedInput {
