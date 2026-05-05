@@ -19,7 +19,7 @@
     padding: 20px;
     border: white 2px solid;
     border-radius: 5px;
-    color: white;
+    color: var(--neutral-1);
     justify-content: center;
     align-items: center;
     font-size: 18px;
@@ -48,8 +48,8 @@
     border-radius: 20px;
     border: none;
     padding-left: 10px;
-    background-color: rgba(152, 146, 145, 1);
-    color: rgba(255, 254, 251, 1);
+    background-color: var(--blue-2);
+    color: var(--neutral-1);
     font-size: 16px;
 }
 
