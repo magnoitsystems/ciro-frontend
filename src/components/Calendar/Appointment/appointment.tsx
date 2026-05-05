@@ -34,7 +34,7 @@ export default function Appointment({ type, onClose, component, turnos, task, ju
         <div className={styles.mainContainerProperties}>
             <div className={styles.infoContainerProperties}>
                 <div>
-                    <h3>{type === 'view' ? (component === 'calendar' ? 'Ciro, aca el resumen del turno.' : 'Ciro, aca el resumen de la tarea.') : component === 'calendar' ? 'Buenisimo, el turno se ha agendado correctamente!' : 'Buenisimo, la tarea se ha agendado correctamente!'}</h3>
+                    <h3>{type === 'view' ? (component === 'calendar' ? 'Ciro, aca el resumen del turno.' : component === 'tarea' ? 'Ciro, aca el resumen de la tarea.' : 'Ciro, aca el resumen del comentario.') : component === 'calendar' ? 'Buenisimo, el turno se ha agendado correctamente!' : 'Buenisimo, la tarea se ha agendado correctamente!'}</h3>
                 </div>
                 {!justComment && component === 'calendar' ? (
                     turnos?.map((turno) => (

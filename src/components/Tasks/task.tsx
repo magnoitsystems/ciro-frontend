@@ -5,7 +5,7 @@ import TaskCard from "./TasksCards/taskCard";
 import { useEffect, useState } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import Help from './../Calendar/Help/help'
-import CreateAppointment from '../Calendar/CreateAppointment/create'
+import CreateAppointment from '../Calendar/Create/create'
 import DatePicker from 'react-datepicker'
 import Appointment from "../Calendar/Appointment/appointment";
 import type { TaskResponseDTO } from "../../types/management.types";

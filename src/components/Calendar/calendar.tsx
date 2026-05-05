@@ -5,7 +5,7 @@ import WelcomeText from '../WelcomeText/welcomeText'
 import { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import CreateAppointment from './CreateAppointment/create'
+import CreateAppointment from './Create/create'
 import Help from './Help/help'
 import Appointment from './Appointment/appointment'
 import ButtonsRod from '../Buttons/ButtonsRod/buttonsRod'
@@ -93,7 +93,14 @@ export default function CalendarioMedico() {
       {botonActivo?.tipo === 'info' && botonActivo.subtipo === 'setting' ? (
         <Help type={botonActivo.subtipo} component={'calendar'} />
       ) : botonActivo?.tipo === 'info' && botonActivo.subtipo === 'info' ? (
-        <Help type={botonActivo.subtipo} component={'calendar'} />
+        <Help
+          type={botonActivo.subtipo}
+          component={'calendar'}
+          onShiftsFound={(shifts) => {
+            setTurnos(shifts)
+            setBotonActivo(null) 
+          }}
+        />
       ) : botonActivo?.tipo === 'calendar' && botonActivo.subtipo === 'calendar' ? (
         <div className={styles.miniCalendarProperties}>
           <DatePicker
@@ -137,7 +144,7 @@ export default function CalendarioMedico() {
       {showCommentForm && (
         <CreateAppointment
           type={tipoForm}
-          component='calendar'
+          component='comment'
           name='Ana'
           onClose={() => { setShowCommentForm(false); setTipoForm('create'); }}
           onlyComment={true}
@@ -157,7 +164,7 @@ export default function CalendarioMedico() {
 
       {tipo === 'view' && mostrarInfoComment && (
         <Appointment
-          component='calendar'
+          component='comment'
           justComment={true}
           type='view'
           comment={comments[dateCalendar.toISOString().slice(0, 10)]}
@@ -271,6 +278,7 @@ export default function CalendarioMedico() {
           </div>
         </div>
       </div>
+
     </div>
   )
 }
