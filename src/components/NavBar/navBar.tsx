@@ -1,6 +1,7 @@
 import style from "./NavBar.module.css";
 import NavItem from "./NavItem/navItem.tsx";
 import BottomNav from "./BottomNav/BottomNav.tsx";
+import {NavLink} from "react-router-dom";
 
 type NavBarProps = {
     onLogout: () => void;
@@ -10,10 +11,14 @@ export default function NavBar({ onLogout }: NavBarProps) {
     return (
         <>
             <main className={style.navContainer}>
-                <img src={'/logo/whiteLogo.png'} alt={'ciro estetics logo'} />
+                <NavLink
+                    to={'/panel'}
+                >
+                    <img src={'/logo/whiteLogo.png'} alt={'ciro estetics logo'}/>
+                </NavLink>
 
                 <div className={style.sectionsGroup}>
-                    <p>Inicio</p>
+                <p>Inicio</p>
                     <NavItem
                         sectionName={'Panel principal'}
                         image={'/icons/panel.png'}
