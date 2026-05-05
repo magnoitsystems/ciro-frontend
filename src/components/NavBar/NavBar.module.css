@@ -83,5 +83,14 @@
         gap: var(--40px);
         background-color: var(--blue-4);
         color: var(--neutral-1);
+        overflow-y: auto;
+    }
+
+    .navContainer::-webkit-scrollbar {
+        width: 8px;
+    }
+    .navContainer::-webkit-scrollbar-thumb {
+        background-color: var(--blue-4);
+        border-radius: 10px;
     }
 }
