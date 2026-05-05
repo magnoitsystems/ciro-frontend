@@ -31,7 +31,6 @@
 .debtButton {
     width: 50%;
 
-    margin-top: var(--50px);
     padding: var(--10px);
 
     background-color: var(--blue-4);
