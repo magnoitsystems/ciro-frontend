@@ -149,6 +149,7 @@
     padding: var(--20px);
     background-color: var(--blue-2);
     border-radius: var(--10px);
+    margin-bottom: var(--40px);
 }
 
 .reportInfo {

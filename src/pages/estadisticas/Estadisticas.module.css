@@ -4,7 +4,8 @@
     height: 100vh; 
     gap: var(--20px);
     color: var(--neutral-1);
-    overflow: hidden; 
+    overflow: hidden;
+    padding-inline: var(--10px);
 }
 
 .dashboardContainer {
@@ -132,6 +133,7 @@
     flex-direction: column;
     align-items: center;
     gap: 15px;
+    margin-bottom: var(--40px);
 }
 
 .chartCard h4 {

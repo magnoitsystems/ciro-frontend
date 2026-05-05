@@ -8,7 +8,7 @@ import type { ShiftResponseDTO } from '../../../types/clinical.types';
 type Prop = {
     type: 'setting' | 'info' | 'label' | 'calendar';
     component: string;
-    onShiftsFound?: (shifts: ShiftResponseDTO[]) => void;
+    onShiftsFound?: (shifts: ShiftResponseDTO[], doctor: number) => void;
 }
 
 export default function Help({ type, component, onShiftsFound }: Prop) {
@@ -40,7 +40,7 @@ export default function Help({ type, component, onShiftsFound }: Prop) {
                 console.log('Shifts recibidos:', shifts)
                 console.log('Cantidad:', shifts.length)
                 setShifts(shifts)
-                if (onShiftsFound) onShiftsFound(shifts) 
+                if (onShiftsFound) onShiftsFound(shifts, doctor)
             })
             .catch(error => {
                 console.error('Error fetching shifts:', error);

@@ -92,5 +92,18 @@ export const patientService = {
             console.error("Error en getDebtorPatients:", error);
             throw error;
         }
+    },
+    
+    /**
+     * Obtiene los pacientes deudores filtrando por un doctor específico.
+     */
+    getDebtorPatientsByDoctor: async (doctorId: number): Promise<PatientDebtorDTO[]> => {
+        try {
+            const response = await api.get<PatientDebtorDTO[]>(API_ENDPOINTS.PATIENTS.DEBTORS_BY_DOCTOR(doctorId));
+            return response.data;
+        } catch (error) {
+            console.error(`Error al obtener deudores del doctor ${doctorId}:`, error);
+            throw error;
+        }
     }
 };

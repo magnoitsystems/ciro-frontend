@@ -16,6 +16,7 @@ import type { ShiftStatus } from '../../types/enums.types'
 import { useNavigate } from 'react-router-dom'
 import { noteService } from '../../services/note.service'
 import type { NoteResponseDTO } from '../../types/management.types'
+import Shift from '../Shifts/Shift'
 
 export default function CalendarioMedico() {
 
@@ -37,6 +38,8 @@ export default function CalendarioMedico() {
 
   const [comments, setComments] = useState<Record<string, NoteResponseDTO>>({});
   const [mostrarInfoComment, setMostrarInfoComment] = useState(false);
+  const [showShifts, setShowShifts] = useState(false);
+  const [doctor, setDoctor] = useState(-1);
 
   useEffect(() => {
     noteService.getAll()
@@ -69,15 +72,14 @@ export default function CalendarioMedico() {
   const [botonActivo, setBotonActivo] = useState<ButtonInfo | null>(null);
   const [showOptions, setShowOptions] = useState<number | null>(null);
 
-  // Mapeamos los eventos asegurándonos de pasarle toda la data individual a "extendedProps"
   const eventos = turnos.map((turno) => ({
     id: String(turno.id),
     title: turno.patientFullName,
     start: turno.shiftDate,
     extendedProps: {
-      barColor: coloresEstados[turno.status] ?? '#FFFFFF', // Cada evento se lleva su color
+      barColor: coloresEstados[turno.status] ?? '#FFFFFF',
       comment: turno.noteDescription,
-      turnoCompleto: turno // Guardamos el objeto entero para el modal
+      turnoCompleto: turno
     }
   }));
 
@@ -96,9 +98,11 @@ export default function CalendarioMedico() {
         <Help
           type={botonActivo.subtipo}
           component={'calendar'}
-          onShiftsFound={(shifts) => {
+          onShiftsFound={(shifts, doctor) => {
             setTurnos(shifts)
-            setBotonActivo(null) 
+            setDoctor(doctor)
+            setBotonActivo(null)
+            setShowShifts(true)
           }}
         />
       ) : botonActivo?.tipo === 'calendar' && botonActivo.subtipo === 'calendar' ? (
@@ -182,103 +186,105 @@ export default function CalendarioMedico() {
           />
         </div>
       )}
+      {!showShifts ? (
+        <div className={styles.calendarContainerProperties}>
+          <WelcomeText sectionText='Aca el calendario de la semana' className='darkStyle' />
+          <div className={styles.calendarAndButtonsContainerProperties}>
+            <div className={styles.calendarContainerProperties}>
+              <FullCalendar
+                plugins={[timeGridPlugin]}
+                initialView="timeGridWeek"
+                allDaySlot={false}
+                events={eventos}
+                contentHeight={600}
+                expandRows={true}
+                slotMinTime="06:00:00"
+                slotMaxTime="20:00:00"
+                slotDuration="00:30:00"
+                dayHeaderContent={(args) => {
+                  const fechaKey = args.date.toISOString().slice(0, 10)
+                  const comentarioDelDia = comments[fechaKey]
 
-      <div className={styles.calendarContainerProperties}>
-        <WelcomeText sectionText='Aca el calendario de la semana' className='darkStyle' />
-        <div className={styles.calendarAndButtonsContainerProperties}>
-          <div className={styles.calendarContainerProperties}>
-            <FullCalendar
-              plugins={[timeGridPlugin]}
-              initialView="timeGridWeek"
-              allDaySlot={false}
-              events={eventos}
-              contentHeight={600}
-              expandRows={true}
-              slotMinTime="06:00:00"
-              slotMaxTime="20:00:00"
-              slotDuration="00:30:00"
-              dayHeaderContent={(args) => {
-                const fechaKey = args.date.toISOString().slice(0, 10)
-                const comentarioDelDia = comments[fechaKey]
-
-                return (
-                  <div className={styles.diaHeader}>
-                    <span>{args.text}</span>
-                    {comentarioDelDia ? (
-                      <button className={styles.commentIcon} onClick={() => {
-                        setDateCalendar(args.date)
-                        setMostrarInfoComment(true)
-                      }}><img src='/icons/seeMoreIcon.png' /></button>
-                    ) : (
-                      <button className={styles.commentIcon} onClick={() => {
-                        setShowCommentForm(true)
-                        setTipoForm('create')
-                        setDateCalendar(args.date)
-                      }}>+</button>
-                    )}
-                  </div>
-                )
-              }}
-              eventContent={(eventInfo) => {
-                const eventId = Number(eventInfo.event.id);
-                const barColor = eventInfo.event.extendedProps.barColor;
-                const turno = eventInfo.event.extendedProps.turnoCompleto as ShiftResponseDTO;
-
-                return (
-                  <div className={styles.evento}>
-                    <div className={styles.barraColor} style={{ backgroundColor: barColor }}></div>
-                    <div className={styles.container}>
-                      <div className={styles.mainInfoProperties}>
-                        <span>{eventInfo.timeText}</span>
-                        <span style={{ backgroundColor: barColor }}>Dr/dra: {turno.doctorFullName}</span>
-                      </div>
-                      <div className={styles.buttonsProperties}>
-                        <button onClick={() => {
-                          setTipo('view');
-                          setTurnoSeleccionado(turno);
-                          setInfoTurno(true);
-                        }}>
-                          <img src='/icons/seeMoreIcon.png' />
-                        </button>
-                        <button onClick={() => { setBotonActivo({ tipo: 'form', subtipo: 'form' }); setTipoForm('edit') }}>
-                          <img src='/icons/editIcon.png' />
-                        </button>
-                        <button onClick={() => setShowOptions(showOptions === eventId ? null : eventId)}>
-                          <img src='/icons/refreshIcon.png' />
-                        </button>
-                      </div>
+                  return (
+                    <div className={styles.diaHeader}>
+                      <span>{args.text}</span>
+                      {comentarioDelDia ? (
+                        <button className={styles.commentIcon} onClick={() => {
+                          setDateCalendar(args.date)
+                          setMostrarInfoComment(true)
+                        }}><img src='/icons/seeMoreIcon.png' /></button>
+                      ) : (
+                        <button className={styles.commentIcon} onClick={() => {
+                          setShowCommentForm(true)
+                          setTipoForm('create')
+                          setDateCalendar(args.date)
+                        }}>+</button>
+                      )}
                     </div>
-                    <div className={styles.barraColor} style={{ backgroundColor: barColor }}></div>
-                    {showOptions === eventId && (
-                      <select
-                        style={{ position: 'absolute', zIndex: 10 }}
-                        onChange={async (e) => {
-                          try {
-                            await shiftService.update(turno.id, { ...turno, status: e.target.value as ShiftStatus })
-                            fetchTurnos()
-                            setShowOptions(null)
-                            navigate('/calendario')
-                          } catch (error) {
-                            console.error(error)
-                          }
-                        }}
-                      >
-                        <option value="" disabled selected>Seleccionar estado</option>
-                        <option value="REQUIRED">Requerido</option>
-                        <option value="ASSIGNED">Asignado</option>
-                      </select>
-                    )}
-                  </div>
-                );
-              }}
-            />
-          </div>
-          <div>
-            <ButtonsRod onBotonClick={(boton: any) => setBotonActivo(boton)} botonActivo={botonActivo} />
+                  )
+                }}
+                eventContent={(eventInfo) => {
+                  const eventId = Number(eventInfo.event.id);
+                  const barColor = eventInfo.event.extendedProps.barColor;
+                  const turno = eventInfo.event.extendedProps.turnoCompleto as ShiftResponseDTO;
+
+                  return (
+                    <div className={styles.evento}>
+                      <div className={styles.barraColor} style={{ backgroundColor: barColor }}></div>
+                      <div className={styles.container}>
+                        <div className={styles.mainInfoProperties}>
+                          <span>{eventInfo.timeText}</span>
+                          <span style={{ backgroundColor: barColor }}>Dr/dra: {turno.doctorFullName}</span>
+                        </div>
+                        <div className={styles.buttonsProperties}>
+                          <button onClick={() => {
+                            setTipo('view');
+                            setTurnoSeleccionado(turno);
+                            setInfoTurno(true);
+                          }}>
+                            <img src='/icons/seeMoreIcon.png' />
+                          </button>
+                          <button onClick={() => { setBotonActivo({ tipo: 'form', subtipo: 'form' }); setTipoForm('edit') }}>
+                            <img src='/icons/editIcon.png' />
+                          </button>
+                          <button onClick={() => setShowOptions(showOptions === eventId ? null : eventId)}>
+                            <img src='/icons/refreshIcon.png' />
+                          </button>
+                        </div>
+                      </div>
+                      <div className={styles.barraColor} style={{ backgroundColor: barColor }}></div>
+                      {showOptions === eventId && (
+                        <select
+                          style={{ position: 'absolute', zIndex: 10 }}
+                          onChange={async (e) => {
+                            try {
+                              await shiftService.update(turno.id, { ...turno, status: e.target.value as ShiftStatus })
+                              fetchTurnos()
+                              setShowOptions(null)
+                              navigate('/calendario')
+                            } catch (error) {
+                              console.error(error)
+                            }
+                          }}
+                        >
+                          <option value="" disabled selected>Seleccionar estado</option>
+                          <option value="REQUIRED">Requerido</option>
+                          <option value="ASSIGNED">Asignado</option>
+                        </select>
+                      )}
+                    </div>
+                  );
+                }}
+              />
+            </div>
+            <div>
+              <ButtonsRod onBotonClick={(boton: any) => setBotonActivo(boton)} botonActivo={botonActivo} />
+            </div>
           </div>
         </div>
-      </div>
-
+      ) : (
+        <Shift shifts={turnos} doctor={doctor} doctors={[]}></Shift>
+      )}
     </div>
   )
 }

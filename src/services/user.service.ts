@@ -1,4 +1,4 @@
-import type { UserCreateDTO, UserResponseDTO } from '../types/users.types';
+import type { UserCreateDTO, UserResponseDTO, UserUpdateDTO } from '../types/users.types';
 import { api } from './api';
 import { API_ENDPOINTS } from './api.endpoints';
 
@@ -54,5 +54,18 @@ export const userService = {
             console.error(`Error al cambiar el rol del usuario con ID ${id}:`, error);
             throw error;
         }
-    }
+    },
+
+    /**
+     * Actualiza un usuario existente
+     */
+    updateUser: async (id: number, userData: UserUpdateDTO): Promise<UserResponseDTO> => {
+        try {
+            const response = await api.put<UserResponseDTO>(API_ENDPOINTS.USERS.BY_ID(id), userData);
+            return response.data;
+        } catch (error) {
+            console.error(`Error al actualizar el usuario con ID ${id}:`, error);
+            throw error;
+        }
+    },
 };

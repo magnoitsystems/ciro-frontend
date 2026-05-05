@@ -1,0 +1,355 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    gap: var(--20px);
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-inline: var(--10px);
+}
+
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.addBtn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--neutral-4); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all ease-in-out 0.2s;
+    margin-right: var(--10px);
+}
+
+.addBtn img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0.1);
+}
+
+.addBtn:hover {
+    filter: brightness(1.1);
+    transform: scale(1.05);
+}
+
+.unauthorized {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--neutral-1);
+}
+
+.usersContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
+    padding: var(--40px);
+    padding-inline: var(--20px);
+    margin-top: var(--10px);
+    gap: var(--10px);
+    background-color: var(--blue-2);
+    border-radius: var(--5px);
+    overflow-x: auto;
+}
+
+.columnNames {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 80px 100px; 
+    width: 900px;
+    padding: 8px var(--15px);
+    font-size: 14px;
+    color: var(--neutral-4);
+}
+
+.userRow {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 80px 100px; 
+    align-items: center;
+    width: 900px;
+    padding: var(--15px);
+    background-color: var(--blue-4);
+    color: var(--neutral-1);
+    border-radius: 12px;
+    transition: all ease-in-out 0.2s;
+}
+
+.userRow:hover {
+    background-color: var(--blue-1);
+}
+
+.roleAdmin {
+    color: #f2c94c; 
+    font-weight: bold;
+}
+
+.roleUser {
+    color: var(--neutral-3);
+}
+
+.colorBadge {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+}
+
+.actionBtn {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.icon:hover {
+    transform: scale(1.2);
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.createFormCard {
+    background-color: var(--blue-2);
+    padding: var(--30px) var(--40px);
+    border-radius: 0;        
+    border: 1px solid white;   
+    
+    display: flex;
+    flex-direction: column;
+    gap: var(--15px);
+    width: 90%;
+    max-width: 700px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--neutral-1);
+}
+
+.cardHeader h2 {
+    font-size: 20px;
+    margin: 0;
+}
+
+.closeForm {
+    cursor: pointer;
+    font-size: 24px;
+    opacity: 0.7;
+}
+
+.closeForm:hover {
+    opacity: 1;
+}
+
+.formBody {
+    display: flex;
+    flex-direction: column;
+    gap: var(--15px);
+}
+
+.inputGroupRow {
+    display: flex;
+    flex-direction: column; 
+    width: 100%;
+    gap: var(--15px);
+}
+
+.colorSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.colorSection p {
+    color: var(--neutral-1);
+    font-size: 14px;
+    margin: 0;
+}
+
+.colorGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.colorCircle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+}
+
+.colorCircle:hover:not(.colorUsed) {
+    transform: scale(1.1);
+}
+
+.colorSelected {
+    box-shadow: 0 0 0 2px var(--blue-2), 0 0 0 4px var(--neutral-1);
+}
+
+.colorUsed {
+    opacity: 0.3;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.cross {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1;
+    text-shadow: 0 0 2px rgba(0,0,0,0.7);
+}
+
+.check {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: 0 0 2px rgba(0,0,0,0.7);
+}
+
+.errorText {
+    color: #ff4d4f;
+    font-size: 12px;
+}
+
+.cardFooter {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.backBtn {
+    background: transparent;
+    border: none;
+    color: var(--neutral-4);
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.backBtn:hover {
+    color: var(--neutral-1);
+}
+
+.modalContent {
+    background-color: var(--blue-2);
+    padding: var(--40px);
+    border-radius: var(--5px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--30px);
+    color: var(--neutral-1);
+}
+
+.modalContent p {
+    font-size: var(--h3);
+    font-weight: 500;
+}
+
+.modalButtons {
+    display: flex;
+    gap: var(--20px);
+}
+
+.cancelBtn, .confirmDeleteBtn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--5px);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.cancelBtn {
+    background-color: transparent;
+    color: var(--neutral-1);
+    border: 1px solid var(--neutral-4);
+}
+
+.cancelBtn:hover {
+    background-color: var(--blue-4);
+}
+
+.confirmDeleteBtn {
+    background-color: #d9534f;
+    color: white;
+}
+
+.confirmDeleteBtn:hover {
+    background-color: #c9302c;
+}
+
+@media (min-width: 768px) {
+    .main {
+        width: 100%;
+        padding-inline: 0;
+    }
+    .usersContainer {
+        align-items: center;
+    }
+    .columnNames {
+        width: 95%;
+    }
+    .userRow {
+        width: 95%;
+    }
+    
+    .inputGroupRow {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .cardFooter {
+        justify-content: flex-end; 
+        gap: 20px;
+    }
+}
