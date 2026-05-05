@@ -67,7 +67,7 @@ export default function Login({ onLogin }: Prop) {
                     </form>
                 </div>
                 <div className={styles.imageProperties}>
-                    <img src="/logo/whiteLogo.png" width={370} height={150}></img>
+                    <img src="/logo/whiteLogo.png" width={197} height={80}></img>
                 </div>
             </div>
         </div>
