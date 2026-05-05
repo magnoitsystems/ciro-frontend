@@ -13,7 +13,7 @@
     flex-direction: column;
 
     width: 100%;
-    height: 490px;
+    height: 60vh;
 
     padding: var(--30px);
     padding-inline: 0;
@@ -21,6 +21,7 @@
 
     background-color: var(--blue-2);
     border-radius: var(--5px);
+    overflow-y: auto;
 }
 
 .columnNames {

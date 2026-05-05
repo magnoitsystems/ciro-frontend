@@ -64,4 +64,7 @@ body {
         justify-content: space-between;
     }
 
+    .buttonsRodContainerProperties {
+        height: 95vh;
+    }
 }
