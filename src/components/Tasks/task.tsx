@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ButtonsRod from "../Buttons/ButtonsRod/buttonsRod";
 import WelcomeText from "../WelcomeText/welcomeText";
 import styles from "./task.module.css"
@@ -20,7 +22,11 @@ type typeButton = {
 
 export default function Task() {
   const navigate = useNavigate()
-  const [tasks, setTasks] = useState<TaskResponseDTO[]>([]);
+  
+  const [allTasks, setAllTasks] = useState<TaskResponseDTO[]>([]);
+  
+  const [filterStatus, setFilterStatus] = useState<string>('ALL');
+
   const [botonActivo, setBotonActivo] = useState<typeButton | null>(null)
   const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(new Date());
   const [taskSeleccionada, setTaskSeleccionada] = useState<TaskResponseDTO | null>(null);
@@ -29,9 +35,26 @@ export default function Task() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    taskService.getAll()
-      .then(fetchedTasks => setTasks(fetchedTasks))
-      .catch(error => console.error('Error fetching tasks:', error));
+    const fetchTasks = async () => {
+      try {
+        const role = localStorage.getItem('userRole');
+        const userId = Number(localStorage.getItem('userId'));
+        
+        let fetchedTasks: TaskResponseDTO[] = [];
+
+        if (role === 'ADMIN') {
+          fetchedTasks = await taskService.getAll();
+        } else if (userId) {
+          fetchedTasks = await taskService.getByUserId(userId);
+        }
+        
+        setAllTasks(fetchedTasks);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    };
+
+    fetchTasks();
   }, []);
 
   const handleDelete = async () => {
@@ -39,17 +62,24 @@ export default function Task() {
     try {
       console.log(idCard)
       await taskService.delete(idCard)
+      setAllTasks(prev => prev.filter(t => t.id !== idCard));
+      setCardEliminarTask(false);
       navigate('/Tareas')
     }
     catch (error:any) {
       console.error(error.response?.data)
+    } finally {
+      setLoading(false);
     }
   }
+
+  const displayedTasks = filterStatus === 'ALL' 
+    ? allTasks 
+    : allTasks.filter(t => t.status === filterStatus);
 
   return (
     <section className={styles.mainContainerProperties}>
 
-      {/* Modales */}
       {botonActivo?.tipo === 'info' && botonActivo.subtipo === 'setting' && (
         <Help type={botonActivo.subtipo} component={'task'} />
       )}
@@ -61,7 +91,7 @@ export default function Task() {
       )}
       {botonActivo?.tipo === 'form' && botonActivo.subtipo === 'form' && (
         <CreateAppointment onTaskSaved={(newTask) => {
-          setTasks(prev => [...prev, newTask])
+          setAllTasks(prev => [...prev, newTask])
         }} type={'create'} component="task" name='Ana' onClose={() => setBotonActivo(null)}
           onlyComment={false} />
       )}
@@ -87,7 +117,7 @@ export default function Task() {
       )}
       {botonActivo?.tipo === 'edit' && taskSeleccionada && (
         <CreateAppointment onTaskSaved={(updatedTask) => {
-          setTasks(prev =>
+          setAllTasks(prev =>
             prev.map(t => t.id === updatedTask.id ? updatedTask : t)
           )
         }} task={taskSeleccionada} type={'edit'} component='task' name='Ana' onClose={() => setBotonActivo(null)} onlyComment={false} />
@@ -97,12 +127,27 @@ export default function Task() {
       )}
 
       <div className={styles.containerProperties}>
-        <WelcomeText sectionText="Aca las tareas proximas" className=""></WelcomeText>
+        <WelcomeText sectionText="Acá las tareas proximas" className=""></WelcomeText>
+        
+        <div className={styles.filterContainer}>
+            <label className={styles.filterLabel}>Filtrar por estado:</label>
+            <select 
+                className={styles.statusSelect}
+                value={filterStatus} 
+                onChange={(e) => setFilterStatus(e.target.value)}
+            >
+                <option value="ALL">Todas</option>
+                <option value="PENDING">Pendiente</option>
+                <option value="IN_PROGRESS">En proceso</option>
+                <option value="COMPLETED">Completada</option>
+            </select>
+        </div>
+
         <div className={styles.taskContainerProperties}>
-          {tasks.length === 0 ? (
+          {displayedTasks.length === 0 ? (
             <p className={styles.noTasksText}>No hay tareas próximas</p>
           ) : (
-            tasks.map((task) => (
+            displayedTasks.map((task) => (
               <TaskCard
                 key={task.id}
                 task={task}
@@ -121,7 +166,7 @@ export default function Task() {
                       priority: "HIGH"
                     });
 
-                    setTasks(prev =>
+                    setAllTasks(prev =>
                       prev.map(t =>
                         t.id === task.id ? { ...t, priority: "HIGH" } : t
                       )
@@ -138,7 +183,7 @@ export default function Task() {
                       status: newStatus
                     });
 
-                    setTasks(prev =>
+                    setAllTasks(prev =>
                       prev.map(t =>
                         t.id === task.id ? { ...t, status: newStatus } : t
                       )
@@ -154,7 +199,6 @@ export default function Task() {
         </div>
       </div>
 
-      {/* Botones */}
       <div className={styles.buttonsRodContainerProperties}>
         <ButtonsRod onBotonClick={(boton: any) => setBotonActivo(boton)} botonActivo={botonActivo} component="task" />
       </div>

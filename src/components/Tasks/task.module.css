@@ -51,6 +51,37 @@ body {
     right: 100px;
 }
 
+.filterContainer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: -10px; 
+    padding-inline: var(--10px);
+}
+
+.filterLabel {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.statusSelect {
+    padding: 8px 12px;
+    border-radius: 5px;
+    background-color: #1E1D26; 
+    color: white;
+    border: 1px solid #444;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    min-width: 150px;
+    transition: border-color 0.2s ease;
+}
+
+.statusSelect:focus {
+    border-color: white;
+}
+
 @media (min-width: 768px) {
     .taskContainerProperties {
         grid-template-columns: 1fr 1fr 1fr;
@@ -66,5 +97,9 @@ body {
 
     .buttonsRodContainerProperties {
         height: 95vh;
+    }
+    
+    .filterContainer {
+        padding-inline: 0;
     }
 }
