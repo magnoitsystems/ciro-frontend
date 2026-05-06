@@ -1,8 +1,8 @@
 .helpContainerProperties {
     display: flex;
     flex-direction: column;
-    width: calc(100vw - 32px); /* mobile: casi full width */
-    max-width: 360px;           /* desktop: se limita */
+    width: calc(100vw - 32px);
+    max-width: 360px;     
     height: fit-content;
     background-color: rgba(54, 53, 67, 1);
     border-radius: 5px;
@@ -12,10 +12,8 @@
     position: absolute;
     z-index: 1000;
     bottom: 70px;
-    right: 16px;                /* mobile: pegado al borde */
+    right: 16px;               
 }
-
-
 
 .formContainerProperties{
     display: flex;
@@ -59,7 +57,6 @@
     }
 }
 
-/* El resto de reglas se mantienen igual */
 .formContainerProperties {
     display: flex;
     flex-direction: row;
@@ -95,4 +92,27 @@
 
 .inputAndLabelProperties select {
     color: rgba(152, 146, 145, 1);
+}
+
+@media (max-width: 767px) {
+    .helpContainerProperties {
+        width: 90vw;
+        right: 5vw;
+        left: 5vw;
+        bottom: 90px; 
+        padding: 15px;
+        font-size: 14px;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    .formContainerProperties {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .buttonProperties button, 
+    .inputAndLabelProperties select {
+        width: 100%; 
+    }
 }
