@@ -49,7 +49,7 @@
     gap: var(--10px);
 }
 
-.totalAppointments div {
+.totalAppointments > div {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -57,12 +57,12 @@
     width: 100%;
 }
 
-.totalAppointments div p {
+.totalAppointments > div p {
     font-size: 50px;
     font-weight: bolder;
 }
 
-.totalAppointments div h5 {
+.totalAppointments > div h5 {
     font-style: normal;
 }
 
@@ -203,11 +203,11 @@
         height: 140px;
     }
 
-    .totalAppointments div {
+    .totalAppointments > div {
         width: 50%;
     }
 
-    .totalAppointments div p {
+    .totalAppointments > div p {
         font-size: 70px;
     }
 
