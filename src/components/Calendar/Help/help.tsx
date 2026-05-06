@@ -49,6 +49,17 @@ export default function Help({ type, component, onShiftsFound }: Prop) {
         console.log(shifts)
     }
 
+    const handleViewAllShifts = () => {
+        shiftService.getAll()
+            .then(shifts => {
+                setShifts(shifts);
+                if (onShiftsFound) onShiftsFound(shifts, -1);
+            })
+            .catch(error => {
+                console.error('Error fetching all shifts:', error);
+            });
+    }
+
     return (
         <>
             {type == 'setting' ? (
@@ -77,7 +88,7 @@ export default function Help({ type, component, onShiftsFound }: Prop) {
                         <button><img src='./icons/search.png'></img></button>
                     </form>
                     <div className={styles.buttonProperties}>
-                        <button>Ver {component === 'calendar' ? 'turnos' : 'tareas'} de todos los doctores</button>
+                        <button onClick={handleViewAllShifts}>Ver {component === 'calendar' ? 'turnos' : 'tareas'} de todos los doctores</button>
                     </div>
                 </div>
             ) : type == 'label' ? (
