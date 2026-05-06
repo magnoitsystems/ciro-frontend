@@ -129,8 +129,6 @@ body {
     cursor: pointer !important;
 }
 
-
-
 @media (max-width: 767px) {
     .calendarAndButtonsContainerProperties {
         flex-direction: column-reverse;

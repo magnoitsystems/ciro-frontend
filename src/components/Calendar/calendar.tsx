@@ -1,5 +1,5 @@
-/* eslint-disable react-hooks/immutability */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/immutability */
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import styles from './Calendar.module.css'
@@ -7,6 +7,7 @@ import WelcomeText from '../WelcomeText/welcomeText'
 import { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import CreateAppointment from './Create/create'
 import Help from './Help/help'
 import Appointment from './Appointment/appointment'
 import ButtonsRod from '../Buttons/ButtonsRod/buttonsRod'
@@ -17,7 +18,7 @@ import type { ShiftStatus } from '../../types/enums.types'
 import { useNavigate } from 'react-router-dom'
 import { noteService } from '../../services/note.service'
 import type { NoteResponseDTO } from '../../types/management.types'
-import CreateAppointment from './Create/create'
+import Shift from '../Shifts/Shift'
 
 export default function CalendarioMedico() {
 
@@ -39,9 +40,10 @@ export default function CalendarioMedico() {
 
   const [comments, setComments] = useState<Record<string, NoteResponseDTO>>({});
   const [mostrarInfoComment, setMostrarInfoComment] = useState(false);
+  const [showShifts, setShowShifts] = useState(false);
+  const [doctor, setDoctor] = useState(-1);
 
   const [expandedEventId, setExpandedEventId] = useState<number | null>(null);
-
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -95,9 +97,9 @@ export default function CalendarioMedico() {
     title: turno.patientFullName,
     start: turno.shiftDate,
     extendedProps: {
-      barColor: coloresEstados[turno.status] ?? '#FFFFFF', 
+      barColor: coloresEstados[turno.status] ?? '#FFFFFF',
       comment: turno.noteDescription,
-      turnoCompleto: turno 
+      turnoCompleto: turno
     }
   }));
 
@@ -113,7 +115,16 @@ export default function CalendarioMedico() {
       {botonActivo?.tipo === 'info' && botonActivo.subtipo === 'setting' ? (
         <Help type={botonActivo.subtipo} component={'calendar'} />
       ) : botonActivo?.tipo === 'info' && botonActivo.subtipo === 'info' ? (
-        <Help type={botonActivo.subtipo} component={'calendar'} />
+        <Help
+          type={botonActivo.subtipo}
+          component={'calendar'}
+          onShiftsFound={(shifts, doctor) => {
+            setTurnos(shifts)
+            setDoctor(doctor)
+            setBotonActivo(null)
+            setShowShifts(true)
+          }}
+        />
       ) : botonActivo?.tipo === 'calendar' && botonActivo.subtipo === 'calendar' ? (
         <div className={styles.miniCalendarProperties}>
           <DatePicker
@@ -157,7 +168,7 @@ export default function CalendarioMedico() {
       {showCommentForm && (
         <CreateAppointment
           type={tipoForm}
-          component='calendar'
+          component='comment'
           name='Ana'
           onClose={() => { setShowCommentForm(false); setTipoForm('create'); }}
           onlyComment={true}
@@ -177,7 +188,7 @@ export default function CalendarioMedico() {
 
       {tipo === 'view' && mostrarInfoComment && (
         <Appointment
-          component='calendar'
+          component='comment'
           justComment={true}
           type='view'
           comment={comments[dateCalendar.toISOString().slice(0, 10)]}
@@ -196,174 +207,176 @@ export default function CalendarioMedico() {
         </div>
       )}
 
-      <div className={styles.calendarContainerProperties}>
-        <WelcomeText sectionText='Aca el calendario de la semana' className='darkStyle' />
-        <div className={styles.calendarAndButtonsContainerProperties}>
-          <div className={styles.calendarContainerProperties}>
-            <FullCalendar
-              plugins={[timeGridPlugin]}
-              initialView={isMobile ? "timeGridDay" : "timeGridWeek"}
-              allDaySlot={false}
-              events={eventos}
-              contentHeight={600}
-              expandRows={true}
-              slotMinTime="06:00:00"
-              slotMaxTime="20:00:00"
-              slotDuration="00:30:00"
-              dayHeaderContent={(args) => {
-                const fechaKey = args.date.toISOString().slice(0, 10)
-                const comentarioDelDia = comments[fechaKey]
+      {!showShifts ? (
+        <div className={styles.calendarContainerProperties}>
+          <WelcomeText sectionText='Aca el calendario de la semana' className='darkStyle' />
+          <div className={styles.calendarAndButtonsContainerProperties}>
+            <div className={styles.calendarContainerProperties}>
+              <FullCalendar
+                plugins={[timeGridPlugin]}
+                initialView={isMobile ? "timeGridDay" : "timeGridWeek"}
+                allDaySlot={false}
+                events={eventos}
+                contentHeight={600}
+                expandRows={true}
+                slotMinTime="06:00:00"
+                slotMaxTime="20:00:00"
+                slotDuration="00:30:00"
+                dayHeaderContent={(args) => {
+                  const fechaKey = args.date.toISOString().slice(0, 10)
+                  const comentarioDelDia = comments[fechaKey]
 
-                return (
-                  <div className={styles.diaHeader}>
-                    <span>{args.text}</span>
-                    {comentarioDelDia ? (
-                      <button className={styles.commentIcon} onClick={(e) => {
-                        e.stopPropagation();
-                        setDateCalendar(args.date)
-                        setMostrarInfoComment(true)
-                      }}><img src='/icons/seeMoreIcon.png' /></button>
-                    ) : (
-                      <button className={styles.commentIcon} onClick={(e) => {
-                        e.stopPropagation();
-                        setShowCommentForm(true)
-                        setTipoForm('create')
-                        setDateCalendar(args.date)
-                      }}>+</button>
-                    )}
-                  </div>
-                )
-              }}
-              eventContent={(eventInfo) => {
-                const eventId = Number(eventInfo.event.id);
-                const barColor = eventInfo.event.extendedProps.barColor;
-                const turno = eventInfo.event.extendedProps.turnoCompleto as ShiftResponseDTO;
-
-                if (!isMobile) {
                   return (
-                    <div className={styles.evento}>
-                      <div className={styles.barraColor} style={{ backgroundColor: barColor }}></div>
-                      <div className={styles.container}>
-                        <div className={styles.mainInfoProperties}>
-                          <span>{eventInfo.timeText}</span>
-                          <span style={{ backgroundColor: barColor }}>Dr/dra: {turno.doctorFullName}</span>
-                        </div>
-                        <div className={styles.buttonsProperties}>
-                          <button onClick={(e) => {
-                            e.stopPropagation();
-                            setTipo('view');
-                            setTurnoSeleccionado(turno);
-                            setInfoTurno(true);
-                          }}>
-                            <img src='/icons/seeMoreIcon.png' />
-                          </button>
-                          <button onClick={(e) => { e.stopPropagation(); setBotonActivo({ tipo: 'form', subtipo: 'form' }); setTipoForm('edit') }}>
-                            <img src='/icons/editIcon.png' />
-                          </button>
-                          <button onClick={(e) => { e.stopPropagation(); setShowOptions(showOptions === eventId ? null : eventId); }}>
-                            <img src='/icons/refreshIcon.png' />
-                          </button>
-                        </div>
-                      </div>
-                      <div className={styles.barraColor} style={{ backgroundColor: barColor }}></div>
-                      {showOptions === eventId && (
-                        <select
-                          style={{ position: 'absolute', zIndex: 10 }}
-                          onChange={async (e) => {
-                            e.stopPropagation();
-                            try {
-                              await shiftService.update(turno.id, { ...turno, status: e.target.value as ShiftStatus })
-                              fetchTurnos()
-                              setShowOptions(null)
-                              navigate('/calendario')
-                            } catch (error) {
-                              console.error(error)
-                            }
-                          }}
-                        >
-                          <option value="" disabled selected>Seleccionar estado</option>
-                          <option value="REQUIRED">Requerido</option>
-                          <option value="ASSIGNED">Asignado</option>
-                        </select>
+                    <div className={styles.diaHeader}>
+                      <span>{args.text}</span>
+                      {comentarioDelDia ? (
+                        <button className={styles.commentIcon} onClick={(e) => {
+                          e.stopPropagation();
+                          setDateCalendar(args.date)
+                          setMostrarInfoComment(true)
+                        }}><img src='/icons/seeMoreIcon.png' /></button>
+                      ) : (
+                        <button className={styles.commentIcon} onClick={(e) => {
+                          e.stopPropagation();
+                          setShowCommentForm(true)
+                          setTipoForm('create')
+                          setDateCalendar(args.date)
+                        }}>+</button>
                       )}
                     </div>
-                  );
-                } 
-                
-                else {
-                  const isExpanded = expandedEventId === eventId;
-                  return (
-                    <div 
-                      className={`${styles.eventoWrapper} ${isExpanded ? styles.expanded : ''}`}
-                      onClick={(e) => {
-                         e.stopPropagation();
-                         setExpandedEventId(isExpanded ? null : eventId);
-                         if (isExpanded) setShowOptions(null);
-                      }}
-                    >
-                      <div className={styles.eventoMinimal} style={{ borderLeft: `4px solid ${barColor}` }}>
-                        <span className={styles.timeText}>{eventInfo.timeText}</span>
-                        <span className={styles.patientText}>{turno.patientFullName}</span>
-                      </div>
+                  )
+                }}
+                eventContent={(eventInfo) => {
+                  const eventId = Number(eventInfo.event.id);
+                  const barColor = eventInfo.event.extendedProps.barColor;
+                  const turno = eventInfo.event.extendedProps.turnoCompleto as ShiftResponseDTO;
 
-                      {isExpanded && (
-                        <div 
-                          className={styles.eventoDetalles} 
-                          style={{ borderLeft: `4px solid ${barColor}` }} 
-                          onClick={(e) => e.stopPropagation()} 
-                        >
-                           <div className={styles.infoTurno}>
-                             <p className={styles.timeTextExpanded}>{eventInfo.timeText}</p>
-                             <p><strong>Paciente:</strong> {turno.patientFullName}</p>
-                             <p><strong>Dr/a:</strong> {turno.doctorFullName}</p>
-                           </div>
-                           
-                           <div className={styles.botonesAccion}>
-                              <button onClick={(e) => { e.stopPropagation(); setTipo('view'); setTurnoSeleccionado(turno); setInfoTurno(true); setExpandedEventId(null); }}>
-                                <img src='/icons/seeMoreIcon.png' alt="Ver más" />
-                              </button>
-                              <button onClick={(e) => { e.stopPropagation(); setBotonActivo({ tipo: 'form', subtipo: 'form' }); setTipoForm('edit'); setExpandedEventId(null); }}>
-                                <img src='/icons/editIcon.png' alt="Editar" />
-                              </button>
-                              <button onClick={(e) => { e.stopPropagation(); setShowOptions(showOptions === eventId ? null : eventId); }}>
-                                <img src='/icons/refreshIcon.png' alt="Estado" />
-                              </button>
-                           </div>
-
-                           {showOptions === eventId && (
-                              <select
-                                className={styles.statusSelect}
-                                onChange={async (e) => {
-                                  e.stopPropagation();
-                                  try {
-                                    await shiftService.update(turno.id, { ...turno, status: e.target.value as ShiftStatus })
-                                    fetchTurnos()
-                                    setShowOptions(null)
-                                    setExpandedEventId(null)
-                                    navigate('/calendario')
-                                  } catch (error) {
-                                    console.error(error)
-                                  }
-                                }}
-                              >
-                                <option value="" disabled selected>Cambiar estado</option>
-                                <option value="REQUIRED">Requerido</option>
-                                <option value="ASSIGNED">Asignado</option>
-                              </select>
-                           )}
+                  if (!isMobile) {
+                    return (
+                      <div className={styles.evento}>
+                        <div className={styles.barraColor} style={{ backgroundColor: barColor }}></div>
+                        <div className={styles.container}>
+                          <div className={styles.mainInfoProperties}>
+                            <span>{eventInfo.timeText}</span>
+                            <span style={{ backgroundColor: barColor }}>Dr/dra: {turno.doctorFullName}</span>
+                          </div>
+                          <div className={styles.buttonsProperties}>
+                            <button onClick={(e) => {
+                              e.stopPropagation();
+                              setTipo('view');
+                              setTurnoSeleccionado(turno);
+                              setInfoTurno(true);
+                            }}>
+                              <img src='/icons/seeMoreIcon.png' />
+                            </button>
+                            <button onClick={(e) => { e.stopPropagation(); setBotonActivo({ tipo: 'form', subtipo: 'form' }); setTipoForm('edit') }}>
+                              <img src='/icons/editIcon.png' />
+                            </button>
+                            <button onClick={(e) => { e.stopPropagation(); setShowOptions(showOptions === eventId ? null : eventId); }}>
+                              <img src='/icons/refreshIcon.png' />
+                            </button>
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  );
-                }
-              }}
-            />
-          </div>
-          <div>
-            <ButtonsRod onBotonClick={(boton: any) => setBotonActivo(boton)} botonActivo={botonActivo} />
+                        <div className={styles.barraColor} style={{ backgroundColor: barColor }}></div>
+                        {showOptions === eventId && (
+                          <select
+                            style={{ position: 'absolute', zIndex: 10 }}
+                            onChange={async (e) => {
+                              e.stopPropagation();
+                              try {
+                                await shiftService.update(turno.id, { ...turno, status: e.target.value as ShiftStatus })
+                                fetchTurnos()
+                                setShowOptions(null)
+                                navigate('/calendario')
+                              } catch (error) {
+                                console.error(error)
+                              }
+                            }}
+                          >
+                            <option value="" disabled selected>Seleccionar estado</option>
+                            <option value="REQUIRED">Requerido</option>
+                            <option value="ASSIGNED">Asignado</option>
+                          </select>
+                        )}
+                      </div>
+                    );
+                  } else {
+                    const isExpanded = expandedEventId === eventId;
+                    return (
+                      <div 
+                        className={`${styles.eventoWrapper} ${isExpanded ? styles.expanded : ''}`}
+                        onClick={(e) => {
+                           e.stopPropagation();
+                           setExpandedEventId(isExpanded ? null : eventId);
+                           if (isExpanded) setShowOptions(null);
+                        }}
+                      >
+                        <div className={styles.eventoMinimal} style={{ borderLeft: `4px solid ${barColor}` }}>
+                          <span className={styles.timeText}>{eventInfo.timeText}</span>
+                          <span className={styles.patientText}>{turno.patientFullName}</span>
+                        </div>
+
+                        {isExpanded && (
+                          <div 
+                            className={styles.eventoDetalles} 
+                            style={{ borderLeft: `4px solid ${barColor}` }} 
+                            onClick={(e) => e.stopPropagation()} 
+                          >
+                             <div className={styles.infoTurno}>
+                               <p className={styles.timeTextExpanded}>{eventInfo.timeText}</p>
+                               <p><strong>Paciente:</strong> {turno.patientFullName}</p>
+                               <p><strong>Dr/a:</strong> {turno.doctorFullName}</p>
+                             </div>
+                             
+                             <div className={styles.botonesAccion}>
+                                <button onClick={(e) => { e.stopPropagation(); setTipo('view'); setTurnoSeleccionado(turno); setInfoTurno(true); setExpandedEventId(null); }}>
+                                  <img src='/icons/seeMoreIcon.png' alt="Ver más" />
+                                </button>
+                                <button onClick={(e) => { e.stopPropagation(); setBotonActivo({ tipo: 'form', subtipo: 'form' }); setTipoForm('edit'); setExpandedEventId(null); }}>
+                                  <img src='/icons/editIcon.png' alt="Editar" />
+                                </button>
+                                <button onClick={(e) => { e.stopPropagation(); setShowOptions(showOptions === eventId ? null : eventId); }}>
+                                  <img src='/icons/refreshIcon.png' alt="Estado" />
+                                </button>
+                             </div>
+
+                             {showOptions === eventId && (
+                                <select
+                                  className={styles.statusSelect}
+                                  onChange={async (e) => {
+                                    e.stopPropagation();
+                                    try {
+                                      await shiftService.update(turno.id, { ...turno, status: e.target.value as ShiftStatus })
+                                      fetchTurnos()
+                                      setShowOptions(null)
+                                      setExpandedEventId(null)
+                                      navigate('/calendario')
+                                    } catch (error) {
+                                      console.error(error)
+                                    }
+                                  }}
+                                >
+                                  <option value="" disabled selected>Cambiar estado</option>
+                                  <option value="REQUIRED">Requerido</option>
+                                  <option value="ASSIGNED">Asignado</option>
+                                </select>
+                             )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+                }}
+              />
+            </div>
+            <div>
+              <ButtonsRod onBotonClick={(boton: any) => setBotonActivo(boton)} botonActivo={botonActivo} />
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <Shift shifts={turnos} doctor={doctor} doctors={[]}></Shift>
+      )}
     </div>
   )
 }
