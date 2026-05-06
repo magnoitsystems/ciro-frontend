@@ -4,7 +4,7 @@ import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import MiniInput from "../../components/Forms/NewProvForm/MiniInput.tsx";
 import GreenFormButton from "../../components/Buttons/GreenFormButton/greenFormButton.tsx";
 import { userService } from '../../services/user.service';
-import type { UserResponseDTO, UserCreateDTO } from '../../types/users.types';
+import type { UserResponseDTO, UserCreateDTO, UserUpdateDTO } from '../../types/users.types';
 
 const PALETA_COLORES = [
     '#9b51e0', '#bb6bd9', '#f2994a', '#f2c94c', 
@@ -21,16 +21,18 @@ const isAdmin = (): boolean => {
 
 export default function AdminPanel() {
     const [users, setUsers] = useState<UserResponseDTO[]>([]);
+    
     const [isCreating, setIsCreating] = useState(false);
-    const [userToDelete, setUserToDelete] = useState<number | null>(null);
-
     const [newUser, setNewUser] = useState<UserCreateDTO>({
-        name: '',
-        lastname: '',
-        username: '',
-        password: '',
-        color: ''
+        name: '', lastname: '', username: '', password: '', color: ''
     });
+
+    const [userToEdit, setUserToEdit] = useState<UserResponseDTO | null>(null);
+    const [editUser, setEditUser] = useState<UserUpdateDTO>({
+        name: '', lastname: '', username: '', password: '', color: ''
+    });
+
+    const [userToDelete, setUserToDelete] = useState<number | null>(null);
 
     const [errors, setErrors] = useState(false);
 
@@ -43,7 +45,6 @@ export default function AdminPanel() {
     const loadUsers = async () => {
         try {
             const data = await userService.getAllUsers();
-            
             const currentLoggedUsername = localStorage.getItem('userName');
             
             if (currentLoggedUsername) {
@@ -52,7 +53,6 @@ export default function AdminPanel() {
             } else {
                 setUsers(data); 
             }
-
         } catch (error) {
             console.error("Error al obtener usuarios:", error);
         }
@@ -72,6 +72,41 @@ export default function AdminPanel() {
             loadUsers();
         } catch (error) {
             console.error("Error al crear usuario:", error);
+        }
+    };
+
+    const handleOpenEdit = (user: UserResponseDTO) => {
+        setEditUser({
+            name: user.name,
+            lastname: user.lastname,
+            username: user.username,
+            password: '', 
+            color: user.color
+        });
+        setUserToEdit(user);
+        setErrors(false);
+    };
+
+    const handleUpdateUser = async () => {
+        if (!editUser.name || !editUser.lastname || !editUser.username || !editUser.color) {
+            setErrors(true);
+            return;
+        }
+
+        try {
+            const payload = { ...editUser };
+            if (!payload.password || payload.password.trim() === '') {
+                delete payload.password;
+            }
+
+            if (userToEdit) {
+                await userService.updateUser(userToEdit.id, payload);
+                setUserToEdit(null);
+                setErrors(false);
+                loadUsers();
+            }
+        } catch (error) {
+            console.error("Error al actualizar usuario:", error);
         }
     };
 
@@ -149,6 +184,15 @@ export default function AdminPanel() {
                                 >
                                     <img src="/icons/supervisorAccount.png" alt="Toggle Role" className={style.icon} />
                                 </button>
+                                
+                                <button 
+                                    className={style.actionBtn} 
+                                    onClick={() => handleOpenEdit(user)}
+                                    title="Editar Usuario"
+                                >
+                                    <img src="/icons/editGrey.png" alt="Editar" className={style.icon} />
+                                </button>
+
                                 <button 
                                     className={style.actionBtn} 
                                     onClick={() => setUserToDelete(user.id)}
@@ -240,6 +284,85 @@ export default function AdminPanel() {
                             <GreenFormButton 
                                 text={'Crear usuario'}
                                 onClick={handleSaveUser}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {userToEdit !== null && (
+                <div className={style.modalOverlay} onClick={() => setUserToEdit(null)}>
+                    <div className={style.createFormCard} onClick={(e) => e.stopPropagation()}>
+                        
+                        <div className={style.cardHeader}>
+                            <h2>Editar usuario</h2>
+                            <span className={style.closeForm} onClick={() => setUserToEdit(null)}>×</span>
+                        </div>
+                        
+                        <div className={style.formBody}>
+                            <div className={style.inputGroupRow}>
+                                <MiniInput
+                                    placeholder="Nombre"
+                                    className="inputBoxDefault"
+                                    value={editUser.name}
+                                    onChange={(e) => setEditUser({...editUser, name: e.target.value})}
+                                    error={errors && !editUser.name}
+                                />
+                                <MiniInput
+                                    placeholder="Apellido"
+                                    className="inputBoxDefault"
+                                    value={editUser.lastname}
+                                    onChange={(e) => setEditUser({...editUser, lastname: e.target.value})}
+                                    error={errors && !editUser.lastname}
+                                />
+                            </div>
+
+                            <div className={style.inputGroupRow}>
+                                <MiniInput
+                                    placeholder="Usuario"
+                                    className="inputBoxDefault"
+                                    value={editUser.username}
+                                    onChange={(e) => setEditUser({...editUser, username: e.target.value})}
+                                    error={errors && !editUser.username}
+                                />
+                                <MiniInput
+                                    placeholder="Nueva contraseña (opcional)"
+                                    type="password"
+                                    className="inputBoxDefault"
+                                    value={editUser.password}
+                                    onChange={(e) => setEditUser({...editUser, password: e.target.value})}
+                                />
+                            </div>
+
+                            <div className={style.colorSection}>
+                                <p>Seleccioná tu color hexadecimal</p>
+                                <div className={style.colorGrid}>
+                                    {PALETA_COLORES.map(hex => {
+                                        const isUsed = users.some(u => u.color.toLowerCase() === hex.toLowerCase() && u.id !== userToEdit.id);
+                                        const isSelected = editUser.color === hex;
+                                        
+                                        return (
+                                            <div 
+                                                key={hex} 
+                                                className={`${style.colorCircle} ${isUsed ? style.colorUsed : ''} ${isSelected ? style.colorSelected : ''}`}
+                                                style={{ backgroundColor: hex }}
+                                                onClick={() => !isUsed && setEditUser({...editUser, color: hex})}
+                                                title={isUsed ? "Color no disponible" : `Hex: ${hex}`}
+                                            >
+                                                {isUsed && <span className={style.cross}>×</span>}
+                                                {isSelected && <span className={style.check}>✓</span>}
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                                {errors && !editUser.color && <span className={style.errorText}>Debes elegir un color hexadecimal.</span>}
+                            </div>
+                        </div>
+
+                        <div className={style.cardFooter}>
+                            <GreenFormButton 
+                                text={'Guardar cambios'}
+                                onClick={handleUpdateUser}
                             />
                         </div>
                     </div>
