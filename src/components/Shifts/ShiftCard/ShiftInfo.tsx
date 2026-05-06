@@ -1,6 +1,6 @@
-import { use, useEffect, useState } from 'react'
+import {useEffect, useState } from 'react'
 import type { ShiftResponseDTO } from '../../../types/clinical.types'
-import styles from './shiftInfo.module.css'
+import styles from './ShiftInfo.module.css'
 import type { UserResponseDTO } from '../../../types/users.types'
 import { userService } from '../../../services/user.service'
 type Prop = {
