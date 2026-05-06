@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react'
 import { shiftService } from '../../services/shift.service'
 import type { ShiftResponseDTO } from '../../types/clinical.types'
 import type { UserResponseDTO } from '../../types/users.types'
-import styles from './shift.module.css'
+import styles from './Shift.module.css'
 import ShiftInfo from './ShiftCard/ShiftInfo'
 import { useNavigate } from 'react-router-dom'
 import { userService } from '../../services/user.service'
