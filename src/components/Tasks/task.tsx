@@ -56,6 +56,9 @@ export default function Task() {
       {botonActivo?.tipo === 'info' && botonActivo.subtipo === 'info' && (
         <Help type={botonActivo.subtipo} component={'task'} />
       )}
+       {botonActivo?.tipo === 'label' && botonActivo.subtipo === 'label' && (
+        <Help type={botonActivo.subtipo} component={'task'} />
+      )}
       {botonActivo?.tipo === 'form' && botonActivo.subtipo === 'form' && (
         <CreateAppointment onTaskSaved={(newTask) => {
           setTasks(prev => [...prev, newTask])

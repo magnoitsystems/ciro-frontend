@@ -64,12 +64,18 @@ export default function Help({ type, component, onShiftsFound }: Prop) {
         <>
             {type == 'setting' ? (
                 <div className={styles.helpContainerProperties}>
-                    <p>Aquellos {component === 'calendar' ? 'turnos' : 'tareas'} que tengan el icono <img src="./icons/plus.png"></img> indica que el {component === 'calendar' ? 'turno' : 'tarea'} no cuenta con notas al momento,
-                        de lo contrario se mostrara <img src="./icons/seeMoreIcon.png"></img></p>
+                    <p>{component === 'calendar' ? 'Aquellos turnos que tengan el icono' : 'El icono'} <img src="./icons/plus.png"></img>  {component === 'calendar' ? 'indica que el turno no cuenta con notas al momento' : 'se utilizará para poder ver la información adicional que posea la tareas'} ,
+                        {component === 'calendar' && 'de lo contrario se mostrara'} {component === 'calendar' && <img src="./icons/seeMoreIcon.png"></img>}</p>
+                    
+                    {component === 'task' && (
+                        <p><img src="./icons/deudas.png"></img> Para marcar como prioritaria una tarea</p>
+                    )}
 
                     <p><img src="./icons/editIcon.png"></img> Para editar {component === 'calendar' ? 'el turno' : 'la tarea'}</p>
+                    {component === 'calendar' && (
+                        <p><img src="./icons/refreshIcon.png"></img> Para cambiar el estado del turno</p>
+                    )}
 
-                    <p><img src="./icons/refreshIcon.png"></img> Para cambiar el estado {component === 'calendar' ? 'del turno' : 'de la tarea'}</p>
                 </div>
             ) : type == 'info' ? (
                 <div className={styles.helpContainerProperties}>
@@ -92,11 +98,19 @@ export default function Help({ type, component, onShiftsFound }: Prop) {
                     </div>
                 </div>
             ) : type == 'label' ? (
-                component === 'calendar' && (
+                component === 'calendar' ? (
                     <div className={styles.helpContainerProperties}>
                         <span><img src="./icons/confirmado.png" width="20px"></img> Significa que el turno está ASIGNADO</span>
                         <span><img src="./icons/descartado.png" width="20px"></img> Significa que el turno está REQUERIDO</span>
                     </div>
+                ) : (
+                    component === 'task' && (
+                        <div className={styles.helpContainerProperties}>
+                            <span><img src="./icons/confirmado.png" width="20px"></img> Significa que la tarea tiene prioridad BAJA</span>
+                            <span><img src="./icons/sinAvisar.png" width="20px"></img> Significa que la tarea tiene prioridad MEDIA</span>
+                            <span><img src="./icons/descartado.png" width="20px"></img> Significa que la tarea tiene prioridad ALTA</span>
+                        </div>
+                    )
                 )
             ) : null}
         </>
