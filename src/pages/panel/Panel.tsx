@@ -142,7 +142,7 @@ export default function Panel() {
                 <div className={style.seeTasks}>
                     <PanelButton
                         content={'Ver todas las tareas ➝'}
-                        linkTo='/Tareas'
+                        linkTo='/tareas'
                     />
                 </div>
             </div>
@@ -158,7 +158,7 @@ export default function Panel() {
                     <div>
                         <PanelButton
                             content={'Ver todos los saldos ➝'}
-                            linkTo='/Sueldos'
+                            linkTo='/sueldos'
                         />
                     </div>
                 </div>

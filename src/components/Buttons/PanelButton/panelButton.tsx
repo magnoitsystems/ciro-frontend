@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import style from '../Buttons.module.css';
 
 type Props = {
@@ -7,8 +8,8 @@ type Props = {
 
 export default function PanelButton({content, linkTo}: Props) {
     return(
-        <a className={style.panelButton} href={linkTo}>
+        <Link className={style.panelButton} to={linkTo || '#'}>
             <h6>{content}</h6>
-        </a>
+        </Link>
     )
 }
