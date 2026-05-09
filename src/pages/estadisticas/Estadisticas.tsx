@@ -16,7 +16,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import { statisticsService } from "../../services/statistics.service";
-import type { StatisticsResponseDTO } from "../../types/statistics.types"; 
+import type { StatisticsResponseDTO } from "../../types/statistics.types";
+import {NavLink} from "react-router-dom";
 
 export default function Estadisticas() {
   const [stats, setStats] = useState<StatisticsResponseDTO | null>(null);
@@ -109,6 +110,10 @@ export default function Estadisticas() {
         sectionText={"Acá las estadísticas generales de la clínica."}
         className={"darkStyle"}
       />
+
+      <NavLink to={'/pacientes'} style={{ textDecoration: 'none' }}>
+        <p style={{ cursor: 'pointer', color: 'var(--neutral-4)'}}>← Volver a la sección pacientes</p>
+      </NavLink>
 
       <div className={style.dashboardContainer}>
         <section className={style.topSection}>
