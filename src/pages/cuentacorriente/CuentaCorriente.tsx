@@ -20,6 +20,7 @@ export default function CuentaCorriente() {
     const [accountData, setAccountData] = useState<CurrentAccountResponseDTO | null>(null);
     const [users, setUsers] = useState<UserResponseDTO[]>([]);
     const [loading, setLoading] = useState(true);
+    const [movementFilter, setMovementFilter] = useState<'ALL' | 'RECEIPT' | 'VOUCHER'>('ALL');
 
     const [comprobanteData, setComprobanteData] = useState({
         fecha: "",
@@ -198,7 +199,12 @@ export default function CuentaCorriente() {
             <div className={style.content}>
                 <div className={style.allInformation}>
 
-                    <SaldosResume saldoPesos={accountData.debtInPesos || 0} saldoDolares={accountData.debtInDollars || 0} />
+                    <SaldosResume
+                        saldoPesos={accountData.debtInPesos || 0}
+                        saldoDolares={accountData.debtInDollars || 0}
+                        filter={movementFilter}
+                        onFilterChange={setMovementFilter}
+                    />
 
                     <div className={style.registerContainer}>
 
@@ -208,19 +214,21 @@ export default function CuentaCorriente() {
                         </div>
 
                         {accountData.movements && accountData.movements.length > 0 ? (
-                            accountData.movements.map((movement) => (
-                                <Register
-                                    key={movement.id}
-                                    movement={movement}
-                                    onClick={() => {
-                                        if (movement.type === 'RECEIPT' && movement.receiptId) {
-                                            handleViewReceipt(movement.receiptId);
-                                        } else if (movement.type === 'VOUCHER' && movement.voucherId) {
-                                            handleViewVoucher(movement.voucherId);
-                                        }
-                                    }}
-                                />
-                            ))
+                            accountData.movements
+                                .filter(m => movementFilter === 'ALL' || m.type === movementFilter)
+                                .map((movement) => (
+                                    <Register
+                                        key={movement.id}
+                                        movement={movement}
+                                        onClick={() => {
+                                            if (movement.type === 'RECEIPT' && movement.receiptId) {
+                                                handleViewReceipt(movement.receiptId);
+                                            } else if (movement.type === 'VOUCHER' && movement.voucherId) {
+                                                handleViewVoucher(movement.voucherId);
+                                            }
+                                        }}
+                                    />
+                                ))
                         ) : (
                             <p style={{padding: '20px', color: 'var(--neutral-4)'}}>No hay movimientos registrados.</p>
                         )}

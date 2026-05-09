@@ -41,8 +41,8 @@
 }
 
 .greenFormButton {
-    width: 330px;
-    height: 40px;
+    width: 280px;
+    height: 30px;
 
     background-color: var(--light-green);
     color: var(--blue-4);

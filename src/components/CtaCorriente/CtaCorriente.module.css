@@ -85,6 +85,50 @@
     border: 1px solid #ff4d4d; 
 }
 
+.filterButtons {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.filterBtn {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--neutral-4);
+    background: transparent;
+    color: var(--neutral-4);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.filterBtn:hover {
+    border-color: var(--neutral-1);
+    color: var(--neutral-1);
+}
+
+.filterActive {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--neutral-1);
+    background: var(--blue-1);
+    color: var(--neutral-1);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+@media (max-width: 767px) {
+    .saldosResume {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .filterButtons {
+        flex-wrap: wrap;
+    }
+}
+
 @media (min-width: 768px) {
     .register {
         width: 100%;
