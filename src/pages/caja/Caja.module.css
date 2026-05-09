@@ -5,7 +5,7 @@
     max-width: 100vw;
     overflow-x: hidden;
     padding-inline: var(--10px);
-    gap: var(--30px);
+    gap: var(--20px);
 }
 
 .content {
