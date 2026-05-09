@@ -55,6 +55,7 @@
     flex-direction: column;
     align-items: start;
     width: 100%;
+    height: 70vh;
     padding: var(--40px);
     padding-inline: var(--20px);
     margin-top: var(--10px);
@@ -78,7 +79,8 @@
     grid-template-columns: 2fr 2fr 1fr 80px 120px; 
     align-items: center;
     width: 900px;
-    padding: var(--15px);
+    padding: var(--5px);
+    padding-inline: var(--15px);
     background-color: var(--blue-4);
     color: var(--neutral-1);
     border-radius: 12px;
