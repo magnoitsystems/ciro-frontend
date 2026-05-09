@@ -172,9 +172,9 @@ export default function CreateAppointment({
             <form className={styles.formContainerProperties} onSubmit={handleSubmit}>
 
                 {type === 'create' && !onlyComment ? (
-                    <h3>{name}, complete los siguientes datos para crear {component === 'calendar' ? 'el turno' : 'la tarea'}</h3>
+                    <h3>{name}, complete los siguientes datos para crear {component === 'calendar' ? 'el turno' : component === 'tarea' ? 'la tarea' : 'el comentario'}</h3>
                 ) : (
-                    <h3>{name}, modifique los datos de {component === 'calendar' ? 'el turno' : 'la tarea'}</h3>
+                    <h3>{name}, modifique los datos {component === 'calendar' ? 'del turno' : component === 'tarea' ? 'de la tarea' : 'del comentario'}</h3>
                 )}
 
                 <div className={styles.campsContainerProperties}>

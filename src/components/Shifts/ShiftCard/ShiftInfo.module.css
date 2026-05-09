@@ -41,9 +41,9 @@
     flex-direction: row;
     width: 100%;
     min-width: 800px;
-    justify-content: space-between;
     background-color: var(--neutral-2);
     height: 45px;
+    justify-content: space-between;
     align-items: center;
     border-radius: 5px;
     color: var(--blue-4);

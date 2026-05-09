@@ -1,6 +1,7 @@
 import type { NoteResponseDTO, TaskResponseDTO } from '../../../types/management.types';
 import styles from './Appointment.module.css';
 import type { ShiftResponseDTO } from '../../../types/clinical.types';
+import { authService } from '../../../services/auth.service';
 
 type Prop = {
     type: 'view' | 'confirm';
@@ -29,12 +30,24 @@ const taskPriority: Record<string, string> = {
     "LOW": 'Baja',
 }
 
+const userName = authService.getUserName();
+
 export default function Appointment({ type, onClose, component, turnos, task, justComment, comment }: Prop) {
     return (
         <div className={styles.mainContainerProperties}>
             <div className={styles.infoContainerProperties}>
                 <div>
-                    <h3>{type === 'view' ? (component === 'calendar' ? 'Ciro, aca el resumen del turno.' : 'Ciro, aca el resumen de la tarea.') : component === 'calendar' ? 'Buenisimo, el turno se ha agendado correctamente!' : 'Buenisimo, la tarea se ha agendado correctamente!'}</h3>
+                    <h3>
+                    {type === 'view' 
+                        ? (component === 'calendar' 
+                            ? `${userName}, aca el resumen del turno.` 
+                            : component === 'tarea' 
+                                ? `${userName}, aca el resumen de la tarea.` 
+                                : `${userName}, aca el resumen del comentario.`) 
+                        : component === 'calendar' 
+                            ? 'Buenisimo, el turno se ha agendado correctamente!' 
+                            : 'Buenisimo, la tarea se ha agendado correctamente!'}
+                    </h3>
                 </div>
                 {!justComment && component === 'calendar' ? (
                     turnos?.map((turno) => (

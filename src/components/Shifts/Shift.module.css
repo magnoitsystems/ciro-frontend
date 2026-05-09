@@ -1,0 +1,17 @@
+.shiftContainer {
+    display: flex;
+    flex-direction: column;
+    padding-inline: var(--10px);
+    color: var(--neutral-1);
+    justify-self: center;
+    align-self: center;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: var(--20px);
+    padding-top: 50px;
+}
+
+@media (min-width: 768px) {
+
+}

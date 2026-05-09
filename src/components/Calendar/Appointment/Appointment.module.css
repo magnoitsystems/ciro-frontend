@@ -37,7 +37,7 @@
     z-index: 999;
     align-items: center;
     justify-content: center;
-    padding: 16px; /* mobile first: padding uniforme */
+    padding: 16px;
 }
 
 .infoContainerProperties {
@@ -47,8 +47,8 @@
     border-radius: 5px;
     background-color: rgba(23, 22, 32, 1);
     color: white;
-    width: 100%; /* mobile: full width */
-    max-width: 650px; /* desktop: se limita */
+    width: 100%;
+    max-width: 650px; 
     height: fit-content;
     justify-content: center;
     align-items: center;
@@ -58,7 +58,7 @@
 
 .infoAppointmentProperties {
     display: grid;
-    grid-template-columns: 1fr; /* mobile: 1 columna */
+    grid-template-columns: 1fr; 
     gap: 10px;
     padding-left: 0;
     padding-top: 20px;
@@ -76,8 +76,45 @@
     }
 
     .infoAppointmentProperties {
-        grid-template-columns: 1fr 1fr; /* desktop: 2 columnas */
+        grid-template-columns: 1fr 1fr; 
         padding-left: 30px;
         font-size: 18px;
+    }
+}
+
+@media (max-width: 767px) {
+    .mainContainerProperties {
+        padding: 15px;
+    }
+
+    .infoContainerProperties {
+        width: 100%;
+        padding: 20px 15px;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    .infoContainerProperties h3 {
+        font-size: 18px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .infoAppointmentProperties h4,
+    .infoCommentProperties h4 {
+        font-size: 14px;
+        margin-bottom: 10px;
+        text-align: left; 
+    }
+
+    .buttonsProperties {
+        justify-content: center;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .buttonsProperties button {
+        width: 60px;
+        height: 40px;
     }
 }
