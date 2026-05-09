@@ -57,13 +57,10 @@ export default function Login({ onLogin }: Prop) {
                             <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Contraseña" />
                         </div>
                         <div className={styles.buttonProperties}>
-                            <button>Iniciar sesión</button>
+                            <button disabled={loading}>
+                                {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+                            </button>
                         </div>
-                        {loading && (
-                            <div className={styles.loadingProperties}>
-                                <h3>Iniciando sesión...</h3>
-                            </div>
-                        )}
                     </form>
                 </div>
                 <div className={styles.imageProperties}>
