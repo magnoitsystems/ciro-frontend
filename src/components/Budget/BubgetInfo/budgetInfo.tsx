@@ -47,7 +47,7 @@ export default function BudgetInfo({ budgets, onDeletelick, onEditBudget }: Prop
                     {budgets.map(budget => (
                         <tr key={budget.id} className={styles.tableTrPropertiesTbody}>
                             <td>
-                                <span style={{ backgroundColor: '#FFFEFB', height: '45px', display: 'flex', alignItems: 'center', padding: '10px', margin: '0px', width: '155px', borderTopLeftRadius: '5px', borderBottomLeftRadius: '5px', color: 'black', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                <span style={{ backgroundColor: '#FFFEFB', height: '35px', display: 'flex', alignItems: 'center', padding: '10px', margin: '0px', width: '155px', borderTopLeftRadius: '5px', borderBottomLeftRadius: '5px', color: 'black', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                     <a href={budget.fileUrl || '#'} target='_blank' rel='noreferrer' style={{textDecoration: 'none', color: 'inherit'}}>
                                         <img src='/icons/fileIcon.png' style={{marginRight: '5px'}} /> 
                                         {budget.title}

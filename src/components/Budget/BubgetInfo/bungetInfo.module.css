@@ -17,6 +17,7 @@
     padding: 0 var(--15px) var(--10px) var(--15px);
     color: var(--neutral-4);
     display: block;
+    margin-bottom: var(--10px);
 }
 
 .tableBodyProperties {
@@ -43,7 +44,7 @@
     min-width: 800px;
     justify-content: space-between;
     background-color: var(--neutral-2);
-    height: 45px;
+    height: 35px;
     align-items: center;
     border-radius: 5px;
     color: var(--blue-4);
