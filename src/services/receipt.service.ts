@@ -1,4 +1,4 @@
-import type { ReceiptCreateDTO, ReceiptResponseDTO, RevenueWidgetDTO } from '../types/currentAccount.types';
+import type { ReceiptCreateDTO, ReceiptResponseDTO } from '../types/currentAccount.types';
 import { api } from './api';
 import { API_ENDPOINTS } from './api.endpoints';
 
@@ -70,16 +70,4 @@ export const receiptService = {
         }
     },
 
-    /**
-     * Método para el dashboard (widget), parte de ingreso recibido en la semana
-     */
-    getWeeklyRevenueWidget: async (): Promise<RevenueWidgetDTO> => {
-        try {
-            const response = await api.get<RevenueWidgetDTO>(API_ENDPOINTS.RECEIPTS.WIDGET_WEEKLY_REVENUE);
-            return response.data;
-        } catch (error) {
-            console.error("Error al obtener el widget de ingresos:", error);
-            throw error;
-        }
-    }
 };

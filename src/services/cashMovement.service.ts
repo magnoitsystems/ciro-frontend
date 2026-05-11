@@ -2,6 +2,7 @@
 import { api } from './api'; 
 import { API_ENDPOINTS } from './api.endpoints';
 import type { CashMovementDetailDTO } from '../types/cash.types';
+import type { RevenueWidgetDTO } from '../types/currentAccount.types';
 
 class CashMovementService {
     
@@ -32,6 +33,25 @@ class CashMovementService {
             responseType: 'blob' 
         });
         return response.data;
+    }
+
+    
+   /**
+     * Método para el dashboard (widget), trae el ingreso NETO (ingresos - egresos).
+     * Soporta rango de fechas opcional. Si no se envían, el backend calcula la semana actual.
+     */
+    async getWeeklyRevenueWidget(startDate?: string, endDate?: string): Promise<RevenueWidgetDTO> {
+        try {
+            const params: Record<string, string> = {};
+            if (startDate) params.startDate = startDate;
+            if (endDate) params.endDate = endDate;
+
+            const response = await api.get<RevenueWidgetDTO>(API_ENDPOINTS.CASH_MOVEMENTS.WIDGET_WEEKLY_REVENUE, { params });
+            return response.data;
+        } catch (error) {
+            console.error("Error al obtener el widget de ingresos netos:", error);
+            throw error;
+        }
     }
 }
 

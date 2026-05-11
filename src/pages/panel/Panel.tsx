@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react'
 
 import { taskService } from '../../services/task.service' 
 import { shiftService } from '../../services/shift.service'
-import { receiptService } from '../../services/receipt.service'
 import { statisticsService } from '../../services/statistics.service'
 
 import type { TaskResponseDTO } from '../../types/management.types'
@@ -14,6 +13,7 @@ import type { RevenueWidgetDTO } from '../../types/currentAccount.types'
 import type { ShiftWidgetDTO } from '../../types/clinical.types'
 import type { PendingSalaryItemDTO } from '../../types/bills.types'
 import { billService } from '../../services/bill.service'
+import { cashMovementService } from '../../services/cashMovement.service'
 
 export default function Panel() {
     
@@ -37,7 +37,7 @@ export default function Panel() {
             const [tasksResult, shiftsResult, revenueResult,salariesResult] = await Promise.allSettled([
                 taskService.getPendingWidget(),
                 shiftService.getDashboardWidget(),
-                receiptService.getWeeklyRevenueWidget(),
+                cashMovementService.getWeeklyRevenueWidget(),
                 billService.getPendingSalariesWidget(),
                 statisticsService.getDashboardStats(),
             ]);
