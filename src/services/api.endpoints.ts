@@ -19,6 +19,7 @@ export const API_ENDPOINTS = {
         BASE: '/api/v1/cash-movements',
         BY_ID: (id: number) => `/api/v1/cash-movements/${id}`,
         REPORT_PDF: '/api/v1/cash-movements/report/pdf',
+        WIDGET_WEEKLY_REVENUE: '/api/v1/receipts/widget/weekly-revenue',
     },
     CURRENT_ACCOUNTS: {
         BASE: '/api/v1/current-accounts',
@@ -65,7 +66,6 @@ export const API_ENDPOINTS = {
         BY_ID: (id: number) => `/api/v1/receipts/${id}`,
         BY_PATIENT: (patientId: number) => `/api/v1/receipts/patient/${patientId}`,
         PDF_BY_ID: (id: number) => `/api/v1/receipts/${id}/pdf`,
-        WIDGET_WEEKLY_REVENUE: '/api/v1/receipts/widget/weekly-revenue',
     },
     SHIFTS: {
         BASE: '/api/v1/shifts',

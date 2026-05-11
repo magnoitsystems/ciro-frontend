@@ -12,6 +12,8 @@ import { statisticsService } from '../../services/statistics.service'
 import type { TaskResponseDTO } from '../../types/management.types'
 import type { RevenueWidgetDTO } from '../../types/currentAccount.types'
 import type { ShiftWidgetDTO } from '../../types/clinical.types'
+import type { PendingSalaryItemDTO } from '../../types/bills.types'
+import { billService } from '../../services/bill.service'
 
 export default function Panel() {
     
@@ -20,6 +22,7 @@ export default function Panel() {
     const [shiftData, setShiftData] = useState<ShiftWidgetDTO | null>(null);
     const [revenueData, setRevenueData] = useState<RevenueWidgetDTO | null>(null);
     const [currentTime, setCurrentTime] = useState<string>('');
+    const [pendingSalaries, setPendingSalaries] = useState<PendingSalaryItemDTO[]>([]);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -31,11 +34,12 @@ export default function Panel() {
         }, 1000);
 
         const fetchDashboardData = async () => {
-            const [tasksResult, shiftsResult, revenueResult] = await Promise.allSettled([
+            const [tasksResult, shiftsResult, revenueResult,salariesResult] = await Promise.allSettled([
                 taskService.getPendingWidget(),
                 shiftService.getDashboardWidget(),
                 receiptService.getWeeklyRevenueWidget(),
-                statisticsService.getDashboardStats()
+                billService.getPendingSalariesWidget(),
+                statisticsService.getDashboardStats(),
             ]);
 
             if (tasksResult.status === 'fulfilled') {
@@ -55,6 +59,11 @@ export default function Panel() {
                 setRevenueData(revenueResult.value);
             } else {
                 console.error("El backend falló al traer los ingresos", revenueResult.reason);
+            }
+            if (salariesResult.status === 'fulfilled') {
+                setPendingSalaries(salariesResult.value);
+            } else {
+                console.error("El backend falló al traer los sueldos", salariesResult.reason);
             }
         };
 
@@ -151,8 +160,18 @@ export default function Panel() {
                 <div className={style.saldos}>
                     <div className={style.saldosList}>
                         <h6>Saldos pendientes</h6>
-                        <h5>- $44.565 Juan M. García</h5>
-                        <h5>- $44.565 Juan M. García</h5>
+                        {pendingSalaries.length > 0 ? (
+                            pendingSalaries.slice(0, 3).map((salary) => (
+                                <h5 key={salary.id}>
+                                    - {salary.currencyType === 'DOLARES' ? 'USD' : '$'}
+                                    {salary.amount.toLocaleString('es-AR')} {salary.fullName}
+                                </h5>
+                            ))
+                        ) : (
+                            <p style={{ color: 'var(--neutral-4)', fontSize: '14px', marginTop: '10px' }}>
+                                No hay saldos pendientes.
+                            </p>
+                        )}
                     </div>
 
                     <div>

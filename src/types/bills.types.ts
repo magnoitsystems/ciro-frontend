@@ -32,7 +32,7 @@ export interface BillResponseDTO {
 
 export interface PendingSalaryItemDTO {
     id: number;
-    employeeFullName: string;
+    fullName: string;
     amount: number;
     currencyType: CurrencyType;
 }
