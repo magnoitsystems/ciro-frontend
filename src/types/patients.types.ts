@@ -1,4 +1,4 @@
-import type { HealthInsurance, PatientFrom, DocumentType } from "./enums.types";
+import type { HealthInsurance, PatientFrom, DocumentType, ReasonForConsultation, AppointmentStatus } from "./enums.types";
 
 export interface Label {
     id: number;
@@ -17,6 +17,8 @@ export interface PatientCreateDTO {
     from?: PatientFrom;
     observations?: string;
     createdById: number;
+    reasonForConsultation?: ReasonForConsultation;
+    appointmentStatus?: AppointmentStatus;
 }
 
 export interface PatientUpdateDTO {
@@ -28,6 +30,8 @@ export interface PatientUpdateDTO {
     obraSocial?: HealthInsurance;
     from?: PatientFrom;
     observations?: string;
+    reasonForConsultation?: ReasonForConsultation;
+    appointmentStatus?: AppointmentStatus;
 }
 
 export interface PatientResponseDTO {
@@ -44,6 +48,8 @@ export interface PatientResponseDTO {
     observations?: string;
     createdById?: number;
     createdByName?: string; 
+    reasonForConsultation?: ReasonForConsultation;
+    appointmentStatus?: AppointmentStatus;
 }
 
 export interface PatientDebtorDTO {

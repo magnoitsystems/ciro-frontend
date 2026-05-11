@@ -1,5 +1,13 @@
 import type { TaskPriority, TaskStatus } from "./enums.types";
 
+export interface SubtaskDTO {
+    id?: number; 
+    title: string;
+    description: string;
+    status?: TaskStatus;
+    evaluation?: string;
+}
+
 export interface TaskCreateDTO {
     userId: number;
     taskDate: string; 
@@ -8,6 +16,8 @@ export interface TaskCreateDTO {
     status: TaskStatus;
     priority: TaskPriority;
     noteDescription?: string; 
+    evaluation?: string;
+    subtasks?: SubtaskDTO[];
 }
 
 export interface TaskResponseDTO {
@@ -20,6 +30,8 @@ export interface TaskResponseDTO {
     status: TaskStatus;
     priority: TaskPriority;
     noteDescription?: string;
+    evaluation?: string;
+    subtasks?: SubtaskDTO[];
 }
 
 export interface TaskWidgetDTO {
