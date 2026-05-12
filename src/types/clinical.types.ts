@@ -4,12 +4,14 @@ export interface ShiftCreateDTO {
     patientDni: string;
     doctorId: number;
     shiftDate: string; 
+    endDate: string;  
     status: ShiftStatus;
     noteDescription?: string; 
 }
 export interface ShiftResponseDTO {
     id: number;
     shiftDate: string;
+    endDate: string;  
     status: ShiftStatus;
     patientDni: string;
     patientFullName: string;
