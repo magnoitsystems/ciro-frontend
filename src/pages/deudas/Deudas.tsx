@@ -4,7 +4,7 @@ import DeudaCard from "../../components/DeudaCard/deudaCard.tsx";
 import { useState, useEffect } from "react";
 import { patientService } from '../../services/patient.service';
 import { userService } from '../../services/user.service';
-import type { PatientDebtorDTO } from '../../types/patients.types.ts';
+import type { PatientDebtorDTO } from '../../types/currentAccount.types.ts';
 import type { UserResponseDTO } from '../../types/users.types.ts'; 
 
 export default function Deudas() {

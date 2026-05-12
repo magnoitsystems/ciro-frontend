@@ -12,6 +12,7 @@
     color: var(--neutral-1);
     background-color: var(--blue-2);
 
+    border: 2px solid transparent;
     transition: all ease-in 0.2s;
 }
 
@@ -22,4 +23,16 @@
 
 .main:hover {
     background-color: var(--blue-4);
+}
+
+.overdue {
+    border-color: var(--red);
+    background-color: rgba(255, 0, 0, 0.05); 
+}
+
+.overdueText {
+    color: var(--red);
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 5px;
 }
