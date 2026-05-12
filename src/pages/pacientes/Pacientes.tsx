@@ -8,7 +8,7 @@ import LightGreyButton from "../../components/Buttons/LightGreyButton/lightGreyB
 import { NavLink } from "react-router-dom";
 import { patientService } from "../../services/patient.service";
 import type { PatientResponseDTO, PatientUpdateDTO } from "../../types/patients.types";
-import type { HealthInsurance, PatientFrom } from '../../types/enums.types';
+import type { HealthInsurance, PatientFrom, AppointmentStatus, ReasonForConsultation } from '../../types/enums.types';
 import Patient from "../../components/patients/patient.tsx";
 import HistoriaClinicaModal from "../../components/HistoriaClinica/HistoriaClinicaModal.tsx";
 
@@ -59,8 +59,49 @@ export default function Pacientes() {
 
     const [historiasModal, setHistoriasModal] = useState(false);
 
-    const himKnowOur: PatientFrom[] = ['RECOMMENDATION', 'FACEBOOK', 'INSTAGRAM', 'TIKTOK', 'WEBSITE', 'ANOTHER'];
-    const healthInsurances: HealthInsurance[] = ['PARTICULAR', 'OSDE', 'SWISS_MEDICAL', 'GALENO', 'SANCOR_SALUD', 'IOMA', 'PAMI', 'OMINT', 'OTRA'];
+    const healthInsurancesOptions = [
+        { value: 'PARTICULAR', label: 'Particular' },
+        { value: 'OSDE', label: 'OSDE' },
+        { value: 'SWISS_MEDICAL', label: 'Swiss Medical' },
+        { value: 'GALENO', label: 'Galeno' },
+        { value: 'SANCOR_SALUD', label: 'Sancor Salud' },
+        { value: 'IOMA', label: 'IOMA' },
+        { value: 'PAMI', label: 'PAMI' },
+        { value: 'OMINT', label: 'Omint' },
+        { value: 'OTRA', label: 'Otra' }
+    ];
+
+    const fromOptions = [
+        { value: 'RECOMMENDATION', label: 'Recomendación' },
+        { value: 'FACEBOOK', label: 'Facebook' },
+        { value: 'INSTAGRAM', label: 'Instagram' },
+        { value: 'TIKTOK', label: 'TikTok' },
+        { value: 'WEBSITE', label: 'Sitio Web' },
+        { value: 'ANOTHER', label: 'Otro' }
+    ];
+
+    const turnosOptions = [
+        { value: 'SACO_TURNO', label: 'Sacó turno' },
+        { value: 'TODAVIA_NO', label: 'Todavía no' },
+        { value: 'NO_VA_A_SACAR', label: 'No va a sacar' },
+        { value: 'NO_RESPONDIO', label: 'No respondió' },
+        { value: 'SACO_PERO_CANCELO', label: 'Sacó pero canceló'}
+    ];
+
+    const motivosOptions = [
+       { value: 'CIRUGIA_ORTOGNATICA_MAXILOFACIAL', label: 'Cirugía Ortognática Maxilofacial'},
+       { value: 'IMPLANTOLOGIA', label: 'Implantología'},
+       { value: 'ESTETICA_DENTAL', label: 'Estética dental'},
+       { value: 'BLANQUEAMIENTO', label: 'Blanqueamiento'},
+       { value: 'PROTESIS', label: 'Prótesis'},
+       { value: 'ORTODONCIA', label: 'Ortodoncia'},
+       { value: 'ODONTOPEDIATRIA_ORTOPEDIA_FUNCIONAL', label: 'Odontopediatría Ortopedia Funcional'},
+       { value: 'ODONTOLOGIA_GENERAL_RESTAURACION', label: 'Odontología General Restauración'},
+       { value: 'LIMPIEZA_DENTAL_PROFILAXIS', label: 'Limpeza dental profilaxis'},
+       { value: 'REGENERACION_RECONSTRUCCION_OSEA', label: 'Regeneración Reconstrucción ósea'},
+       { value: 'ESTETICA_FACIAL', label: 'Estética facial'},
+       { value: 'OTRO', label: 'Otro'}
+    ];
 
     const handleUpdatePatient = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -74,6 +115,8 @@ export default function Pacientes() {
             phone: editData.phone,
             obraSocial: editData.obraSocial,
             from: editData.from,
+            appointmentStatus: editData.appointmentStatus,
+            reasonForConsultation: editData.reasonForConsultation,
             observations: editData.observations
         };
 
@@ -89,7 +132,6 @@ export default function Pacientes() {
             alert("Hubo un error al guardar los cambios del paciente.");
         }
     };
-
 
     return(
         <main className={style.main}>
@@ -194,14 +236,13 @@ export default function Pacientes() {
                                 </>
                             ) : (
                                 <>
-                                    
                                     <ProvInput 
                                         placeholder="Obra social" 
                                         as="select"
                                         value={editData.obraSocial} 
                                         onChange={(e) => setEditData(prev => ({ ...prev!, obraSocial: e.target.value as HealthInsurance }))} 
                                         className="inputBoxDefault"
-                                        options={healthInsurances.map(i => ({ value: i, label: i.replace('_', ' ') }))}
+                                        options={healthInsurancesOptions}
                                     />
                                     
                                     <ProvInput 
@@ -210,7 +251,26 @@ export default function Pacientes() {
                                         value={editData.from} 
                                         onChange={(e) => setEditData(prev => ({ ...prev!, from: e.target.value as PatientFrom }))} 
                                         className="inputBoxDefault"
-                                        options={himKnowOur.map(s => ({ value: s, label: s }))}
+                                        options={fromOptions}
+                                    />
+
+                                    {/* ACÁ ESTABAN LOS ERRORES */}
+                                    <ProvInput 
+                                        placeholder="Turno" 
+                                        as="select"
+                                        value={editData.appointmentStatus || "TODAVIA_NO"} 
+                                        onChange={(e) => setEditData(prev => ({ ...prev!, appointmentStatus: e.target.value as AppointmentStatus }))} 
+                                        className="inputBoxDefault"
+                                        options={turnosOptions}
+                                    />
+
+                                    <ProvInput 
+                                        placeholder="Motivo de consulta" 
+                                        as="select"
+                                        value={editData.reasonForConsultation || "OTRO"} 
+                                        onChange={(e) => setEditData(prev => ({ ...prev!, reasonForConsultation: e.target.value as ReasonForConsultation }))} 
+                                        className="inputBoxDefault"
+                                        options={motivosOptions}
                                     />
                                     
                                     <ProvInput 

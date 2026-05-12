@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { PatientCreateDTO } from '../../types/patients.types';
 import { patientService } from '../../services/patient.service';
 import { useNavigate } from 'react-router-dom';
-import type { DocumentType, HealthInsurance, PatientFrom } from '../../types/enums.types';
+import type { DocumentType, HealthInsurance, PatientFrom, ReasonForConsultation, AppointmentStatus } from '../../types/enums.types';
 import ProvInput from '../../components/Forms/NewProvForm/ProvInput.tsx';
 
 type PatientProps = {
@@ -26,13 +26,66 @@ export default function Patient({ onNuevoPacienteClick }: PatientProps) {
         dni: '',
         obraSocial: 'PARTICULAR',
         from: 'INSTAGRAM',
+        appointmentStatus: 'TODAVIA_NO', 
+        reasonForConsultation: 'OTRO',
         observations: '',
         createdById: currentUserId
     });
 
-    const documentTypes: DocumentType[] = ['DNI', 'CUIT', 'CUIL', 'CDI', 'LE', 'LC', 'PASAPORTE', 'OTRO'];
-    const himKnowOur: PatientFrom[] = ['RECOMMENDATION', 'FACEBOOK', 'INSTAGRAM', 'TIKTOK', 'WEBSITE', 'ANOTHER'];
-    const healthInsurances: HealthInsurance[] = ['PARTICULAR', 'OSDE', 'SWISS_MEDICAL', 'GALENO', 'SANCOR_SALUD', 'IOMA', 'PAMI', 'OMINT', 'OTRA'];
+    const documentTypesOptions = [
+        { value: 'DNI', label: 'DNI' },
+        { value: 'CUIT', label: 'CUIT' },
+        { value: 'CUIL', label: 'CUIL' },
+        { value: 'CDI', label: 'CDI' },
+        { value: 'LE', label: 'LE' },
+        { value: 'LC', label: 'LC' },
+        { value: 'PASAPORTE', label: 'Pasaporte' },
+        { value: 'OTRO', label: 'Otro' }
+    ];
+
+    const healthInsurancesOptions = [
+        { value: 'PARTICULAR', label: 'Particular' },
+        { value: 'OSDE', label: 'OSDE' },
+        { value: 'SWISS_MEDICAL', label: 'Swiss Medical' },
+        { value: 'GALENO', label: 'Galeno' },
+        { value: 'SANCOR_SALUD', label: 'Sancor Salud' },
+        { value: 'IOMA', label: 'IOMA' },
+        { value: 'PAMI', label: 'PAMI' },
+        { value: 'OMINT', label: 'Omint' },
+        { value: 'OTRA', label: 'Otra' }
+    ];
+
+    const fromOptions = [
+        { value: 'RECOMMENDATION', label: 'Recomendación' },
+        { value: 'FACEBOOK', label: 'Facebook' },
+        { value: 'INSTAGRAM', label: 'Instagram' },
+        { value: 'TIKTOK', label: 'TikTok' },
+        { value: 'WEBSITE', label: 'Sitio Web' },
+        { value: 'ANOTHER', label: 'Otro' }
+    ];
+
+    const turnosOptions = [
+        { value: 'SACO_TURNO', label: 'Sacó turno' },
+        { value: 'TODAVIA_NO', label: 'Todavía no' },
+        { value: 'NO_VA_A_SACAR', label: 'No va a sacar' },
+        { value: 'NO_RESPONDIO', label: 'No respondió' },
+        { value: 'SACO_PERO_CANCELO', label: 'Sacó pero canceló'}
+    ];
+
+    const motivosOptions = [
+       { value: 'CIRUGIA_ORTOGNATICA_MAXILOFACIAL', label: 'Cirugía Ortognática Maxilofacial'},
+       { value: 'IMPLANTOLOGIA', label: 'Implantología'},
+       { value: 'ESTETICA_DENTAL', label: 'Estética dental'},
+       { value: 'BLANQUEAMIENTO', label: 'Blanqueamiento'},
+       { value: 'PROTESIS', label: 'Prótesis'},
+       { value: 'ORTODONCIA', label: 'Ortodoncia'},
+       { value: 'ODONTOPEDIATRIA_ORTOPEDIA_FUNCIONAL', label: 'Odontopediatría Ortopedia Funcional'},
+       { value: 'ODONTOLOGIA_GENERAL_RESTAURACION', label: 'Odontología General Restauración'},
+       { value: 'LIMPIEZA_DENTAL_PROFILAXIS', label: 'Limpeza dental profilaxis'},
+       { value: 'REGENERACION_RECONSTRUCCION_OSEA', label: 'Regeneración Reconstrucción ósea'},
+       { value: 'ESTETICA_FACIAL', label: 'Estética facial'},
+       { value: 'OTRO', label: 'Otro'}
+    ];
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -109,7 +162,7 @@ export default function Patient({ onNuevoPacienteClick }: PatientProps) {
                                 value={formData.documentType} 
                                 onChange={(e) => setFormData(prev => ({ ...prev, documentType: e.target.value as DocumentType }))} 
                                 className="inputBoxDefault"
-                                options={documentTypes.map(t => ({ value: t, label: t }))}
+                                options={documentTypesOptions}
                             />
                             
                             <ProvInput 
@@ -125,7 +178,7 @@ export default function Patient({ onNuevoPacienteClick }: PatientProps) {
                                 value={formData.obraSocial} 
                                 onChange={(e) => setFormData(prev => ({ ...prev, obraSocial: e.target.value as HealthInsurance }))} 
                                 className="inputBoxDefault"
-                                options={healthInsurances.map(i => ({ value: i, label: i.replace('_', ' ') }))}
+                                options={healthInsurancesOptions}
                             />
                             
                             <ProvInput 
@@ -134,7 +187,25 @@ export default function Patient({ onNuevoPacienteClick }: PatientProps) {
                                 value={formData.from} 
                                 onChange={(e) => setFormData(prev => ({ ...prev, from: e.target.value as PatientFrom }))} 
                                 className="inputBoxDefault"
-                                options={himKnowOur.map(s => ({ value: s, label: s }))}
+                                options={fromOptions}
+                            />
+
+                            <ProvInput 
+                                placeholder="Turno" 
+                                as="select"
+                                value={formData.appointmentStatus} 
+                                onChange={(e) => setFormData(prev => ({ ...prev, appointmentStatus: e.target.value as AppointmentStatus }))} 
+                                className="inputBoxDefault"
+                                options={turnosOptions}
+                            />
+
+                            <ProvInput 
+                                placeholder="Motivo de consulta" 
+                                as="select"
+                                value={formData.reasonForConsultation} 
+                                onChange={(e) => setFormData(prev => ({ ...prev, reasonForConsultation: e.target.value as ReasonForConsultation }))} 
+                                className="inputBoxDefault"
+                                options={motivosOptions}
                             />
                             
                             <ProvInput 

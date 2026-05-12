@@ -19,7 +19,7 @@ export const API_ENDPOINTS = {
         BASE: '/api/v1/cash-movements',
         BY_ID: (id: number) => `/api/v1/cash-movements/${id}`,
         REPORT_PDF: '/api/v1/cash-movements/report/pdf',
-        WIDGET_WEEKLY_REVENUE: '/api/v1/receipts/widget/weekly-revenue',
+        WIDGET_WEEKLY_REVENUE: '/api/v1/cash-movements/widgets/net-revenue',
     },
     CURRENT_ACCOUNTS: {
         BASE: '/api/v1/current-accounts',
