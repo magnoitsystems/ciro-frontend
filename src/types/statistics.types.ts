@@ -1,9 +1,15 @@
+export interface DrillDownDetailDTO {
+    id: number;
+    primaryText: string;
+    secondaryText: string;
+}
+
 export interface StatItemDTO {
     label: string;
     amount?: number; 
     count?: number; 
     percentage: number;
-    referenceIds?: number[]; 
+    details?: DrillDownDetailDTO[]; 
 }
 
 export interface PatientStatsDTO {
@@ -12,8 +18,10 @@ export interface PatientStatsDTO {
     totalNonDebtors: number;
     patientsByOrigin: StatItemDTO[];
     patientsByCity: StatItemDTO[];
-    patientsByReason: StatItemDTO[];
+    patientsByReason: StatItemDTO[]; 
     patientsByAppointmentStatus: StatItemDTO[]; 
+    debtorsDetails?: DrillDownDetailDTO[];   
+    nonDebtorsDetails?: DrillDownDetailDTO[]; 
 }
 
 export interface FinancialStatsDTO {
@@ -32,5 +40,4 @@ export interface FinancialStatsDTO {
 export interface StatisticsResponseDTO {
     financial: FinancialStatsDTO;
     patients: PatientStatsDTO;
-    implantsThisMonth: number;
 }

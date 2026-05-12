@@ -16,16 +16,18 @@ import {
   CartesianGrid,
 } from "recharts";
 import { statisticsService } from "../../services/statistics.service";
-import type { StatisticsResponseDTO } from "../../types/statistics.types";
+import type { StatisticsResponseDTO, DrillDownDetailDTO } from "../../types/statistics.types";
 import { NavLink } from "react-router-dom";
 
 export default function Estadisticas() {
   const [stats, setStats] = useState<StatisticsResponseDTO | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeFilter, setActiveFilter] = useState<"ciudad" | "origen" | "motivo" | "turno">("origen");
+
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const [drillDown, setDrillDown] = useState<{ title: string; ids: number[] } | null>(null);
+
+  const [drillDown, setDrillDown] = useState<{ title: string; items: DrillDownDetailDTO[] } | null>(null);
 
   const fetchStats = async () => {
     try {
@@ -54,16 +56,12 @@ export default function Estadisticas() {
   };
 
   const handleChartClick = (data: any, titlePrefix: string) => {
-      if (data && data.payload && data.payload.referenceIds && data.payload.referenceIds.length > 0) {
+      const payloadDetails = data?.payload?.details || data?.details;
+      if (payloadDetails && payloadDetails.length > 0) {
           setDrillDown({
               title: `${titlePrefix}: ${data.name}`,
-              ids: data.payload.referenceIds
+              items: payloadDetails
           });
-      } else if (data && data.referenceIds && data.referenceIds.length > 0) {
-          setDrillDown({
-            title: `${titlePrefix}: ${data.name}`,
-            ids: data.referenceIds
-        });
       }
   };
 
@@ -75,13 +73,7 @@ export default function Estadisticas() {
     );
   }
 
-  if (!stats) {
-    return (
-      <main className={style.main}>
-        <WelcomeText sectionText={"Error al cargar las estadísticas."} className={"darkStyle"} />
-      </main>
-    );
-  }
+  if (!stats) return null;
 
   const COLORS = ["#3b82f6", "#22c55e", "#f59e0b", "#ef4444", "#a855f7", "#ec4899", "#14b8a6", "#64748b"];
 
@@ -98,12 +90,12 @@ export default function Estadisticas() {
   const demographicData = activeDemographicList.map(item => ({
       name: item.label,
       value: item.count || item.percentage || 0,
-      referenceIds: item.referenceIds
+      details: item.details
   }));
 
   const debtorsData = [
-      { name: 'Al día', value: stats.patients?.totalNonDebtors || 0 },
-      { name: 'Deudores', value: stats.patients?.totalDebtors || 0 }
+      { name: 'Al día', value: stats.patients?.totalNonDebtors || 0, details: stats.patients?.nonDebtorsDetails || [] },
+      { name: 'Deudores', value: stats.patients?.totalDebtors || 0, details: stats.patients?.debtorsDetails || [] }
   ];
 
   const financialBalanceData = [
@@ -114,13 +106,13 @@ export default function Estadisticas() {
   const incomeBreakdownData = (stats.financial?.incomeBreakdown || []).map(item => ({
       name: item.label,
       value: item.amount || 0,
-      referenceIds: item.referenceIds
+      details: item.details
   }));
 
   const expensesBreakdownData = (stats.financial?.expensesBreakdown || []).map(item => ({
       name: item.label,
       value: item.amount || 0,
-      referenceIds: item.referenceIds
+      details: item.details
   }));
 
   const formatCurrency = (value: any) => {
@@ -139,29 +131,11 @@ export default function Estadisticas() {
           </NavLink>
 
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-              <input 
-                  type="date" 
-                  value={startDate} 
-                  onChange={(e) => setStartDate(e.target.value)} 
-                  style={{ padding: '8px', borderRadius: '5px', border: 'none', background: 'var(--blue-2)', color: 'white' }}
-              />
+              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} style={{ padding: '8px', borderRadius: '5px', border: 'none', background: 'var(--blue-2)', color: 'white' }} />
               <span style={{ color: 'var(--neutral-4)' }}>hasta</span>
-              <input 
-                  type="date" 
-                  value={endDate} 
-                  onChange={(e) => setEndDate(e.target.value)} 
-                  style={{ padding: '8px', borderRadius: '5px', border: 'none', background: 'var(--blue-2)', color: 'white' }}
-              />
-              <button 
-                  onClick={handleFilterDates} 
-                  style={{ padding: '8px 15px', borderRadius: '5px', border: 'none', background: 'var(--primary)', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}>
-                  Filtrar
-              </button>
-              <button 
-                  onClick={handleClearDates} 
-                  style={{ padding: '8px 15px', borderRadius: '5px', border: '1px solid var(--neutral-4)', background: 'transparent', color: 'var(--neutral-4)', cursor: 'pointer' }}>
-                  Limpiar
-              </button>
+              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} style={{ padding: '8px', borderRadius: '5px', border: 'none', background: 'var(--blue-2)', color: 'white' }} />
+              <button onClick={handleFilterDates} style={{ padding: '8px 15px', borderRadius: '5px', border: 'none', background: 'var(--primary)', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}>Filtrar</button>
+              <button onClick={handleClearDates} style={{ padding: '8px 15px', borderRadius: '5px', border: '1px solid var(--neutral-4)', background: 'transparent', color: 'var(--neutral-4)', cursor: 'pointer' }}>Limpiar</button>
           </div>
       </div>
 
@@ -171,10 +145,6 @@ export default function Estadisticas() {
             <div className={style.card}>
               <h3>Total Pacientes</h3>
               <h2>{stats.patients?.totalPatients || 0}</h2>
-            </div>
-            <div className={style.card}>
-              <h3>Implantes del Mes</h3>
-              <h2>{stats?.implantsThisMonth || 0}</h2>
             </div>
             <div className={style.card} style={{ borderLeft: '4px solid #22c55e' }}>
               <h3>Ganancia Neta (ARS)</h3>
@@ -228,6 +198,8 @@ export default function Estadisticas() {
                   data={debtorsData}
                   cx="50%" cy="50%" innerRadius={60} outerRadius={80}
                   dataKey="value" nameKey="name"
+                  onClick={(data) => handleChartClick(data, "Estado de Cuenta")}
+                  style={{ cursor: 'pointer' }}
                 >
                   <Cell fill="#22c55e" /> 
                   <Cell fill="#ef4444" /> 
@@ -298,23 +270,32 @@ export default function Estadisticas() {
       </div>
 
       {drillDown && (
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }} onClick={() => setDrillDown(null)}>
-              <div style={{ background: 'var(--blue-2)', padding: '25px', borderRadius: '10px', width: '400px', maxHeight: '70vh', overflowY: 'auto', color: 'white' }} onClick={e => e.stopPropagation()}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--neutral-4)', paddingBottom: '10px', marginBottom: '15px' }}>
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }} onClick={() => setDrillDown(null)}>
+              <div style={{ background: 'var(--blue-2)', padding: '30px', borderRadius: '10px', width: '600px', maxHeight: '80vh', display: 'flex', flexDirection: 'column', color: 'white', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }} onClick={e => e.stopPropagation()}>
+                  
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--neutral-4)', paddingBottom: '15px', marginBottom: '15px' }}>
                       <h3 style={{ margin: 0 }}>{drillDown.title}</h3>
-                      <button onClick={() => setDrillDown(null)} style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '18px', cursor: 'pointer', fontWeight: 'bold' }}>✕</button>
+                      <button onClick={() => setDrillDown(null)} style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '20px', cursor: 'pointer', fontWeight: 'bold', padding: '0 5px' }}>✕</button>
                   </div>
+                  
                   <p style={{ fontSize: '14px', color: 'var(--neutral-4)', marginBottom: '15px' }}>
-                      A continuación, los IDs de los registros que componen esta estadística:
+                      Listado detallado de los registros correspondientes: ({drillDown.items.length} resultados)
                   </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                      {drillDown.ids.map(id => (
-                          <span key={id} style={{ background: 'var(--blue-4)', padding: '5px 10px', borderRadius: '5px', fontSize: '13px' }}>
-                              ID: #{id}
-                          </span>
+                  
+                  <div style={{ overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', paddingRight: '5px' }}>
+                      {drillDown.items.map(item => (
+                          <div key={item.id} style={{ background: 'var(--blue-4)', padding: '12px 15px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                                  <span style={{ fontWeight: 'bold', fontSize: '15px', color: 'var(--neutral-1)' }}>{item.primaryText}</span>
+                                  <span style={{ fontSize: '13px', color: 'var(--neutral-4)' }}>{item.secondaryText}</span>
+                              </div>
+                              <span style={{ fontSize: '12px', color: 'var(--blue-1)', background: 'rgba(67, 97, 238, 0.2)', padding: '4px 8px', borderRadius: '4px', fontWeight: 'bold' }}>
+                                  ID #{item.id}
+                              </span>
+                          </div>
                       ))}
+                      {drillDown.items.length === 0 && <p style={{ textAlign: 'center', padding: '20px', color: 'var(--neutral-4)' }}>No hay registros detallados para mostrar.</p>}
                   </div>
-                  {drillDown.ids.length === 0 && <p>No hay registros para mostrar.</p>}
               </div>
           </div>
       )}
