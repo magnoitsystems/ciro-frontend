@@ -52,14 +52,6 @@ export interface PatientResponseDTO {
     appointmentStatus?: AppointmentStatus;
 }
 
-export interface PatientDebtorDTO {
-    id: number;
-    dni?: string;
-    fullName?: string;
-    debtPesos?: number;
-    debtDolares?: number;
-}
-
 export interface StatisticsDTO {
     count: number;
     patients: PatientResponseDTO[];

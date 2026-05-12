@@ -30,6 +30,7 @@ export interface PatientDebtorDTO {
     debtDolares: number;
     doctorId?: number;
     doctorName?: string;
+    overdue: boolean; 
 }
 
 export interface ReceiptCreateDTO {
@@ -42,6 +43,8 @@ export interface ReceiptCreateDTO {
     exchangeRate?: number;
     paymentMethod: PaymentMethod;
     payDollarDebtWithPesos: boolean; 
+    voucherId?: number; 
+    voucherDetailId?: number; 
 }
 
 export interface ReceiptResponseDTO {
@@ -56,12 +59,16 @@ export interface ReceiptResponseDTO {
     doctorFullName: string;
     paymentMethod: PaymentMethod;
     observations: string;
+    voucherId?: number; 
+    voucherDetailId?: number; 
 }
 
 export interface VoucherDetailDTO {
+    id?: number; 
     detail: string;
     unitPrice: number;
     amount: number; 
+    dueDate?: string; 
 }
 
 export interface VoucherCreateDTO {

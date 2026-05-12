@@ -44,6 +44,14 @@ class CurrentAccountService {
     }
 
     /**
+     * Actualiza un recibo de dinero existente 
+     */
+    async updateReceipt(id: number, data: ReceiptCreateDTO): Promise<ReceiptResponseDTO> {
+        const response = await api.put<ReceiptResponseDTO>(API_ENDPOINTS.RECEIPTS.BY_ID(id), data);
+        return response.data;
+    }
+
+    /**
      * obtiene un recibo por su ID
      */
     async getReceiptById(id: number): Promise<ReceiptResponseDTO> {
@@ -75,6 +83,14 @@ class CurrentAccountService {
      */
     async createVoucher(data: VoucherCreateDTO): Promise<VoucherResponseDTO> {
         const response = await api.post<VoucherResponseDTO>(API_ENDPOINTS.VOUCHERS.BASE, data);
+        return response.data;
+    }
+
+    /**
+     * Actualiza un comprobante existente 
+     */
+    async updateVoucher(id: number, data: VoucherCreateDTO): Promise<VoucherResponseDTO> {
+        const response = await api.put<VoucherResponseDTO>(API_ENDPOINTS.VOUCHERS.BY_ID(id), data);
         return response.data;
     }
 

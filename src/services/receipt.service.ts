@@ -18,6 +18,19 @@ export const receiptService = {
     },
 
     /**
+     * Actualiza un recibo de pago existente.
+     */
+    updateReceipt: async (id: number, receiptData: ReceiptCreateDTO): Promise<ReceiptResponseDTO> => {
+        try {
+            const response = await api.put<ReceiptResponseDTO>(API_ENDPOINTS.RECEIPTS.BY_ID(id), receiptData);
+            return response.data;
+        } catch (error) {
+            console.error(`Error al actualizar el recibo con ID ${id}:`, error);
+            throw error;
+        }
+    },
+
+    /**
      * Obtiene el historial completo de recibos de un paciente en particular.
      */
     getReceiptsByPatient: async (patientId: number): Promise<ReceiptResponseDTO[]> => {
