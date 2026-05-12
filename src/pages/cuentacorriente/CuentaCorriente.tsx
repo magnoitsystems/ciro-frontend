@@ -10,7 +10,7 @@ import GreenFormButton from "../../components/Buttons/GreenFormButton/greenFormB
 import { currentAccountService } from "../../services/currentAccount.service"; 
 import { userService } from "../../services/user.service"; 
 import { receiptService } from "../../services/receipt.service";
-import type { CurrentAccountResponseDTO, ReceiptCreateDTO, VoucherCreateDTO, ReceiptResponseDTO, VoucherDTO } from "../../types/currentAccount.types"; 
+import type { CurrentAccountResponseDTO, ReceiptCreateDTO, VoucherCreateDTO, ReceiptResponseDTO, VoucherDTO, VoucherDetailDTO } from "../../types/currentAccount.types"; 
 import type { CurrencyType, PaymentMethod } from "../../types/enums.types"; 
 import type { UserResponseDTO } from "../../types/users.types.ts";
 
@@ -22,15 +22,33 @@ export default function CuentaCorriente() {
     const [loading, setLoading] = useState(true);
     const [movementFilter, setMovementFilter] = useState<'ALL' | 'RECEIPT' | 'VOUCHER'>('ALL');
 
-    const [comprobanteData, setComprobanteData] = useState({
+    const [comprobanteData, setComprobanteData] = useState<{
+        fecha: string;
+        observaciones: string;
+        moneda: string;
+        doctorId: string;
+        details: { detail: string; amount: number; unitPrice: number; dueDate?: string }[]
+    }>({
         fecha: "",
         observaciones: "",
         moneda: "PESOS",
         doctorId: "", 
-        details: [{ detail: "", amount: 1, unitPrice: 0 }]
+        details: [{ detail: "", amount: 1, unitPrice: 0, dueDate: "" }]
     });
 
-    const [reciboData, setReciboData] = useState({
+    const [reciboData, setReciboData] = useState<{
+        fecha: string;
+        cantidad: string;
+        observaciones: string;
+        moneda: string;
+        tipoCambio: string;
+        metodoPago: string;
+        pagarEnDolares: boolean;
+        doctorId: string;
+        voucherId?: number;
+        voucherDetailId?: number;
+        paymentContextText?: string;
+    }>({
         fecha: "",
         cantidad: "",
         observaciones: "",
@@ -84,12 +102,15 @@ export default function CuentaCorriente() {
                 voucherDate: comprobanteData.fecha || undefined,
                 observations: comprobanteData.observaciones || undefined,
                 currencyType: comprobanteData.moneda as CurrencyType,
-                details: comprobanteData.details 
+                details: comprobanteData.details.map(d => ({
+                    ...d,
+                    dueDate: d.dueDate || undefined 
+                }))
             };
 
             await currentAccountService.createVoucher(payload);
             setShowComprobanteModal(false);
-            setComprobanteData({ fecha: "", observaciones: "", moneda: "PESOS", doctorId: "", details: [{ detail: "", amount: 1, unitPrice: 0 }] });
+            setComprobanteData({ fecha: "", observaciones: "", moneda: "PESOS", doctorId: "", details: [{ detail: "", amount: 1, unitPrice: 0, dueDate: "" }] });
             loadData();
             
         } catch (error) {
@@ -114,12 +135,14 @@ export default function CuentaCorriente() {
                 receiptDate: reciboData.fecha || undefined,
                 observations: reciboData.observaciones || undefined,
                 exchangeRate: reciboData.tipoCambio ? Number(reciboData.tipoCambio) : undefined,
-                payDollarDebtWithPesos: reciboData.pagarEnDolares
+                payDollarDebtWithPesos: reciboData.pagarEnDolares,
+                voucherId: reciboData.voucherId,
+                voucherDetailId: reciboData.voucherDetailId
             };
 
             await currentAccountService.createReceipt(payload);
             setShowReciboModal(false);
-            setReciboData({ fecha: "", cantidad: "", observaciones: "", moneda: "PESOS", tipoCambio: "", metodoPago: "EFECTIVO", pagarEnDolares: false, doctorId: "" });
+            setReciboData({ fecha: "", cantidad: "", observaciones: "", moneda: "PESOS", tipoCambio: "", metodoPago: "EFECTIVO", pagarEnDolares: false, doctorId: "", voucherId: undefined, voucherDetailId: undefined, paymentContextText: "" });
             loadData();
 
         } catch (error) {
@@ -174,7 +197,33 @@ export default function CuentaCorriente() {
         }
     };
 
-    const addDetail = () => setComprobanteData(prev => ({ ...prev, details: [...prev.details, { detail: "", amount: 1, unitPrice: 0 }] }));
+    const handlePayVoucher = (voucher: VoucherDTO) => {
+        setReciboData({
+            ...reciboData,
+            cantidad: String(voucher.totalAmount),
+            moneda: voucher.currency,
+            voucherId: voucher.id,
+            voucherDetailId: undefined,
+            paymentContextText: `Comprobante #${voucher.id} completo`
+        });
+        setViewVoucherModal(false);
+        setShowReciboModal(true);
+    };
+
+    const handlePayVoucherDetail = (voucher: VoucherDTO, detail: VoucherDetailDTO) => {
+        setReciboData({
+            ...reciboData,
+            cantidad: String(detail.amount * detail.unitPrice),
+            moneda: voucher.currency,
+            voucherId: voucher.id,
+            voucherDetailId: detail.id,
+            paymentContextText: `Detalle: "${detail.detail}" (Comp. #${voucher.id})`
+        });
+        setViewVoucherModal(false);
+        setShowReciboModal(true);
+    };
+
+    const addDetail = () => setComprobanteData(prev => ({ ...prev, details: [...prev.details, { detail: "", amount: 1, unitPrice: 0, dueDate: "" }] }));
     const removeDetail = (index: number) => setComprobanteData(prev => ({ ...prev, details: prev.details.filter((_, i) => i !== index) }));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updateDetail = (index: number, field: string, value: any) => {
@@ -243,14 +292,9 @@ export default function CuentaCorriente() {
                 </div>
 
                 <div className={style.createRegisters}>
-                    <div onClick={() => setShowComprobanteModal(true)}>
+                    <div onClick={() => setShowComprobanteModal(true)} style={{ width: '100%' }}>
                     <img src={'/icons/bigPlus.png'} alt="Crear Comprobante" />
                         <p>Crear nuevo comprobante</p>
-                    </div>
-
-                    <div onClick={() => setShowReciboModal(true)}>
-                        <img src={'/icons/bigPlus.png'} alt="Crear Recibo" />
-                        <p>Crear nuevo recibo</p>
                     </div>
                 </div>
             </div>
@@ -269,24 +313,25 @@ export default function CuentaCorriente() {
                                 onChange={(e) => setComprobanteData({...comprobanteData, doctorId: e.target.value})} 
                                 options={users.map(u => ({ value: String(u.id), label: `${u.name} ${u.lastname}` }))} 
                             />
-                            <ProvInput placeholder="Fecha" type="date" className="inputBoxDefault" value={comprobanteData.fecha} onChange={(e) => setComprobanteData({...comprobanteData, fecha: e.target.value})} />
+                            <ProvInput placeholder="Fecha de emisión" type="date" className="inputBoxDefault" value={comprobanteData.fecha} onChange={(e) => setComprobanteData({...comprobanteData, fecha: e.target.value})} />
                             <ProvInput placeholder="Observaciones" type="text" className="inputBoxBig" value={comprobanteData.observaciones} onChange={(e) => setComprobanteData({...comprobanteData, observaciones: e.target.value})} />
                             <ProvInput placeholder="Moneda" as="select" className="inputBoxDefault" value={comprobanteData.moneda} onChange={(e) => setComprobanteData({...comprobanteData, moneda: e.target.value})} options={[{value: "PESOS", label: "Pesos (ARS)"}, {value: "DOLARES", label: "Dólares (USD)"}, {value: "REALES", label: "Reales (R)"}, {value: "EUROS", label: "Euros (EUR)"}]} />
                             
                             <div className={style.detailsContainer}>
                                 <div className={style.detailsHeader}>
-                                    <h5>Detalles</h5>
-                                    <span onClick={addDetail}>+ Agregar</span>
+                                    <h5>Detalles de cargos</h5>
+                                    <span onClick={addDetail}>+ Agregar cargo</span>
                                 </div>
                                 <div className={style.detailsTable}>
                                     <div className={style.detailsColumns}>
-                                        <span>Detalle</span><span>Cant.</span><span>Precio</span><span>Total</span><span></span>
+                                        <span>Detalle</span><span>Cant.</span><span>Precio</span><span>Vencimiento</span><span>Total</span><span></span>
                                     </div>
                                     {comprobanteData.details.map((d, i) => (
                                         <div key={i} className={style.detailRow}>
                                             <input type="text" placeholder="Ej: Consulta" value={d.detail} onChange={(e) => updateDetail(i, "detail", e.target.value)} />
                                             <input type="number" value={d.amount} onChange={(e) => updateDetail(i, "amount", Number(e.target.value))} />
                                             <input type="number" value={d.unitPrice} onChange={(e) => updateDetail(i, "unitPrice", Number(e.target.value))} />
+                                            <input type="date" value={d.dueDate || ""} onChange={(e) => updateDetail(i, "dueDate", e.target.value)} title="Fecha límite de pago" />
                                             <span className={style.rowTotal}>${(d.amount * d.unitPrice).toFixed(2)}</span>
                                             {comprobanteData.details.length > 1 && (<button onClick={() => removeDetail(i)}>✕</button>)}
                                         </div>
@@ -305,11 +350,22 @@ export default function CuentaCorriente() {
             )}
 
             {showReciboModal && (
-                <div className={style.overlay} onClick={() => setShowReciboModal(false)}>
+                <div className={style.overlay} onClick={() => {
+                    setShowReciboModal(false);
+                    setReciboData({...reciboData, voucherId: undefined, voucherDetailId: undefined, paymentContextText: ""});
+                }}>
                     <div className={style.modal} onClick={(e) => e.stopPropagation()}>
                         <button className={style.close} onClick={() => setShowReciboModal(false)}>✕</button>
                         <h3>Nuevo recibo</h3>
+                        
                         <div className={style.form}>
+                            {reciboData.paymentContextText && (
+                                <div className={style.contextTag}>
+                                    <span>Asignando pago a: {reciboData.paymentContextText}</span>
+                                    <button type="button" className={style.clearContextBtn} onClick={() => setReciboData({...reciboData, voucherId: undefined, voucherDetailId: undefined, paymentContextText: ""})}>✕ (Desvincular)</button>
+                                </div>
+                            )}
+
                             <ProvInput 
                                 placeholder="Profesional que recibe" 
                                 as="select" 
@@ -318,11 +374,11 @@ export default function CuentaCorriente() {
                                 onChange={(e) => setReciboData({...reciboData, doctorId: e.target.value})} 
                                 options={users.map(u => ({ value: String(u.id), label: `${u.name} ${u.lastname}` }))} 
                             />
-                            <ProvInput placeholder="Fecha" type="date" className="inputBoxDefault" value={reciboData.fecha} onChange={(e) => setReciboData({...reciboData, fecha: e.target.value})} />
-                            <ProvInput placeholder="Cantidad" type="number" className="inputBoxDefault" value={reciboData.cantidad} onChange={(e) => setReciboData({...reciboData, cantidad: e.target.value})} />
+                            <ProvInput placeholder="Fecha del pago" type="date" className="inputBoxDefault" value={reciboData.fecha} onChange={(e) => setReciboData({...reciboData, fecha: e.target.value})} />
+                            <ProvInput placeholder="Cantidad abonada" type="number" className="inputBoxDefault" value={reciboData.cantidad} onChange={(e) => setReciboData({...reciboData, cantidad: e.target.value})} />
                             <ProvInput placeholder="Observaciones" type="text" className="inputBoxBig" value={reciboData.observaciones} onChange={(e) => setReciboData({...reciboData, observaciones: e.target.value})} />
                             
-                            <ProvInput placeholder="Moneda" as="select" className="inputBoxDefault" value={reciboData.moneda} onChange={(e) => setReciboData({...reciboData, moneda: e.target.value})} options={[{value: "PESOS", label: "Pesos (ARS)"}, {value: "DOLARES", label: "Dólares (USD)"}, {value: "REALES", label: "Reales (R)"}, {value: "EUROS", label: "Euros (EUR)"}]} />
+                            <ProvInput placeholder="Moneda de pago" as="select" className="inputBoxDefault" value={reciboData.moneda} onChange={(e) => setReciboData({...reciboData, moneda: e.target.value})} options={[{value: "PESOS", label: "Pesos (ARS)"}, {value: "DOLARES", label: "Dólares (USD)"}, {value: "REALES", label: "Reales (R)"}, {value: "EUROS", label: "Euros (EUR)"}]} />
                             <ProvInput placeholder="Tipo de cambio al día" type="number" className="inputBoxDefault" value={reciboData.tipoCambio} onChange={(e) => setReciboData({...reciboData, tipoCambio: e.target.value})} />
                             <ProvInput placeholder="Método de pago" as="select" className="inputBoxDefault" value={reciboData.metodoPago} onChange={(e) => setReciboData({...reciboData, metodoPago: e.target.value})} options={[{value: "EFECTIVO", label: "Efectivo"}, {value: "TRANSFERENCIA", label: "Transferencia"}, {value: "TARJETA_CREDITO", label: "Tarjeta de crédito"}, {value: "TARJETA_DEBITO", label: "Tarjeta de débito"}, {value: "MERCADO_PAGO", label: "Mercado Pago"}, {value: "DOLARES", label: "Dólares"}, {value: "CHEQUE", label: "Cheque"}]} />
                             
@@ -361,6 +417,18 @@ export default function CuentaCorriente() {
                                     <div className={style.row}><span>Monto convertido</span><p>${selectedRecibo.convertedAmount}</p></div>
                                 )}
                             </div>
+
+                            {(selectedRecibo.voucherId || selectedRecibo.voucherDetailId) && (
+                                <div className={style.reciboSection}>
+                                    <h5>Imputación de Pago</h5>
+                                    {selectedRecibo.voucherId && (
+                                        <div className={style.row}><span>Comprobante asoc.</span><p>#{selectedRecibo.voucherId}</p></div>
+                                    )}
+                                    {selectedRecibo.voucherDetailId && (
+                                        <div className={style.row}><span>Detalle asoc.</span><p>#{selectedRecibo.voucherDetailId}</p></div>
+                                    )}
+                                </div>
+                            )}
 
                             <div className={style.reciboSection}>
                                 <h5>Observaciones</h5>
@@ -409,22 +477,34 @@ export default function CuentaCorriente() {
                             <div className={style.reciboSection}>
                                 <h5>Detalles de cargos</h5>
                                 <div className={style.detailsTable}>
-                                    <div className={style.detailsColumns}>
-                                        <span>Detalle</span><span>Cant.</span><span>Precio U.</span><span>Subtotal</span>
+                                    <div className={style.detailsColumnsView}>
+                                        <span>Detalle</span><span>Cant.</span><span>Precio U.</span><span>Vencimiento</span><span>Subtotal</span><span>Pagar</span>
                                     </div>
                                     {selectedVoucher.details.map((d, i) => (
-                                        <div key={i} className={style.detailRow} style={{ marginBottom: "5px" }}>
+                                        <div key={i} className={style.detailRowView} style={{ marginBottom: "5px" }}>
                                             <span>{d.detail}</span>
                                             <span>{d.amount}</span>
                                             <span>${d.unitPrice}</span>
+                                            <span>{d.dueDate ? new Date(d.dueDate).toLocaleDateString('es-AR') : '-'}</span>
                                             <span style={{ fontWeight: "bold" }}>
                                                 ${(d.amount * d.unitPrice).toFixed(2)}
                                             </span>
+                                            <button 
+                                                className={style.payBtn} 
+                                                onClick={() => handlePayVoucherDetail(selectedVoucher, d)} 
+                                                title="Pagar este detalle"
+                                            >
+                                                <img src="/icons/bigPlus.png" alt="Pagar" style={{width: '12px', filter: 'brightness(0) invert(1)'}}/>
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
-                                <div className={style.totalBox} style={{ marginTop: "15px", textAlign: "right" }}>
-                                    Total: <strong>{selectedVoucher.currency} {selectedVoucher.totalAmount}</strong>
+                                <div className={style.totalBox} style={{ marginTop: "15px", display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '15px' }}>
+                                    <span style={{ fontSize: '16px' }}>Total: <strong>{selectedVoucher.currency} {selectedVoucher.totalAmount}</strong></span>
+                                    <button className={style.payBtnText} onClick={() => handlePayVoucher(selectedVoucher)}>
+                                        <img src="/icons/bigPlus.png" alt="Pagar" style={{width: '12px', filter: 'brightness(0) invert(1)'}}/>
+                                        Pagar Totalidad
+                                    </button>
                                 </div>
                             </div>
                         </div>
