@@ -3,6 +3,7 @@ export interface StatItemDTO {
     amount?: number; 
     count?: number; 
     percentage: number;
+    referenceIds?: number[]; 
 }
 
 export interface PatientStatsDTO {
@@ -11,18 +12,21 @@ export interface PatientStatsDTO {
     totalNonDebtors: number;
     patientsByOrigin: StatItemDTO[];
     patientsByCity: StatItemDTO[];
+    patientsByReason: StatItemDTO[];
+    patientsByAppointmentStatus: StatItemDTO[]; 
 }
 
 export interface FinancialStatsDTO {
-    currentMonthIncomePesos: number;
-    currentMonthIncomeDollars: number;
-    currentMonthExpensesPesos: number;
-    currentMonthExpensesDollars: number;
-    
-    previousMonthIncomePesos: number;
-    previousMonthIncomeDollars: number;
-    
+    currentPeriodIncomePesos: number;
+    currentPeriodIncomeDollars: number;
+    currentPeriodExpensesPesos: number;
+    currentPeriodExpensesDollars: number;
+    netProfitPesos: number; 
+    netProfitDollars: number; 
+    previousMonthIncomePesos?: number;
+    previousMonthIncomeDollars?: number;
     incomeBreakdown: StatItemDTO[];
+    expensesBreakdown: StatItemDTO[]; 
 }
 
 export interface StatisticsResponseDTO {

@@ -1,6 +1,7 @@
-import type { PatientCreateDTO, PatientDebtorDTO, PatientResponseDTO, PatientSearchParams, PatientUpdateDTO } from '../types/patients.types';
+import type { PatientCreateDTO, PatientResponseDTO, PatientSearchParams, PatientUpdateDTO } from '../types/patients.types';
 import { api } from './api';
 import { API_ENDPOINTS } from './api.endpoints';
+import type { PatientDebtorDTO } from '../types/currentAccount.types';
 
 export const patientService = {
     
