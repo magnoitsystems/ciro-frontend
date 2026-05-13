@@ -56,13 +56,14 @@ export default function Estadisticas() {
   };
 
   const handleChartClick = (data: any, titlePrefix: string) => {
-      const payloadDetails = data?.payload?.details || data?.details;
-      if (payloadDetails && payloadDetails.length > 0) {
-          setDrillDown({
-              title: `${titlePrefix}: ${data.name}`,
-              items: payloadDetails
-          });
-      }
+      const itemData = data?.payload || data;
+      const payloadDetails = itemData?.details || [];
+      const itemName = itemData?.name || "Detalle";
+
+      setDrillDown({
+          title: `${titlePrefix}: ${itemName}`,
+          items: payloadDetails
+      });
   };
 
   if (loading && !stats) {
