@@ -15,6 +15,9 @@ import type { CurrentAccountResponseDTO, ReceiptCreateDTO, VoucherCreateDTO, Rec
 import type { CurrencyType, PaymentMethod } from "../../types/enums.types"; 
 import type { UserResponseDTO } from "../../types/users.types.ts";
 
+// Toast simple
+type ToastState = { msg: string; type: 'error' | 'info' } | null;
+
 export default function CuentaCorriente() {
     const { patientId } = useParams<{ patientId: string }>();
     
@@ -22,6 +25,12 @@ export default function CuentaCorriente() {
     const [users, setUsers] = useState<UserResponseDTO[]>([]);
     const [loading, setLoading] = useState(true);
     const [movementFilter, setMovementFilter] = useState<'ALL' | 'RECEIPT' | 'VOUCHER'>('ALL');
+    const [toast, setToast] = useState<ToastState>(null);
+
+    const showToast = (msg: string, type: 'error' | 'info' = 'error') => {
+        setToast({ msg, type });
+        setTimeout(() => setToast(null), 3500);
+    };
 
     const [comprobanteData, setComprobanteData] = useState<{
         fecha: string;
@@ -94,7 +103,7 @@ export default function CuentaCorriente() {
 
     const handleCreateVoucher = async () => {
         if (!comprobanteData.doctorId) {
-            alert("Por favor seleccioná el profesional al que se le adeuda.");
+            showToast("Por favor seleccioná el profesional al que se le adeuda.", 'info');
             return;
         }
 
@@ -118,13 +127,13 @@ export default function CuentaCorriente() {
             
         } catch (error) {
             console.error("Error al crear comprobante", error);
-            alert("Ocurrió un error al guardar el comprobante.");
+            showToast("Ocurrió un error al guardar el comprobante.");
         }
     };
 
     const handleCreateReceipt = async () => {
         if (!reciboData.doctorId) {
-            alert("Por favor seleccioná el profesional que recibe el pago.");
+            showToast("Por favor seleccioná el profesional que recibe el pago.", 'info');
             return;
         }
 
@@ -150,7 +159,7 @@ export default function CuentaCorriente() {
 
         } catch (error) {
             console.error("Error al crear recibo", error);
-            alert("Ocurrió un error al guardar el recibo.");
+            showToast("Ocurrió un error al guardar el recibo.");
         }
     };
 
@@ -176,7 +185,7 @@ export default function CuentaCorriente() {
             loadData(); 
         } catch (error) {
             console.error(error);
-            alert("Error al intentar cancelar la deuda.");
+            showToast("Error al intentar cancelar la deuda.");
         }
     };
 
@@ -187,7 +196,7 @@ export default function CuentaCorriente() {
             setViewReciboModal(true);
         } catch (error) {
             console.error(error);
-            alert("Error al obtener el recibo.");
+            showToast("Error al obtener el recibo.");
         }
     };
 
@@ -197,7 +206,7 @@ export default function CuentaCorriente() {
             await receiptService.downloadReceiptPdf(id);
         } catch (error) {
             console.error(error);
-            alert("Error al intentar descargar el PDF del recibo.");
+            showToast("Error al intentar descargar el PDF del recibo.");
         }
     };
 
@@ -208,7 +217,7 @@ export default function CuentaCorriente() {
             setViewVoucherModal(true);
         } catch (error) {
             console.error(error);
-            alert("Error al obtener el comprobante.");
+            showToast("Error al obtener el comprobante.");
         }
     };
 
@@ -260,6 +269,26 @@ export default function CuentaCorriente() {
                 <p style={{ cursor: 'pointer', color: 'var(--neutral-4)'}}>← Volver a la sección pacientes</p>
             </NavLink>
 
+            {toast && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: '28px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 9999,
+                    background: toast.type === 'error' ? '#5c1a1a' : '#1a2a3a',
+                    border: `1px solid ${toast.type === 'error' ? '#c0392b' : 'rgba(255,255,255,0.15)'}`,
+                    borderRadius: '12px',
+                    padding: '12px 22px',
+                    color: toast.type === 'error' ? '#fcc' : '#eee',
+                    fontSize: '14px',
+                    boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
+                    whiteSpace: 'nowrap',
+                }}>
+                    {toast.type === 'error' ? '⚠ ' : 'ℹ '}{toast.msg}
+                </div>
+            )}
+
             <div className={style.content}>
                 <div className={style.allInformation}>
 
@@ -290,9 +319,8 @@ export default function CuentaCorriente() {
                                             } else if (movement.type === 'VOUCHER' && movement.voucherId) {
                                                 handleViewVoucher(movement.voucherId);
                                             }
-                                        }
-                                    }
-                                    onRefresh={loadData}
+                                        }}
+                                        onRefresh={loadData}
                                     />
                                 ))
                         ) : (
