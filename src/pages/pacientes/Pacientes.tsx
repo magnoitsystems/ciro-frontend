@@ -18,6 +18,7 @@ export default function Pacientes() {
     
     const [pacientesState, setPacientesState] = useState<PatientResponseDTO[]>([]);
     const [loading, setLoading] = useState(true);
+    const [editErrors, setEditErrors] = useState<Record<string, boolean>>({});
 
     const fetchPacientes = async () => {
         try {
@@ -103,9 +104,40 @@ export default function Pacientes() {
        { value: 'OTRO', label: 'Otro'}
     ];
 
+    const handleNextEditStep = () => {
+        if (!editData) return;
+        const newErrors: Record<string, boolean> = {};
+        
+        if (!(editData.fullName || '').trim()) newErrors.fullName = true;
+        if (!(editData.city || '').trim()) newErrors.city = true;
+        if (!(editData.phone || '').trim()) newErrors.phone = true;
+
+        setEditErrors(prev => ({ ...prev, ...newErrors }));
+
+        if (Object.keys(newErrors).length > 0) {
+            return;
+        }
+        setEditNext(true);
+    };
+
     const handleUpdatePatient = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!editData) return;
+
+        const newErrors: Record<string, boolean> = {};
+        
+        if (!(editData.fullName || '').trim()) newErrors.fullName = true;
+        if (!(editData.city || '').trim()) newErrors.city = true;
+        if (!(editData.phone || '').trim()) newErrors.phone = true;
+        if (!editData.from) newErrors.from = true;
+        if (!editData.appointmentStatus) newErrors.appointmentStatus = true;
+        if (!editData.reasonForConsultation) newErrors.reasonForConsultation = true;
+
+        setEditErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) {
+            return;
+        }
 
         const updatePayload: PatientUpdateDTO = {
             fullName: editData.fullName,
@@ -127,9 +159,9 @@ export default function Pacientes() {
             setEditModal(false);
             setEditData(null);
             setEditNext(false);
+            setEditErrors({});
         } catch (error) {
             console.error("Error editando el paciente:", error);
-            alert("Hubo un error al guardar los cambios del paciente.");
         }
     };
 
@@ -180,116 +212,139 @@ export default function Pacientes() {
             )}
 
             {editModal && editData && (
-                <div className={style.overlay} onClick={() => setEditModal(false)}>
-                    <div className={style.modal} onClick={(e) => e.stopPropagation()}>
-                        
-                        <div className={style.modalHeader}>
-                            <h3>Editar Paciente</h3>
-                            <button type="button" className={style.close} onClick={() => setEditModal(false)}>
-                                ✕
-                            </button>
-                        </div>
-
-                        <form onSubmit={handleUpdatePatient} className={style.form}>
-                            {!editNext ? (
-                                <>
-                                    <ProvInput 
-                                        placeholder="Nombre y apellido *" 
-                                        value={editData.fullName} 
-                                        onChange={(e) => setEditData(prev => ({ ...prev!, fullName: e.target.value }))} 
-                                        className="inputBoxDefault" 
-                                    />
-                                    
-                                    <ProvInput 
-                                        placeholder="Fecha de nacimiento" 
-                                        type="date"
-                                        value={editData.birthDate} 
-                                        onChange={(e) => setEditData(prev => ({ ...prev!, birthDate: e.target.value }))} 
-                                        className="inputBoxDefault" 
-                                    />
-                                    
-                                    <ProvInput 
-                                        placeholder="Dirección (Ej: Calle 123)" 
-                                        value={editData.address} 
-                                        onChange={(e) => setEditData(prev => ({ ...prev!, address: e.target.value }))} 
-                                        className="inputBoxDefault" 
-                                    />
-                                    
-                                    <ProvInput 
-                                        placeholder="Ciudad (Ej: Mar del Plata)" 
-                                        value={editData.city} 
-                                        onChange={(e) => setEditData(prev => ({ ...prev!, city: e.target.value }))} 
-                                        className="inputBoxDefault" 
-                                    />
-                                    
-                                    <ProvInput 
-                                        placeholder="Teléfono (Ej: 223 123 4567)" 
-                                        value={editData.phone} 
-                                        onChange={(e) => setEditData(prev => ({ ...prev!, phone: e.target.value }))} 
-                                        className="inputBoxDefault" 
-                                    />
-
-                                    <div className={style.submitButton}>
-                                        <button type="button" className={style.cancelButton} onClick={() => setEditModal(false)}>Cancelar</button>
-                                        <button type="button" className={style.nextButton} onClick={() => setEditNext(true)}>Siguiente</button>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <ProvInput 
-                                        placeholder="Obra social" 
-                                        as="select"
-                                        value={editData.obraSocial} 
-                                        onChange={(e) => setEditData(prev => ({ ...prev!, obraSocial: e.target.value as HealthInsurance }))} 
-                                        className="inputBoxDefault"
-                                        options={healthInsurancesOptions}
-                                    />
-                                    
-                                    <ProvInput 
-                                        placeholder="Nos conoció por" 
-                                        as="select"
-                                        value={editData.from} 
-                                        onChange={(e) => setEditData(prev => ({ ...prev!, from: e.target.value as PatientFrom }))} 
-                                        className="inputBoxDefault"
-                                        options={fromOptions}
-                                    />
-
-                                    {/* ACÁ ESTABAN LOS ERRORES */}
-                                    <ProvInput 
-                                        placeholder="Turno" 
-                                        as="select"
-                                        value={editData.appointmentStatus || "TODAVIA_NO"} 
-                                        onChange={(e) => setEditData(prev => ({ ...prev!, appointmentStatus: e.target.value as AppointmentStatus }))} 
-                                        className="inputBoxDefault"
-                                        options={turnosOptions}
-                                    />
-
-                                    <ProvInput 
-                                        placeholder="Motivo de consulta" 
-                                        as="select"
-                                        value={editData.reasonForConsultation || "OTRO"} 
-                                        onChange={(e) => setEditData(prev => ({ ...prev!, reasonForConsultation: e.target.value as ReasonForConsultation }))} 
-                                        className="inputBoxDefault"
-                                        options={motivosOptions}
-                                    />
-                                    
-                                    <ProvInput 
-                                        placeholder="Observaciones (Alergias, notas...)" 
-                                        value={editData.observations} 
-                                        onChange={(e) => setEditData(prev => ({ ...prev!, observations: e.target.value }))} 
-                                        className="inputBoxBig" 
-                                    />
-
-                                    <div className={style.submitButton}>
-                                        <button type="button" className={style.lastButton} onClick={() => setEditNext(false)}>Anterior</button>
-                                        <button type="submit" className={style.createButton}>Guardar cambios</button>
-                                    </div>
-                                </>
-                            )}
-                        </form>
-                    </div>
+        <div className={style.overlay} onClick={() => setEditModal(false)}>
+            <div className={style.modal} onClick={(e) => e.stopPropagation()}>
+                
+                <div className={style.modalHeader}>
+                    <h3>Editar Paciente</h3>
+                    <button type="button" className={style.close} onClick={() => setEditModal(false)}>
+                        ✕
+                    </button>
                 </div>
-            )}
+
+                <form onSubmit={handleUpdatePatient} className={style.form}>
+                    {!editNext ? (
+                        <>
+                            <ProvInput 
+                                placeholder="Nombre y apellido *" 
+                                value={editData.fullName} 
+                                onChange={(e) => {
+                                    setEditData(prev => ({ ...prev!, fullName: e.target.value }));
+                                    if (editErrors.fullName) setEditErrors(prev => ({ ...prev, fullName: false }));
+                                }} 
+                                className="inputBoxDefault" 
+                            />
+                            {editErrors.fullName && <span style={{ color: '#ef4444', fontSize: '12px', marginTop: '-10px', marginBottom: '10px', display: 'block' }}>Por favor, complete este campo.</span>}
+                            
+                            <ProvInput 
+                                placeholder="Fecha de nacimiento" 
+                                type="date"
+                                value={editData.birthDate} 
+                                onChange={(e) => setEditData(prev => ({ ...prev!, birthDate: e.target.value }))} 
+                                className="inputBoxDefault" 
+                            />
+                            
+                            <ProvInput 
+                                placeholder="Dirección (Ej: Calle 123)" 
+                                value={editData.address} 
+                                onChange={(e) => setEditData(prev => ({ ...prev!, address: e.target.value }))} 
+                                className="inputBoxDefault" 
+                            />
+                            
+                            <ProvInput 
+                                placeholder="Ciudad (Ej: Mar del Plata) *" 
+                                value={editData.city} 
+                                onChange={(e) => {
+                                    setEditData(prev => ({ ...prev!, city: e.target.value }));
+                                    if (editErrors.city) setEditErrors(prev => ({ ...prev, city: false }));
+                                }} 
+                                className="inputBoxDefault" 
+                            />
+                            {editErrors.city && <span style={{ color: '#ef4444', fontSize: '12px', marginTop: '-10px', marginBottom: '10px', display: 'block' }}>Por favor, complete este campo.</span>}
+                            
+                            <ProvInput 
+                                placeholder="Teléfono (Ej: 223 123 4567) *" 
+                                value={editData.phone} 
+                                onChange={(e) => {
+                                    setEditData(prev => ({ ...prev!, phone: e.target.value }));
+                                    if (editErrors.phone) setEditErrors(prev => ({ ...prev, phone: false }));
+                                }} 
+                                className="inputBoxDefault" 
+                            />
+                            {editErrors.phone && <span style={{ color: '#ef4444', fontSize: '12px', marginTop: '-10px', marginBottom: '10px', display: 'block' }}>Por favor, complete este campo.</span>}
+
+                            <div className={style.submitButton}>
+                                <button type="button" className={style.cancelButton} onClick={() => setEditModal(false)}>Cancelar</button>
+                                <button type="button" className={style.nextButton} onClick={handleNextEditStep}>Siguiente</button>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <ProvInput 
+                                placeholder="Obra social" 
+                                as="select"
+                                value={editData.obraSocial} 
+                                onChange={(e) => setEditData(prev => ({ ...prev!, obraSocial: e.target.value as HealthInsurance }))} 
+                                className="inputBoxDefault"
+                                options={healthInsurancesOptions}
+                            />
+                            
+                            <ProvInput 
+                                placeholder="Nos conoció por *" 
+                                as="select"
+                                value={editData.from} 
+                                onChange={(e) => {
+                                    setEditData(prev => ({ ...prev!, from: e.target.value as PatientFrom }));
+                                    if (editErrors.from) setEditErrors(prev => ({ ...prev, from: false }));
+                                }} 
+                                className="inputBoxDefault"
+                                options={fromOptions}
+                            />
+                            {editErrors.from && <span style={{ color: '#ef4444', fontSize: '12px', marginTop: '-10px', marginBottom: '10px', display: 'block' }}>Por favor, complete este campo.</span>}
+
+                            <ProvInput 
+                                placeholder="Turno *" 
+                                as="select"
+                                value={editData.appointmentStatus || "TODAVIA_NO"} 
+                                onChange={(e) => {
+                                    setEditData(prev => ({ ...prev!, appointmentStatus: e.target.value as AppointmentStatus }));
+                                    if (editErrors.appointmentStatus) setEditErrors(prev => ({ ...prev, appointmentStatus: false }));
+                                }} 
+                                className="inputBoxDefault"
+                                options={turnosOptions}
+                            />
+                            {editErrors.appointmentStatus && <span style={{ color: '#ef4444', fontSize: '12px', marginTop: '-10px', marginBottom: '10px', display: 'block' }}>Por favor, complete este campo.</span>}
+
+                            <ProvInput 
+                                placeholder="Motivo de consulta *" 
+                                as="select"
+                                value={editData.reasonForConsultation || "OTRO"} 
+                                onChange={(e) => {
+                                    setEditData(prev => ({ ...prev!, reasonForConsultation: e.target.value as ReasonForConsultation }));
+                                    if (editErrors.reasonForConsultation) setEditErrors(prev => ({ ...prev, reasonForConsultation: false }));
+                                }} 
+                                className="inputBoxDefault"
+                                options={motivosOptions}
+                            />
+                            {editErrors.reasonForConsultation && <span style={{ color: '#ef4444', fontSize: '12px', marginTop: '-10px', marginBottom: '10px', display: 'block' }}>Por favor, complete este campo.</span>}
+                            
+                            <ProvInput 
+                                placeholder="Observaciones (Alergias, notas...)" 
+                                value={editData.observations} 
+                                onChange={(e) => setEditData(prev => ({ ...prev!, observations: e.target.value }))} 
+                                className="inputBoxBig" 
+                            />
+
+                            <div className={style.submitButton}>
+                                <button type="button" className={style.lastButton} onClick={() => setEditNext(false)}>Anterior</button>
+                                <button type="submit" className={style.createButton}>Guardar cambios</button>
+                            </div>
+                        </>
+                    )}
+                </form>
+            </div>
+        </div>
+    )}
 
             {viewModal && selectedPaciente && (
                 <div className={style.overlay} onClick={() => setViewModal(false)}>
