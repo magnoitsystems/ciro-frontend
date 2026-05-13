@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import WelcomeText from "../../components/WelcomeText/welcomeText.tsx";
 import style from './CuentaCorriente.module.css';
 import SaldosResume from "../../components/CtaCorriente/saldosResume.tsx";
@@ -61,6 +62,8 @@ export default function CuentaCorriente() {
 
     const [showComprobanteModal, setShowComprobanteModal] = useState(false);
     const [showReciboModal, setShowReciboModal] = useState(false);
+    const [showVoucherDetail, setShowVoucherDetail] = useState(false);
+    const [showReceiptDetail, setShowReceiptDetail] = useState(false);
     
     const [viewReciboModal, setViewReciboModal] = useState(false);
     const [selectedRecibo, setSelectedRecibo] = useState<ReceiptResponseDTO | null>(null);
@@ -151,14 +154,26 @@ export default function CuentaCorriente() {
         }
     };
 
-    const handleCancelDebt = async () => {
-        const confirmar = window.confirm("¿Seguro deseas cancelar la deuda por abandono de tratamiento?");
-        if (!confirmar) return;
-
+    const fetchAccountData = async () => {
+        if (!patientId) return;
         try {
-            await currentAccountService.cancelPatientDebt(Number(patientId));
-            alert("Deuda cancelada exitosamente.");
-            loadData();
+            setLoading(true);
+            const data = await currentAccountService.getPatientCurrentAccount(Number(patientId));
+            setAccountData(data);
+        } catch (error) {
+            console.error("Error al cargar cuenta corriente:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCancelVoucherDebt = async (voucherId: number) => {
+        if (!window.confirm("¿Estás seguro de cancelar administrativamente la deuda de este comprobante?")) return;
+        
+        try {
+            await currentAccountService.cancelVoucherDebt(voucherId);
+            setViewVoucherModal(false); 
+            loadData(); 
         } catch (error) {
             console.error(error);
             alert("Error al intentar cancelar la deuda.");
@@ -275,17 +290,15 @@ export default function CuentaCorriente() {
                                             } else if (movement.type === 'VOUCHER' && movement.voucherId) {
                                                 handleViewVoucher(movement.voucherId);
                                             }
-                                        }}
+                                        }
+                                    }
+                                    onRefresh={loadData}
                                     />
                                 ))
                         ) : (
                             <p style={{padding: '20px', color: 'var(--neutral-4)'}}>No hay movimientos registrados.</p>
                         )}
 
-
-                        <div style={{display: 'flex', justifyContent: 'center', marginBottom: '15px', width: '100%'}}>
-                            <DebtButton onClick={handleCancelDebt}/>
-                        </div>
                     </div>
 
 
@@ -501,6 +514,16 @@ export default function CuentaCorriente() {
                                 </div>
                                 <div className={style.totalBox} style={{ marginTop: "15px", display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '15px' }}>
                                     <span style={{ fontSize: '16px' }}>Total: <strong>{selectedVoucher.currency} {selectedVoucher.totalAmount}</strong></span>
+                                    
+                                    <button 
+                                        className={style.payBtnText} 
+                                        style={{ backgroundColor: '#6c757d' }} 
+                                        onClick={() => handleCancelVoucherDebt(selectedVoucher.id)}
+                                    >
+                                        <img src="/icons/trash.png" alt="Cancelar" style={{width: '12px', filter: 'brightness(0) invert(1)'}}/>
+                                        Cancelar Deuda
+                                    </button>
+
                                     <button className={style.payBtnText} onClick={() => handlePayVoucher(selectedVoucher)}>
                                         <img src="/icons/bigPlus.png" alt="Pagar" style={{width: '12px', filter: 'brightness(0) invert(1)'}}/>
                                         Pagar Totalidad

@@ -1,12 +1,15 @@
 import style from './CtaCorriente.module.css';
 import type { CurrentAccountMovementDTO } from '../../types/currentAccount.types';
+import { receiptService } from '../../services/receipt.service';
+import { currentAccountService } from '../../services/currentAccount.service';
 
 type Props = {
     movement: CurrentAccountMovementDTO;
     onClick?: () => void;
+    onRefresh: () => void;
 }
 
-export default function Register({ movement, onClick }: Props) {
+export default function Register({ movement, onClick, onRefresh }: Props) {
     const displayType = movement.type === 'RECEIPT' ? 'Recibo' : 'Comprobante';
 
     const formatCurrency = (value: number | null | undefined) => {
@@ -23,6 +26,23 @@ export default function Register({ movement, onClick }: Props) {
 
     const registerClassName = `${style.register} ${movement.canceled ? style.canceled : ''}`;
 
+    const handleDelete = async (e: React.MouseEvent) => {
+        e.stopPropagation(); 
+        if (!window.confirm("¿Estás seguro de eliminar este registro?")) return;
+
+        try {
+            if (movement.type === 'RECEIPT') {
+                await receiptService.deleteReceipt(movement.id);
+            } else {
+                await currentAccountService.deleteVoucher(movement.id);
+            }
+            onRefresh(); 
+        } catch (error) {
+            console.error(error);
+            alert("No se pudo eliminar el registro.");
+        }
+    };
+
     return (
         <main onClick={onClick} className={registerClassName}>
             <div className={style[displayType] || style.defaultTag}>
@@ -31,9 +51,18 @@ export default function Register({ movement, onClick }: Props) {
             
             <h6>{dateStr}</h6>
             <h6 style={movement.canceled ? { textDecoration: 'line-through', opacity: 0.6 } : {}}>${amtPesos}</h6>
-            <h6 style={movement.canceled ? { textDecoration: 'line-through', opacity: 0.6 } : {}}>U$D {amtDollars}</h6>
-            <h6>${balPesos}</h6>
-            <h6>USD {balDollars}</h6>
+            <h6 style={movement.canceled ? { textDecoration: 'line-through', opacity: 0.6 } : {}}>${amtDollars}</h6>
+            <h6 className={style.balanceMobile}>${balPesos}</h6>
+            <h6 className={style.balanceMobile}>${balDollars}</h6>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <button 
+                    onClick={handleDelete} 
+                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                >
+                    <img src="/icons/trash.png" alt="Borrar" style={{ width: '18px' }} />
+                </button>
+            </div>
         </main>
     )
 }

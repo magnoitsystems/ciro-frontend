@@ -83,4 +83,13 @@ export const receiptService = {
         }
     },
 
+    deleteReceipt: async (id: number): Promise<void> => {
+        try {
+            await api.delete(API_ENDPOINTS.RECEIPTS.BY_ID(id));
+        } catch (error) {
+            console.error(`Error al borrar el recibo ${id}:`, error);
+            throw error;
+        }
+    },
+
 };

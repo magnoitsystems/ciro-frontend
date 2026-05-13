@@ -25,7 +25,7 @@ export const API_ENDPOINTS = {
         BASE: '/api/v1/current-accounts',
         BY_PATIENT: (patientId: number) => `/api/v1/current-accounts/patient/${patientId}`,
         PDF_BY_PATIENT: (patientId: number) => `/api/v1/current-accounts/patient/${patientId}/pdf`,
-        CANCEL_DEBT: (patientId: number) => `/api/v1/current-accounts/patient/${patientId}/cancel-debt`,
+        CANCEL_VOUCHER_DEBT: (voucherId: number) => `/api/v1/current-account/voucher/${voucherId}/cancel-debt`,
     },
     LABELS: {
         BASE: '/api/v1/labels',

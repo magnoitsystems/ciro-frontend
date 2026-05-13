@@ -18,10 +18,17 @@ class CurrentAccountService {
     }
 
     /**
-     * Cancela la deuda actual de un paciente
+     * Cancela la deuda de un comprobante específico
      */
-    async cancelPatientDebt(patientId: number): Promise<void> {
-        await api.put(API_ENDPOINTS.CURRENT_ACCOUNTS.CANCEL_DEBT(patientId));
+    async cancelVoucherDebt(voucherId: number): Promise<void> {
+        await api.put(API_ENDPOINTS.CURRENT_ACCOUNTS.CANCEL_VOUCHER_DEBT(voucherId));
+    }
+
+    /**
+     * Borra un comprobante (y sus recibos asociados en cascada por backend)
+     */
+    async deleteVoucher(id: number): Promise<void> {
+        await api.delete(API_ENDPOINTS.VOUCHERS.BY_ID(id));
     }
 
     /**
