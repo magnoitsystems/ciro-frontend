@@ -50,7 +50,9 @@ export default function Caja() {
 
     const handleDownloadReport = async (period: ReportPeriod) => {
         try {
-            const blob = await cashMovementService.downloadCashReportPdf(undefined, period);
+            const doctorId = isAdmin ? undefined : currentUserId;
+            
+            const blob = await cashMovementService.downloadCashReportPdf(doctorId, period);
             const url = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
             const link = document.createElement('a');
             link.href = url;
@@ -61,7 +63,7 @@ export default function Caja() {
             window.URL.revokeObjectURL(url);
         } catch (error) {
             console.error("Error al descargar el reporte:", error);
-            alert("No se pudo generar el reporte. Verificá si tenés permisos de ADMIN.");
+            alert("No se pudo generar el reporte.");
         }
     };
 
@@ -104,17 +106,15 @@ export default function Caja() {
                 </div>
             </div>
 
-            {isAdmin && (
-                <div className={style.reportContainer}>
-                    <div className={style.reportInfo}>
-                        <h4 style={{ margin: '0 0 10px 0', color: 'white' }}>Generar reporte</h4>
-                        <p style={{ color: 'var(--neutral-4)', fontSize: '14px' }}>
-                            Seleccioná el período para obtener un resumen en PDF de los movimientos de caja.
-                        </p>
-                    </div>
-                    <ReporteCaja onGenerate={handleDownloadReport} />
+            <div className={style.reportContainer}>
+                <div className={style.reportInfo}>
+                    <h4 style={{ margin: '0 0 10px 0', color: 'white' }}>Generar reporte</h4>
+                    <p style={{ color: 'var(--neutral-4)', fontSize: '14px' }}>
+                        Seleccioná el período para obtener un resumen en PDF de los movimientos de caja.
+                    </p>
                 </div>
-            )}
+                <ReporteCaja onGenerate={handleDownloadReport} />
+            </div>
 
             {showDetail && selectedDetail && (
                 <div className={style.overlay} onClick={() => setShowDetail(false)}>
