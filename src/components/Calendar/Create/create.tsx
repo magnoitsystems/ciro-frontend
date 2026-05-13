@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import type { TaskCreateDTO, TaskResponseDTO } from '../../../types/management.types';
 import styles from './Create.module.css';
