@@ -56,6 +56,7 @@ export default function Appointment({ type, onClose, component, turnos, task, ju
                             <h4>Fecha: <span>{new Date(turno.shiftDate).toLocaleDateString()}</span></h4>
                             <h4>Hora: <span>{new Date(turno.shiftDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></h4>
                             <h4>Estado: <span>{nombresEstados[turno.status] || turno.status}</span></h4>
+                            <h4>Doctor: <span>{turno.doctorFullName}</span></h4>
                         </div>
                     ))
                 ) : component === 'task' ? (

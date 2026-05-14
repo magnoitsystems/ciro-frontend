@@ -3,10 +3,12 @@ import type { ShiftResponseDTO } from '../../../types/clinical.types'
 import styles from './ShiftInfo.module.css'
 import type { UserResponseDTO } from '../../../types/users.types'
 import { userService } from '../../../services/user.service'
+
 type Prop = {
     shifts: ShiftResponseDTO[]
     onDeletelick: (id: number) => void
 }
+
 export default function ShiftInfo({ shifts, onDeletelick }: Prop) {
     const [user, setUser] = useState<UserResponseDTO | null>(null);
 
@@ -37,7 +39,7 @@ export default function ShiftInfo({ shifts, onDeletelick }: Prop) {
                 <tbody className={styles.tableBodyProperties}>
                     {shifts.map(shift => (
                         <tr key={shift.id} className={styles.tableTrPropertiesTbody}>
-                            <td><span style={{ backgroundColor: user?.color, height: '45px', display: 'flex', alignItems: 'center', padding: '10px', margin: '0px', width: '155px', borderTopLeftRadius: '5px', borderBottomLeftRadius: '5px', color: 'black', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{shift.doctorFullName}</span></td>
+                            <td><span style={{ backgroundColor: user?.color, height: '45px', display: 'flex', alignItems: 'center', padding: '10px', margin: '0px', width: '155px', borderTopLeftRadius: '20px', borderBottomLeftRadius: '20px', color: 'black', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{shift.doctorFullName}</span></td>
                             <td>{shift.shiftDate.slice(0, 10)}</td>
                             <td>{shift.patientFullName}</td>
                             <td><span className={styles.stateProperties}>{shift.noteDescription}</span></td>

@@ -118,6 +118,44 @@ body {
     font-size: 30px;
 }
 
+.dropdownProperties {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #1E1D26;
+  border: 1px solid #333;
+  border-radius: 5px;
+  width: 300px;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.dropdownItemProperties {
+  padding: 8px;
+  cursor: pointer;
+  color: white;
+}
+
+.dropdownItemProperties:hover {
+  background-color: #292831;
+}
+
+.searchBarProperties {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.searchBarProperties input {
+    width: 300px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #333;
+    background-color: #1E1D26;
+    color: white;
+}
+
 .commentIcon button {
     background-color: black;
 

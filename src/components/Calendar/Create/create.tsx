@@ -11,6 +11,8 @@ import type { UserResponseDTO } from '../../../types/users.types';
 import { userService } from '../../../services/user.service';
 import { noteService } from '../../../services/note.service';
 import { useNavigate } from 'react-router-dom';
+import { patientService } from '../../../services/patient.service';
+import type { PatientResponseDTO } from '../../../types/patients.types';
 
 type Props = {
     name: string;
@@ -34,7 +36,7 @@ export default function CreateAppointment({
     task,
     onlyComment,
     onTaskSaved,
-    onShiftSaved, 
+    onShiftSaved,
     dateCalendar
 }: Props) {
     const navigate = useNavigate();
@@ -52,10 +54,32 @@ export default function CreateAppointment({
 
     const [loading, setLoading] = useState(false);
 
+
+    const [patientSearch, setPatientSearch] = useState('');
+    const [patients, setPatients] = useState<PatientResponseDTO[]>([]);
+    const [filteredPatients, setFilteredPatients] = useState<PatientResponseDTO[]>([]);
+
+    useEffect(() => {
+        patientService.getAllPatients()
+            .then(fetchedPatients => setPatients(fetchedPatients))
+            .catch(error => console.error(error));
+    }, []);
+
+    const handlePatientSearch = (value: string) => {
+        setPatientSearch(value)
+        if (value.length > 0) {
+            setFilteredPatients(
+                patients.filter(p => p.fullName.toLowerCase().includes(value.toLowerCase()))
+            )
+        } else {
+            setFilteredPatients([])
+        }
+    }
+
     useEffect(() => {
         userService.getAllUsers()
-        .then(fetchedDoctors => setDoctors(fetchedDoctors.filter(user => user.role === 'ADMIN' || user.role === 'USER')))
-        .catch(error => console.error('Error fetching doctors:', error));
+            .then(fetchedDoctors => setDoctors(fetchedDoctors.filter(user => user.role === 'ADMIN' || user.role === 'USER')))
+            .catch(error => console.error('Error fetching doctors:', error));
     }, []);
 
     useEffect(() => {
@@ -71,8 +95,8 @@ export default function CreateAppointment({
 
     const handleSubmit = async (e: React.FormEvent) => {
         setLoading(true);
-        if (onlyComment) handleSubmitComment(e); 
-        
+        if (onlyComment) handleSubmitComment(e);
+
         else if (component === 'calendar') {
             handleSubmitShift(e);
             return;
@@ -108,7 +132,7 @@ export default function CreateAppointment({
             alert("Seleccioná una prioridad");
             return;
         }
-          const payload: TaskCreateDTO = {
+        const payload: TaskCreateDTO = {
             userId: task?.userId != null ? task.userId : 1,
             taskDate: date + "T00:00:00",
             title,
@@ -157,11 +181,11 @@ export default function CreateAppointment({
             } else {
                 response = await shiftService.update(turnos!.id, payload);
             }
-            
+
             if (onShiftSaved) {
-                onShiftSaved(response); 
+                onShiftSaved(response);
             }
-            
+
             onClose();
             navigate('/Calendario');
         } catch (error) {
@@ -194,13 +218,31 @@ export default function CreateAppointment({
 
                     {!onlyComment && component === 'calendar' && (
                         <div className={styles.labelAndInputProperties}>
-                            <label>DNI del paciente</label>
+                            <label>Paciente</label>
                             <input
                                 type='text'
-                                value={patientDni}
-                                onChange={(e) => setPatientDni(e.target.value)}
-                                placeholder='DNI'
+                                value={patientSearch}
+                                onChange={(e) => handlePatientSearch(e.target.value)}
+                                placeholder='Buscar por nombre'
                             />
+                            {filteredPatients.length > 0 && (
+                                <div className={styles.dropdownProperties}>
+                                    {filteredPatients.map(patient => (
+                                        <div
+                                            key={patient.id}
+                                            className={styles.dropdownItemProperties}
+                                            onClick={() => {
+                                                setPatientDni(patient.dni)
+                                                setPatientSearch(patient.fullName)
+                                                setFilteredPatients([])
+                                            }}
+                                        >
+                                            <span>{patient.fullName}</span>
+                                            <span>{patient.dni}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     )}
 
