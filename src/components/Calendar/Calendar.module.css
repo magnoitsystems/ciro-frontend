@@ -31,7 +31,7 @@ body {
 
 .barraColor {
     width: 100%;
-    height: 10px;
+    height: 20px;
     border-radius: 3px;
 }
 
@@ -42,8 +42,31 @@ body {
     padding: 10px;
 }
 
+.slotLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.turnosCount {
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.turnosCount:hover {
+  background-color: rebeccapurple;
+}
+
 :global(.fc-timegrid-slot) {
-    height: 60px !important;
+    height: 55px !important;
 }
 
 :global(.fc-event-time) {
@@ -54,7 +77,7 @@ body {
 }
 
 :global(.fc-event) {
-    background-color: transparent !important;
+    background-color: var(--blue-4) !important;
     border: none !important;
 }
 
@@ -118,17 +141,31 @@ body {
     font-size: 30px;
 }
 
+.headerProperties {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .dropdownProperties {
   position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #1E1D26;
+  top: 6%;
+  background-color: var(--blue-1);
   border: 1px solid #333;
   border-radius: 5px;
   width: 300px;
   max-height: 150px;
   overflow-y: auto;
   z-index: 100;
+}
+
+:global(.fc-timegrid-event) {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+:global(.fc-timegrid-event-harness) {
+    border: none !important;
 }
 
 .dropdownItemProperties {

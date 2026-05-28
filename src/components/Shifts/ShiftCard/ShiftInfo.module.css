@@ -71,6 +71,19 @@
     padding-right: 10px;
 }
 
+.closeButton{
+    position: absolute;
+    background-color: var(--red);
+    z-index: 1001;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    right: 5%;
+    top: 12%;
+}
+
 @media (min-width: 768px) {
     .tableContainerPropeties {
         padding: var(--20px) 0;

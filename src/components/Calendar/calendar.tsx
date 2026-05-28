@@ -28,6 +28,7 @@ export default function CalendarioMedico() {
   const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(new Date());
   const [tipo, setTipo] = useState<'view' | 'confirm'>('view');
   const [tipoForm, setTipoForm] = useState<'create' | 'edit'>('create');
+  const [allShifts, setAllShifts] = useState<ShiftResponseDTO[]>([]); // Para el contador de turnos
 
   const [mostarInfoTurno, setInfoTurno] = useState(false);
   const [turnoSeleccionado, setTurnoSeleccionado] = useState<ShiftResponseDTO | null>(null);
@@ -43,6 +44,7 @@ export default function CalendarioMedico() {
   const [comments, setComments] = useState<Record<string, NoteResponseDTO>>({});
   const [mostrarInfoComment, setMostrarInfoComment] = useState(false);
   const [showShifts, setShowShifts] = useState(false);
+  const [showShiftsParDay, setShowShiftsParDay] = useState(false);
   const [doctor, setDoctor] = useState(-1);
 
   const [expandedEventId, setExpandedEventId] = useState<number | null>(null);
@@ -81,14 +83,18 @@ export default function CalendarioMedico() {
   }, [])
 
   const fetchTurnos = () => {
-    shiftService.getAll()
+    const userId = Number(localStorage.getItem('userId'))
+    shiftService.getByDoctorId(userId)
       .then(fetchedTurnos => {
         setTurnos(fetchedTurnos)
-        setTurnosFiltrados(fetchedTurnos) // inicializás ambos
+        setTurnosFiltrados(fetchedTurnos)
       })
       .catch(error => console.error(error));
+    // Todos los turnos para el contador
+    shiftService.getAll()
+      .then(fetchedTurnos => setAllShifts(fetchedTurnos))
+      .catch(error => console.error(error));
   }
-
   useEffect(() => {
     fetchTurnos();
   }, [])
@@ -207,60 +213,72 @@ export default function CalendarioMedico() {
 
       {turnoConfirmado && (
         <div style={{ position: 'fixed', zIndex: 9999, top: 0, left: 0, width: '100%', height: '100%' }}>
-          <Appointment
-            component='calendar'
-            turnos={[turnoConfirmado]}
-            type='confirm'
-            onClose={() => setTurnoConfirmado(null)}
-          />
+          
+        </div>
+      )}
+
+      {showShiftsParDay && (
+        <div style={{ position: 'fixed', zIndex: 9999, top: 0, left: 0, width: '100%', height: '100%' }}>
+         <Shift shifts={allShifts.filter(t => {
+            const turnoFecha = new Date(t.shiftDate)
+            const hoy = new Date()
+
+            const mismodia = turnoFecha.getDate() === hoy.getDate() &&
+              turnoFecha.getMonth() === hoy.getMonth() &&
+              turnoFecha.getFullYear() === hoy.getFullYear()
+
+            return mismodia
+          })} doctor={-1} doctors={[]} onClose={() => setShowShiftsParDay(false)}></Shift>
         </div>
       )}
 
       {!showShifts ? (
         <div className={styles.calendarContainerProperties}>
-          <WelcomeText sectionText='Aca el calendario de la semana' className='darkStyle' />
+          <div className={styles.headerProperties}>
+            <WelcomeText sectionText='Aca el calendario de la semana' className='darkStyle' />
+            <div className={styles.searchBarProperties}>
+              <input
+                type='text'
+                placeholder='Buscar por médico...'
+                value={searchDoctor}
+                onChange={(e) => {
+                  const valor = e.target.value
+                  setSearchDoctor(valor)
+                  if (valor === '') {
+                    setTurnosFiltrados(turnos)
+                    setDoctorsSuggestions([])
+                  } else {
+                    setDoctorsSuggestions(
+                      doctoresUnicos.filter(d => d.toLowerCase().includes(valor.toLowerCase()))
+                    )
+                    setTurnosFiltrados(
+                      turnos.filter(t => t.doctorFullName.toLowerCase().includes(valor.toLowerCase()))
+                    )
+                  }
+                }}
+              />
+              {doctorsSuggestions.length > 0 && (
+                <div className={styles.dropdownProperties}>
+                  {doctorsSuggestions.map(doctor => (
+                    <div
+                      key={doctor}
+                      className={styles.dropdownItemProperties}
+                      onClick={() => {
+                        setSearchDoctor(doctor)
+                        setTurnosFiltrados(turnos.filter(t => t.doctorFullName === doctor))
+                        setDoctorsSuggestions([])
+                      }}
+                    >
+                      {doctor}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
           <div className={styles.calendarAndButtonsContainerProperties}>
             <div className={styles.calendarContainerProperties}>
               <div className={styles.calendarContainerProperties}>
-                <div className={styles.searchBarProperties}>
-                  <input
-                    type='text'
-                    placeholder='Buscar por médico...'
-                    value={searchDoctor}
-                    onChange={(e) => {
-                      const valor = e.target.value
-                      setSearchDoctor(valor)
-                      if (valor === '') {
-                        setTurnosFiltrados(turnos)
-                        setDoctorsSuggestions([])
-                      } else {
-                        setDoctorsSuggestions(
-                          doctoresUnicos.filter(d => d.toLowerCase().includes(valor.toLowerCase()))
-                        )
-                        setTurnosFiltrados(
-                          turnos.filter(t => t.doctorFullName.toLowerCase().includes(valor.toLowerCase()))
-                        )
-                      }
-                    }}
-                  />
-                  {doctorsSuggestions.length > 0 && (
-                    <div className={styles.dropdownProperties}>
-                      {doctorsSuggestions.map(doctor => (
-                        <div
-                          key={doctor}
-                          className={styles.dropdownItemProperties}
-                          onClick={() => {
-                            setSearchDoctor(doctor)
-                            setTurnosFiltrados(turnos.filter(t => t.doctorFullName === doctor))
-                            setDoctorsSuggestions([])
-                          }}
-                        >
-                          {doctor}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
                 <FullCalendar
                   locale={esLocale}
                   plugins={[timeGridPlugin]}
@@ -272,6 +290,31 @@ export default function CalendarioMedico() {
                   slotMinTime="06:00:00"
                   slotMaxTime="20:00:00"
                   slotDuration="00:30:00"
+                  slotLabelContent={(args) => {
+                    const hora = `${String(args.date.getHours()).padStart(2, '0')}:${String(args.date.getMinutes()).padStart(2, '0')}`
+
+                    const cantidadTurnos = allShifts.filter(t => {
+                      const turnoFecha = new Date(t.shiftDate)
+                      const hoy = new Date()
+
+                      const mismodia = turnoFecha.getDate() === hoy.getDate() &&
+                        turnoFecha.getMonth() === hoy.getMonth() &&
+                        turnoFecha.getFullYear() === hoy.getFullYear()
+
+                      const turnoHoraStr = `${String(turnoFecha.getHours()).padStart(2, '0')}:${String(turnoFecha.getMinutes()).padStart(2, '0')}`
+
+                      return mismodia && turnoHoraStr === hora
+                    }).length
+
+                    return (
+                      <div className={styles.slotLabel}>
+                        <span>{args.text}</span>
+                        {cantidadTurnos > 0 && (
+                          <span onClick={() => setShowShiftsParDay(true)} className={styles.turnosCount}>{cantidadTurnos}</span>
+                        )}
+                      </div>
+                    )
+                  }}
                   dayHeaderContent={(args) => {
                     const fechaKey = args.date.toISOString().slice(0, 10)
                     const comentarioDelDia = comments[fechaKey]
@@ -304,8 +347,7 @@ export default function CalendarioMedico() {
                     if (!isMobile) {
                       return (
                         <div className={styles.evento}>
-                          <div className={styles.barraColor} style={{ backgroundColor: barColor }}></div>
-                          <div className={styles.container}>
+                          <div className={styles.container} style={{ borderTop: `5px solid ${barColor}`, borderBottom: `5px solid ${barColor}` }}>
                             <div className={styles.mainInfoProperties}>
                               <span>{eventInfo.timeText}</span>
                               <span style={{ backgroundColor: barColor }}>Dr/dra: {turno.doctorFullName}</span>
@@ -327,7 +369,6 @@ export default function CalendarioMedico() {
                               </button>
                             </div>
                           </div>
-                          <div className={styles.barraColor} style={{ backgroundColor: barColor }}></div>
                           {showOptions === eventId && (
                             <select
                               style={{ position: 'absolute', zIndex: 10 }}
@@ -361,7 +402,7 @@ export default function CalendarioMedico() {
                             if (isExpanded) setShowOptions(null);
                           }}
                         >
-                          <div className={styles.eventoMinimal} style={{ borderLeft: `4px solid ${barColor}` }}>
+                          <div className={styles.eventoMinimal} style={{ borderLeft: `10px solid ${barColor}` }}>
                             <span className={styles.timeText}>{eventInfo.timeText}</span>
                             <span className={styles.patientText}>{turno.patientFullName}</span>
                           </div>
@@ -369,7 +410,7 @@ export default function CalendarioMedico() {
                           {isExpanded && (
                             <div
                               className={styles.eventoDetalles}
-                              style={{ borderLeft: `4px solid ${barColor}` }}
+                              style={{ borderLeft: `10px solid ${barColor}` }}
                               onClick={(e) => e.stopPropagation()}
                             >
                               <div className={styles.infoTurno}>
@@ -427,7 +468,7 @@ export default function CalendarioMedico() {
           </div>
         </div>
       ) : (
-        <Shift shifts={turnos} doctor={doctor} doctors={[]}></Shift>
+        <Shift shifts={turnos} doctor={doctor} doctors={[]} onClose={() => setShowShiftsParDay(false)}></Shift>
       )}
     </div>
   )

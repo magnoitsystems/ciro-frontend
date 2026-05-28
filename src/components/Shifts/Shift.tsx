@@ -13,9 +13,10 @@ type Prop = {
     shifts: ShiftResponseDTO[]
     doctors: UserResponseDTO[]
     doctor: number
+    onClose: () => void
 }
 
-export default function Shift({ shifts, doctors, doctor }: Prop) {
+export default function Shift({ shifts, doctors, doctor, onClose }: Prop) {
     const navigate = useNavigate();
     const [doctorShift, setDoctorShift] = useState<UserResponseDTO | null>(null);
     const deleteShift = (id: number) => {
@@ -44,7 +45,7 @@ export default function Shift({ shifts, doctors, doctor }: Prop) {
     return (
         <div className={styles.shiftContainer}>
              <h3>Turnos del/la especialista: {doctorShift?.name}</h3>
-            <ShiftInfo shifts={shifts} onDeletelick={deleteShift} />
+            <ShiftInfo shifts={shifts} onDeletelick={deleteShift} onClose={onClose} />
         </div>
     )
 }
