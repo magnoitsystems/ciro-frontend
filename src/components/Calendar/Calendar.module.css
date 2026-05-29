@@ -59,10 +59,8 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 10px;
-}
-
-.turnosCount:hover {
-  background-color: rebeccapurple;
+  border: none;
+  cursor: pointer;
 }
 
 :global(.fc-timegrid-slot) {

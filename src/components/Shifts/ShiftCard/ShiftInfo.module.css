@@ -82,6 +82,7 @@
     height: 25px;
     right: 5%;
     top: 12%;
+    cursor: pointer;
 }
 
 @media (min-width: 768px) {

@@ -52,7 +52,7 @@ export default function CalendarioMedico() {
 
   const [searchDoctor, setSearchDoctor] = useState('');
   const [doctorsSuggestions, setDoctorsSuggestions] = useState<string[]>([]);
-  const doctoresUnicos = [...new Set(turnos.map(t => t.doctorFullName))]
+  const doctoresUnicos = [...new Set(allShifts.map(t => t.doctorFullName))]
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -213,13 +213,13 @@ export default function CalendarioMedico() {
 
       {turnoConfirmado && (
         <div style={{ position: 'fixed', zIndex: 9999, top: 0, left: 0, width: '100%', height: '100%' }}>
-          
+
         </div>
       )}
 
       {showShiftsParDay && (
         <div style={{ position: 'fixed', zIndex: 9999, top: 0, left: 0, width: '100%', height: '100%' }}>
-         <Shift shifts={allShifts.filter(t => {
+          <Shift shifts={allShifts.filter(t => {
             const turnoFecha = new Date(t.shiftDate)
             const hoy = new Date()
 
@@ -228,7 +228,7 @@ export default function CalendarioMedico() {
               turnoFecha.getFullYear() === hoy.getFullYear()
 
             return mismodia
-          })} doctor={-1} doctors={[]} onClose={() => setShowShiftsParDay(false)}></Shift>
+          })} doctor={-1} onClose={() => setShowShiftsParDay(false)}></Shift>
         </div>
       )}
 
@@ -245,14 +245,15 @@ export default function CalendarioMedico() {
                   const valor = e.target.value
                   setSearchDoctor(valor)
                   if (valor === '') {
-                    setTurnosFiltrados(turnos)
+                    setTurnosFiltrados(turnos) // volvés a los del usuario logueado
                     setDoctorsSuggestions([])
                   } else {
+                    const doctoresUnicosAll = [...new Set(allShifts.map(t => t.doctorFullName))]
                     setDoctorsSuggestions(
-                      doctoresUnicos.filter(d => d.toLowerCase().includes(valor.toLowerCase()))
+                      doctoresUnicosAll.filter(d => d.toLowerCase().includes(valor.toLowerCase()))
                     )
                     setTurnosFiltrados(
-                      turnos.filter(t => t.doctorFullName.toLowerCase().includes(valor.toLowerCase()))
+                      allShifts.filter(t => t.doctorFullName.toLowerCase().includes(valor.toLowerCase()))
                     )
                   }
                 }}
@@ -265,7 +266,7 @@ export default function CalendarioMedico() {
                       className={styles.dropdownItemProperties}
                       onClick={() => {
                         setSearchDoctor(doctor)
-                        setTurnosFiltrados(turnos.filter(t => t.doctorFullName === doctor))
+                        setTurnosFiltrados(allShifts.filter(t => t.doctorFullName === doctor))
                         setDoctorsSuggestions([])
                       }}
                     >
@@ -310,7 +311,7 @@ export default function CalendarioMedico() {
                       <div className={styles.slotLabel}>
                         <span>{args.text}</span>
                         {cantidadTurnos > 0 && (
-                          <span onClick={() => setShowShiftsParDay(true)} className={styles.turnosCount}>{cantidadTurnos}</span>
+                          <button onClick={() => setShowShiftsParDay(true)} className={styles.turnosCount}>{cantidadTurnos}</button>
                         )}
                       </div>
                     )
@@ -468,7 +469,7 @@ export default function CalendarioMedico() {
           </div>
         </div>
       ) : (
-        <Shift shifts={turnos} doctor={doctor} doctors={[]} onClose={() => setShowShiftsParDay(false)}></Shift>
+        <Shift shifts={turnos} doctor={doctor} onClose={() => setShowShiftsParDay(false)}></Shift>
       )}
     </div>
   )
