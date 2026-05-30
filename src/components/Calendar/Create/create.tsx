@@ -13,6 +13,7 @@ import { noteService } from '../../../services/note.service';
 import { useNavigate } from 'react-router-dom';
 import { patientService } from '../../../services/patient.service';
 import type { PatientResponseDTO } from '../../../types/patients.types';
+import { sub } from 'date-fns';
 
 type Props = {
     name: string;
@@ -51,6 +52,7 @@ export default function CreateAppointment({
     const [doctorId, setDoctorId] = useState(0);
     const [statusShift, setStatusShift] = useState<ShiftStatus>('REQUIRED');
     const [doctors, setDoctors] = useState<UserResponseDTO[]>([]);
+    const [subTasks, setSubTasks] = useState(false);
 
     const [loading, setLoading] = useState(false);
 
@@ -198,9 +200,9 @@ export default function CreateAppointment({
             <form className={styles.formContainerProperties} onSubmit={handleSubmit}>
 
                 {type === 'create' && !onlyComment ? (
-                    <h3>{name}, complete los siguientes datos para crear {component === 'calendar' ? 'el turno' : component === 'tarea' ? 'la tarea' : 'el comentario'}</h3>
+                    <h3>{name}, complete los siguientes datos para crear {component === 'calendar' ? 'el turno' : component === 'task' ? 'la tarea' : 'el comentario'}</h3>
                 ) : (
-                    <h3>{name}, modifique los datos {component === 'calendar' ? 'del turno' : component === 'tarea' ? 'de la tarea' : 'del comentario'}</h3>
+                    <h3>{name}, modifique los datos {component === 'calendar' ? 'del turno' : component === 'task' ? 'de la tarea' : 'del comentario'}</h3>
                 )}
 
                 <div className={styles.campsContainerProperties}>
@@ -341,8 +343,54 @@ export default function CreateAppointment({
                             />
                         </div>
                     )}
+                </div>
 
-                    <div className={styles.buttonsContainerProperties}>
+                {subTasks && (
+                    <form onSubmit={handleSubmit} className={styles.subTasksContainerProperties}>
+                        <div className={styles.inputProperties}>
+                            <input
+                                type='datetime-local'
+                                style={
+                                    {width:'50px'}
+                                }
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
+                            />
+                            <input
+                                type='text'
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder='Título de la tarea'
+                            />
+                            <select value={statusShift} onChange={(e) => setStatusShift(e.target.value as ShiftStatus)}>
+                                <option value="REQUIRED">Requerido</option>
+                                <option value="ASSIGNED">Asignado</option>
+                            </select>
+                            <input
+                                type='text'
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder='Descripción de la tarea'
+                            />
+                            <select
+                                value={priority}
+                                onChange={(e) => setPriority(e.target.value as TaskPriority)}
+                            >
+                                <option value="">Seleccione una prioridad</option>
+                                <option value="HIGH">Alta</option>
+                                <option value="MEDIUM">Media</option>
+                                <option value="LOW">Baja</option>
+                            </select>
+
+                            <button disabled={loading} type="submit" className={styles.addSubTaskButton}>
+                                <img src='./icons/plus.png'></img>
+                            </button>
+                        </div>
+                    </form>
+                )}
+
+                <div className={styles.buttonsContainerProperties}>
+                    <div className={styles.buttonsProperties}>
                         <button type="submit" className={styles.confirmButton} disabled={loading}>
                             {!loading && component === 'calendar' ? 'Confirmar turno' : !loading ? 'Confirmar tarea' : 'Confirmando...'}
                         </button>
@@ -351,7 +399,21 @@ export default function CreateAppointment({
                             <img src='./icons/cancelIcon.png'></img>
                         </button>
                     </div>
+                    <div>
+                        {component === 'task' && (
+                            <button
+                                type="button"
+                                className={styles.subTasksButton}
+                                onClick={() => {
+                                    setSubTasks(!subTasks);
+                                }}
+                            >
+                                Agregar sub tareas
+                            </button>
+                        )}
+                    </div>
                 </div>
+
             </form>
         </div>
     )
