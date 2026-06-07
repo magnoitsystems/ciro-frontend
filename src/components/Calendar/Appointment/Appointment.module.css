@@ -20,6 +20,52 @@
     cursor: pointer;
 }
 
+.infoTaskProperties{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+}
+
+.subTareasContainerProperties{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    align-items: center;
+    max-height: 40%;
+    overflow-y: auto;
+}
+
+.showSubTareasProperties{
+    width: fit-content;
+    padding: 8px 16px;
+    background-color: var(--neutral-1);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.checkListProperties{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--blue-1);
+    width: 50%;
+    height: fit-content;
+    padding: var(--10px);
+    justify-self: center;
+    justify-content: space-between;
+    border-radius: var(--20px);
+    gap: var(--10px);
+}
+
+.buttonsContainerProperties{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
 .cancelButton{
     background-color: rgba(235, 12, 12, 1);
 }
@@ -44,7 +90,7 @@
     display: flex;
     flex-direction: column;
     border: white 2px solid;
-    border-radius: 5px;
+    border-radius: 20px;
     background-color: rgba(23, 22, 32, 1);
     color: white;
     width: 100%;

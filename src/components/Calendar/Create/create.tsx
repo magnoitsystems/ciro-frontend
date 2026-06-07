@@ -13,6 +13,7 @@ import { noteService } from '../../../services/note.service';
 import { useNavigate } from 'react-router-dom';
 import { patientService } from '../../../services/patient.service';
 import type { PatientResponseDTO } from '../../../types/patients.types';
+import type { SubtaskDTO } from '../../../types/management.types';
 import { sub } from 'date-fns';
 
 type Props = {
@@ -41,6 +42,14 @@ export default function CreateAppointment({
     dateCalendar
 }: Props) {
     const navigate = useNavigate();
+    const [subTask, setSubTask] = useState({
+        title: '',
+        description: '',
+        priority: '' as TaskPriority | '',
+        status: 'PENDING' as TaskStatus,
+        date: '',
+    });
+    const [subTasksList, setSubTasksList] = useState<SubtaskDTO[]>([]);
     const [date, setDate] = useState('');
     const [comment, setComment] = useState('');
     const [description, setDescription] = useState('');
@@ -55,7 +64,7 @@ export default function CreateAppointment({
     const [subTasks, setSubTasks] = useState(false);
 
     const [loading, setLoading] = useState(false);
-
+    const [showSubTareas, setShowSubTareas] = useState(false);
 
     const [patientSearch, setPatientSearch] = useState('');
     const [patients, setPatients] = useState<PatientResponseDTO[]>([]);
@@ -96,9 +105,12 @@ export default function CreateAppointment({
     }, [type, task]);
 
     const handleSubmit = async (e: React.FormEvent) => {
+        console.log("voy a guardar")
         setLoading(true);
-        if (onlyComment) handleSubmitComment(e);
 
+        if (onlyComment) {
+            handleSubmitComment(e);
+        }
         else if (component === 'calendar') {
             handleSubmitShift(e);
             return;
@@ -108,6 +120,10 @@ export default function CreateAppointment({
             return;
         }
     };
+
+    const handleDeleteSubTask = (index: number) => {
+        setSubTasksList(prev => prev.filter((_, i) => i !== index))
+    }
 
     const handleSubmitComment = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -126,6 +142,29 @@ export default function CreateAppointment({
             console.error("Error al guardar el comentario:", error);
         }
     }
+    const handleSubmitSubTask = () => {
+
+        if (!subTask.title.trim()) {
+            alert("Ingrese un título para la subtarea");
+            return;
+        }
+
+        const newSubTask: SubtaskDTO = {
+            title: subTask.title,
+            description: subTask.description,
+            status: subTask.status,
+        };
+
+        setSubTasksList(prev => [...prev, newSubTask]);
+
+        setSubTask({
+            title: '',
+            description: '',
+            priority: '',
+            status: 'PENDING',
+            date: '',
+        });
+    }
 
     const handleSubmitTask = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -134,6 +173,7 @@ export default function CreateAppointment({
             alert("Seleccioná una prioridad");
             return;
         }
+
         const payload: TaskCreateDTO = {
             userId: task?.userId != null ? task.userId : 1,
             taskDate: date + "T00:00:00",
@@ -142,6 +182,7 @@ export default function CreateAppointment({
             status,
             priority,
             noteDescription: comment,
+            subtasks: subTasksList,
         };
 
         try {
@@ -197,224 +238,245 @@ export default function CreateAppointment({
 
     return (
         <div className={styles.backgroundTransparents}>
-            <form className={styles.formContainerProperties} onSubmit={handleSubmit}>
+            {!showSubTareas ? (
+                <form className={styles.formContainerProperties} onSubmit={handleSubmit}>
 
-                {type === 'create' && !onlyComment ? (
-                    <h3>{name}, complete los siguientes datos para crear {component === 'calendar' ? 'el turno' : component === 'task' ? 'la tarea' : 'el comentario'}</h3>
-                ) : (
-                    <h3>{name}, modifique los datos {component === 'calendar' ? 'del turno' : component === 'task' ? 'de la tarea' : 'del comentario'}</h3>
-                )}
-
-                <div className={styles.campsContainerProperties}>
-
-                    {!onlyComment && component === 'task' && (
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Fecha</label>
-                            <input
-                                type='date'
-                                value={date}
-                                onChange={(e) => setDate(e.target.value)}
-                            />
-                        </div>
+                    {type === 'create' && !onlyComment ? (
+                        <h3>{name}, complete los siguientes datos para crear {component === 'calendar' ? 'el turno' : component === 'task' ? 'la tarea' : 'el comentario'}</h3>
+                    ) : (
+                        <h3>{name}, modifique los datos {component === 'calendar' ? 'del turno' : component === 'task' ? 'de la tarea' : 'del comentario'}</h3>
                     )}
 
-                    {!onlyComment && component === 'calendar' && (
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Paciente</label>
-                            <input
-                                type='text'
-                                value={patientSearch}
-                                onChange={(e) => handlePatientSearch(e.target.value)}
-                                placeholder='Buscar por nombre'
-                            />
-                            {filteredPatients.length > 0 && (
-                                <div className={styles.dropdownProperties}>
-                                    {filteredPatients.map(patient => (
-                                        <div
-                                            key={patient.id}
-                                            className={styles.dropdownItemProperties}
-                                            onClick={() => {
-                                                setPatientDni(patient.dni)
-                                                setPatientSearch(patient.fullName)
-                                                setFilteredPatients([])
-                                            }}
-                                        >
-                                            <span>{patient.fullName}</span>
-                                            <span>{patient.dni}</span>
-                                        </div>
+                    <div className={styles.campsContainerProperties}>
+
+                        {!onlyComment && component === 'task' && (
+                            <div className={styles.labelAndInputProperties}>
+                                <label>Fecha</label>
+                                <input
+                                    type='date'
+                                    value={date}
+                                    onChange={(e) => setDate(e.target.value)}
+                                />
+                            </div>
+                        )}
+
+                        {!onlyComment && component === 'calendar' && (
+                            <div className={styles.labelAndInputProperties}>
+                                <label>Paciente</label>
+                                <input
+                                    type='text'
+                                    value={patientSearch}
+                                    onChange={(e) => handlePatientSearch(e.target.value)}
+                                    placeholder='Buscar por nombre'
+                                />
+                                {filteredPatients.length > 0 && (
+                                    <div className={styles.dropdownProperties}>
+                                        {filteredPatients.map(patient => (
+                                            <div
+                                                key={patient.id}
+                                                className={styles.dropdownItemProperties}
+                                                onClick={() => {
+                                                    setPatientDni(patient.dni)
+                                                    setPatientSearch(patient.fullName)
+                                                    setFilteredPatients([])
+                                                }}
+                                            >
+                                                <span>{patient.fullName}</span>
+                                                <span>{patient.dni}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {!onlyComment && component === 'calendar' && (
+                            <div className={styles.labelAndInputProperties}>
+                                <label>Estado</label>
+                                <select value={statusShift} onChange={(e) => setStatusShift(e.target.value as ShiftStatus)}>
+                                    <option value="REQUIRED">Requerido</option>
+                                    <option value="ASSIGNED">Asignado</option>
+                                </select>
+                            </div>
+                        )}
+
+                        {!onlyComment && component === 'calendar' && (
+                            <div className={styles.labelAndInputProperties}>
+                                <label>Doctor</label>
+                                <select value={doctorId} onChange={(e) => setDoctorId(Number(e.target.value))}>
+                                    <option value={0}>Seleccione un doctor</option>
+                                    {doctors.map((doctor) => (
+                                        <option key={doctor.id} value={doctor.id}>
+                                            {doctor.name}
+                                        </option>
                                     ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
+                                </select>
+                            </div>
+                        )}
 
-                    {!onlyComment && component === 'calendar' && (
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Estado</label>
-                            <select value={statusShift} onChange={(e) => setStatusShift(e.target.value as ShiftStatus)}>
-                                <option value="REQUIRED">Requerido</option>
-                                <option value="ASSIGNED">Asignado</option>
-                            </select>
-                        </div>
-                    )}
-
-                    {!onlyComment && component === 'calendar' && (
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Doctor</label>
-                            <select value={doctorId} onChange={(e) => setDoctorId(Number(e.target.value))}>
-                                <option value={0}>Seleccione un doctor</option>
-                                {doctors.map((doctor) => (
-                                    <option key={doctor.id} value={doctor.id}>
-                                        {doctor.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
-
-                    {component === 'task' && (
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Título</label>
-                            <input
-                                type='text'
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder='Título de la tarea'
-                            />
-                        </div>
-                    )}
-
-                    {component === 'task' && (
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Estado</label>
-                            <select value={status} onChange={(e) => setStatus(e.target.value as TaskStatus)}>
-                                <option value={''}>Seleccione un estado</option>
-                                <option value="PENDING">Pendiente</option>
-                                <option value="IN_PROGRESS">En proceso</option>
-                                <option value="COMPLETED">Finalizada</option>
-                            </select>
-                        </div>
-                    )}
-
-                    {component === 'task' && (
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Descripción</label>
-                            <input
-                                type='text'
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                placeholder='Descripción de la tarea'
-                            />
-                        </div>
-                    )}
-
-                    {component === 'task' && (
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Prioridad</label>
-                            <select
-                                value={priority}
-                                onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                            >
-                                <option value="">Seleccione una prioridad</option>
-                                <option value="HIGH">Alta</option>
-                                <option value="MEDIUM">Media</option>
-                                <option value="LOW">Baja</option>
-                            </select>
-                        </div>
-                    )}
-
-                    <div className={styles.labelAndInputProperties}>
-                        <label>Comentario (opcional)</label>
-                        <input
-                            type='text'
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                            placeholder='Comentario de la tarea'
-                        />
-                    </div>
-
-                    {component === 'calendar' && !onlyComment && (
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Horario</label>
-                            <input
-                                type='datetime-local'
-                                value={date}
-                                onChange={(e) => setDate(e.target.value)}
-                            />
-                        </div>
-                    )}
-                </div>
-
-                {subTasks && (
-                    <form onSubmit={handleSubmit} className={styles.subTasksContainerProperties}>
-                        <div className={styles.inputProperties}>
-                            <input
-                                type='datetime-local'
-                                style={
-                                    {width:'50px'}
-                                }
-                                value={date}
-                                onChange={(e) => setDate(e.target.value)}
-                            />
-                            <input
-                                type='text'
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder='Título de la tarea'
-                            />
-                            <select value={statusShift} onChange={(e) => setStatusShift(e.target.value as ShiftStatus)}>
-                                <option value="REQUIRED">Requerido</option>
-                                <option value="ASSIGNED">Asignado</option>
-                            </select>
-                            <input
-                                type='text'
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                placeholder='Descripción de la tarea'
-                            />
-                            <select
-                                value={priority}
-                                onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                            >
-                                <option value="">Seleccione una prioridad</option>
-                                <option value="HIGH">Alta</option>
-                                <option value="MEDIUM">Media</option>
-                                <option value="LOW">Baja</option>
-                            </select>
-
-                            <button disabled={loading} type="submit" className={styles.addSubTaskButton}>
-                                <img src='./icons/plus.png'></img>
-                            </button>
-                        </div>
-                    </form>
-                )}
-
-                <div className={styles.buttonsContainerProperties}>
-                    <div className={styles.buttonsProperties}>
-                        <button type="submit" className={styles.confirmButton} disabled={loading}>
-                            {!loading && component === 'calendar' ? 'Confirmar turno' : !loading ? 'Confirmar tarea' : 'Confirmando...'}
-                        </button>
-
-                        <button type="button" className={styles.cancelButton} onClick={onClose}>
-                            <img src='./icons/cancelIcon.png'></img>
-                        </button>
-                    </div>
-                    <div>
                         {component === 'task' && (
-                            <button
-                                type="button"
-                                className={styles.subTasksButton}
-                                onClick={() => {
-                                    setSubTasks(!subTasks);
-                                }}
-                            >
-                                Agregar sub tareas
-                            </button>
+                            <div className={styles.labelAndInputProperties}>
+                                <label>Título</label>
+                                <input
+                                    type='text'
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    placeholder='Título de la tarea'
+                                />
+                            </div>
+                        )}
+
+                        {component === 'task' && (
+                            <div className={styles.labelAndInputProperties}>
+                                <label>Estado</label>
+                                <select value={status} onChange={(e) => setStatus(e.target.value as TaskStatus)}>
+                                    <option value={''}>Seleccione un estado</option>
+                                    <option value="PENDING">Pendiente</option>
+                                    <option value="IN_PROGRESS">En proceso</option>
+                                    <option value="COMPLETED">Finalizada</option>
+                                </select>
+                            </div>
+                        )}
+
+                        {component === 'task' && (
+                            <div className={styles.labelAndInputProperties}>
+                                <label>Descripción</label>
+                                <input
+                                    type='text'
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    placeholder='Descripción de la tarea'
+                                />
+                            </div>
+                        )}
+
+                        {component === 'task' && (
+                            <div className={styles.labelAndInputProperties}>
+                                <label>Prioridad</label>
+                                <select
+                                    value={priority}
+                                    onChange={(e) => setPriority(e.target.value as TaskPriority)}
+                                >
+                                    <option value="">Seleccione una prioridad</option>
+                                    <option value="HIGH">Alta</option>
+                                    <option value="MEDIUM">Media</option>
+                                    <option value="LOW">Baja</option>
+                                </select>
+                            </div>
+                        )}
+
+                        <div className={styles.labelAndInputProperties}>
+                            <label>Comentario (opcional)</label>
+                            <input
+                                type='text'
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                                placeholder='Comentario de la tarea'
+                            />
+                        </div>
+
+                        {component === 'calendar' && !onlyComment && (
+                            <div className={styles.labelAndInputProperties}>
+                                <label>Horario</label>
+                                <input
+                                    type='datetime-local'
+                                    value={date}
+                                    onChange={(e) => setDate(e.target.value)}
+                                />
+                            </div>
                         )}
                     </div>
-                </div>
 
-            </form>
+                    {subTasks && (
+                        <div className={styles.subTasksContainerProperties}>
+                            <div className={styles.inputProperties}>
+                                <input
+                                    type='text'
+                                    value={subTask.title}
+                                    onChange={(e) => setSubTask({ ...subTask, title: e.target.value })}
+                                    placeholder='Título de la tarea'
+                                />
+
+                                <input
+                                    type='text'
+                                    value={subTask.description}
+                                    onChange={(e) => setSubTask({ ...subTask, description: e.target.value })}
+                                    placeholder='Descripción'
+                                />
+
+                                <select
+                                    value={subTask.priority}
+                                    onChange={(e) => setSubTask({ ...subTask, priority: e.target.value as TaskPriority })}
+                                >
+                                    <option value="">Seleccione una prioridad</option>
+                                    <option value="HIGH">Alta</option>
+                                    <option value="MEDIUM">Media</option>
+                                    <option value="LOW">Baja</option>
+                                </select>
+                                <button
+                                    disabled={loading}
+                                    type="button"
+                                    onClick={handleSubmitSubTask}
+                                    className={styles.addSubTaskButton}
+                                >
+                                    <img src='./icons/plus.png' />
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className={styles.buttonsContainerProperties}>
+                        <div className={styles.buttonsProperties}>
+                            <button type="submit" className={styles.confirmButton} disabled={loading}>
+                                {!loading && component === 'calendar' ? 'Confirmar turno' : !loading ? 'Confirmar tarea' : 'Confirmando...'}
+                            </button>
+
+                            <button type="button" className={styles.cancelButton} onClick={onClose}>
+                                <img src='./icons/cancelIcon.png'></img>
+                            </button>
+                            <div className={styles.subTasksButtonsContainer}>
+                                {component === 'task' && (
+                                    <button
+                                        type="button"
+                                        className={styles.subTasksButton}
+                                        onClick={() => {
+                                            setSubTasks(!subTasks);
+                                        }}
+                                    >
+                                        {subTasks ? 'Ocultar sub tareas' : 'Agregar sub tareas'}
+                                    </button>
+                                )}
+                                {subTasksList.length > 0 && (
+                                    <button className={styles.subTasksButton} onClick={() => setShowSubTareas(true)}>
+                                        Ver subtareas ({subTasksList.length})
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            ) : (
+                <div className={styles.formContainerProperties}>
+                    <h2>Sub tareas</h2>
+                    <div className={styles.subTaskItemContainer}>
+                        {subTasksList.map((subtask, index) => (
+
+                            <div key={index} className={styles.subTaskItemProperties}>
+                                <div className={styles.subTaskInfoContainer}>
+                                    <strong>{subtask.title}</strong>
+                                    {subtask.description && ` - ${subtask.description}`}
+                                </div>
+                                <button className={styles.deleteSubTaskButtonContainer} onClick={() => handleDeleteSubTask(index)}>
+                                    <img src='./icons/trash.png' alt="Eliminar" />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                    <button className={styles.subTasksButton} style={{ height: '40px' }} onClick={() => setShowSubTareas(false)}>
+                        Volver
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

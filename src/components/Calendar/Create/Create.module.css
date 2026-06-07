@@ -45,7 +45,7 @@
     color: var(--neutral-1);
     align-items: center;
     justify-content: space-evenly;
-    gap: 24px;
+    gap: 20px;
     font-size: 16px;
     background-color: #1a1928;
     box-shadow: 0px 24px 48px rgba(0, 0, 0, 0.5);
@@ -124,9 +124,28 @@
     gap: 12px;
 }
 
-.subTasksContainerProperties{
+.deleteSubTaskButtonContainer{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.subTaskItemProperties{
     display: flex;
     flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding: 8px 12px;
+    color: white;
+    background-color: var(--blue-1);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    align-items: center;
+}
+
+.subTasksContainerProperties{
+    display: flex;
+    flex-direction: column;
     width: 100%;
     background-color: var(--blue-4);
     height: 100px;
@@ -134,6 +153,19 @@
     justify-content: center;
     align-items: center;
     border-radius: 20px;
+}
+
+.subTasksButtonsContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.subTasksList{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
 }
 
 .addSubTaskButton{
@@ -179,9 +211,23 @@
     justify-content: center;
 }
 
+.subTaskItemContainer{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
 .subTasksButton {
     background-color: var(--blue-1);
     width: 150px;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
 @media (min-width: 768px) {
