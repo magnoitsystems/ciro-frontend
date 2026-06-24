@@ -350,8 +350,14 @@ export default function CalendarioMedico() {
                         <div className={styles.evento}>
                           <div className={styles.container} style={{ borderTop: `5px solid ${barColor}`, borderBottom: `5px solid ${barColor}` }}>
                             <div className={styles.mainInfoProperties}>
-                              <span>{eventInfo.timeText}</span>
-                              <span style={{ backgroundColor: barColor }}>Dr/dra: {turno.doctorFullName}</span>
+                              <span>Paciente: {turno.patientFullName}</span>
+                              <span style={{
+                                color: barColor,
+                                backgroundColor: 'rgba(255,255,255,0.06)',
+                                border: `1px solid ${barColor}40`,
+                              }}>
+                                Dr/dra: {turno.doctorFullName}
+                              </span>
                             </div>
                             <div className={styles.buttonsProperties}>
                               <button onClick={(e) => {

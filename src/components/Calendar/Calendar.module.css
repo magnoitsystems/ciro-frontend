@@ -2,6 +2,69 @@ body {
     background-color: #171620;
 }
 
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background-color: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.mainInfoProperties {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mainInfoProperties > span:first-child {
+    font-size: 13px;
+    color: white;
+    font-weight: 500;
+}
+
+.mainInfoProperties > span:nth-child(2) {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.buttonsProperties {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 80%;
+    position: absolute;
+    z-index: 1000;
+}
+
+.buttonsProperties button {
+    background-color: rgba(255,255,255,0.06);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease;
+}
+
+.buttonsProperties button:hover {
+    background-color: rgba(255,255,255,0.12);
+}
+
+.buttonsProperties button img {
+    width: 14px;
+    height: 14px;
+}
+
 :global(.fc-toolbar-title) {
     font-size: 30px;
 }
@@ -26,7 +89,9 @@ body {
 .evento {
     display: flex;
     flex-direction: column;
-    height: 100px;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .barraColor {
@@ -89,20 +154,6 @@ body {
 .calendarContainerPropertiess :global(.fc-event) .calendarContainerProperties :global(.fc-toolbar-title) {
     border-color: #292831 !important;
 }
-
-.buttonsProperties {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.buttonsProperties button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    color: white;
-}
-
 
 .calendarAndButtonsContainerProperties {
     display: flex;
