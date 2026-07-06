@@ -14,7 +14,6 @@ import { useNavigate } from 'react-router-dom';
 import { patientService } from '../../../services/patient.service';
 import type { PatientResponseDTO } from '../../../types/patients.types';
 import type { SubtaskDTO } from '../../../types/management.types';
-import { sub } from 'date-fns';
 
 type Props = {
     name: string;
