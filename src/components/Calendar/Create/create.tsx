@@ -133,12 +133,13 @@ export default function CreateAppointment({
             taskId: task?.id,
         };
         try {
-            console.log("voy a crear el comentario")
             await noteService.create(payload);
             navigate('/Calendario');
-            console.log("ya cree el comentario")
         } catch (error) {
             console.error("Error al guardar el comentario:", error);
+        } finally {
+            setLoading(false)
+            onClose()
         }
     }
     const handleSubmitSubTask = () => {
@@ -233,7 +234,7 @@ export default function CreateAppointment({
         } catch (error) {
             console.error("Error al guardar el turno:", error);
         }
-    };
+    }
 
     return (
         <div className={styles.backgroundTransparents}>
@@ -255,6 +256,7 @@ export default function CreateAppointment({
                                     type='date'
                                     value={date}
                                     onChange={(e) => setDate(e.target.value)}
+                                    required
                                 />
                             </div>
                         )}
@@ -320,7 +322,8 @@ export default function CreateAppointment({
                                     type='text'
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    placeholder='Título de la tarea'
+                                    placeholder='Título'
+                                    required
                                 />
                             </div>
                         )}
@@ -344,7 +347,8 @@ export default function CreateAppointment({
                                     type='text'
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
-                                    placeholder='Descripción de la tarea'
+                                    placeholder='Descripción'
+                                    required
                                 />
                             </div>
                         )}
@@ -364,15 +368,16 @@ export default function CreateAppointment({
                             </div>
                         )}
 
-                        <div className={styles.labelAndInputProperties}>
-                            <label>Comentario (opcional)</label>
-                            <input
-                                type='text'
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
-                                placeholder='Comentario de la tarea'
-                            />
-                        </div>
+                        {component === 'task' || component === 'subtask' || component === 'calendar' && (
+                            <div className={styles.labelAndInputProperties}>
+                                <label>Comentario (opcional)</label>
+                                <input
+                                    type='text'
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    placeholder='Comentario...'
+                                />
+                            </div>)}
 
                         {component === 'calendar' && !onlyComment && (
                             <div className={styles.labelAndInputProperties}>
@@ -381,6 +386,7 @@ export default function CreateAppointment({
                                     type='datetime-local'
                                     value={date}
                                     onChange={(e) => setDate(e.target.value)}
+                                    required
                                 />
                             </div>
                         )}
@@ -394,6 +400,7 @@ export default function CreateAppointment({
                                     value={subTask.title}
                                     onChange={(e) => setSubTask({ ...subTask, title: e.target.value })}
                                     placeholder='Título de la tarea'
+                                    required
                                 />
 
                                 <input
@@ -401,6 +408,7 @@ export default function CreateAppointment({
                                     value={subTask.description}
                                     onChange={(e) => setSubTask({ ...subTask, description: e.target.value })}
                                     placeholder='Descripción'
+                                    required
                                 />
 
                                 <select
@@ -426,8 +434,18 @@ export default function CreateAppointment({
 
                     <div className={styles.buttonsContainerProperties}>
                         <div className={styles.buttonsProperties}>
+                            {component !== 'task' && component !== 'calendar' && (
+                                <div className={styles.labelAndInputProperties}>
+                                    <input
+                                        type='text'
+                                        value={comment}
+                                        onChange={(e) => setComment(e.target.value)}
+                                        placeholder='Comentario...'
+                                    />
+                                </div>
+                            )}
                             <button type="submit" className={styles.confirmButton} disabled={loading}>
-                                {!loading && component === 'calendar' ? 'Confirmar turno' : !loading ? 'Confirmar tarea' : 'Confirmando...'}
+                                {!loading ? 'Confirmar' : 'Confirmando...'}
                             </button>
 
                             <button type="button" className={styles.cancelButton} onClick={onClose}>
