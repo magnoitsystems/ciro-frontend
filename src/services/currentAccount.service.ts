@@ -116,6 +116,14 @@ class CurrentAccountService {
         const response = await api.get<VoucherDTO[]>(API_ENDPOINTS.VOUCHERS.BY_PATIENT(patientId));
         return response.data;
     }
+
+    /**
+     * Actualiza únicamente la fecha de vencimiento de un detalle de comprobante
+     */
+    async updateVoucherDetailDueDate(voucherId: number, detailId: number, dueDate: string): Promise<void> {
+        const payload = { dueDate: dueDate };
+        await api.patch(API_ENDPOINTS.VOUCHERS.DUEDATE(voucherId, detailId), payload);
+    }
 }
 
 export const currentAccountService = new CurrentAccountService();

@@ -255,6 +255,23 @@ export default function CuentaCorriente() {
         newDetails[index] = { ...newDetails[index], [field]: value };
         setComprobanteData(prev => ({ ...prev, details: newDetails }));
     };
+
+    const [editingDetailId, setEditingDetailId] = useState<number | null>(null);
+    const [tempDueDate, setTempDueDate] = useState<string>("");
+
+    const handleSaveDueDate = async (voucherId: number, detailId: number) => {
+        try {
+            await currentAccountService.updateVoucherDetailDueDate(voucherId, detailId, tempDueDate);
+            setEditingDetailId(null);
+        
+            const updatedVoucher = await currentAccountService.getVoucherById(voucherId);
+            setSelectedVoucher(updatedVoucher);
+            showToast("Vencimiento actualizado correctamente.", "info");
+        } catch (error) {
+            console.error(error);
+            showToast("Error al actualizar el vencimiento.");
+        }
+    };
     
     const totalComprobante = comprobanteData.details.reduce((acc, d) => acc + (d.amount * d.unitPrice), 0);
 
@@ -526,7 +543,60 @@ export default function CuentaCorriente() {
                                             <span>{d.detail}</span>
                                             <span>{d.amount}</span>
                                             <span>${d.unitPrice}</span>
-                                            <span>{d.dueDate ? new Date(d.dueDate).toLocaleDateString('es-AR') : '-'}</span>
+                                            
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                {editingDetailId === d.id ? (
+                                                    <>
+                                                        <input 
+                                                            type="date" 
+                                                            value={tempDueDate} 
+                                                            onChange={(e) => setTempDueDate(e.target.value)} 
+                                                            style={{ padding: '4px', width: '115px', borderRadius: '4px', border: '1px solid #ccc', outline: 'none' }}
+                                                        />
+                                                        <button 
+                                                            onClick={() => handleSaveDueDate(selectedVoucher.id, d.id!)} 
+                                                            style={{ background: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', padding: '4px 8px', fontWeight: 'bold', transition: 'transform 0.1s' }}
+                                                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                                                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                                                            title="Guardar"
+                                                        >✓</button>
+                                                        <button 
+                                                            onClick={() => setEditingDetailId(null)} 
+                                                            style={{ background: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', padding: '4px 8px', fontWeight: 'bold', transition: 'transform 0.1s' }}
+                                                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                                                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                                                            title="Cancelar"
+                                                        >✕</button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        {d.dueDate ? new Date(d.dueDate).toLocaleDateString('es-AR') : '-'}
+                                                        <img 
+                                                            src="/icons/editIcon.png" 
+                                                            alt="Editar vencimiento" 
+                                                            style={{ 
+                                                                width: '16px', 
+                                                                cursor: 'pointer', 
+                                                                opacity: 0.5, 
+                                                                transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)' // Efecto de rebote
+                                                            }} 
+                                                            onMouseEnter={(e) => {
+                                                                e.currentTarget.style.opacity = '1';
+                                                                e.currentTarget.style.transform = 'scale(1.3) rotate(-5deg)'; // Crece y gira penitas
+                                                            }}
+                                                            onMouseLeave={(e) => {
+                                                                e.currentTarget.style.opacity = '0.5';
+                                                                e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
+                                                            }}
+                                                            onClick={() => {
+                                                                setEditingDetailId(d.id!);
+                                                                setTempDueDate(d.dueDate || "");
+                                                            }}
+                                                        />
+                                                    </>
+                                                )}
+                                            </span>
+
                                             <span style={{ fontWeight: "bold" }}>
                                                 ${(d.amount * d.unitPrice).toFixed(2)}
                                             </span>

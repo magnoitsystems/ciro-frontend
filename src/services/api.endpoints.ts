@@ -97,6 +97,7 @@ export const API_ENDPOINTS = {
     VOUCHERS: {
         BASE: '/api/v1/vouchers',
         BY_ID: (id: number) => `/api/v1/vouchers/${id}`,
+        DUEDATE: (id: number, detailId: number) => `/api/v1/vouchers/${id}/details/${detailId}/due-date`,
         BY_PATIENT: (patientId: number) => `/api/v1/vouchers/patient/${patientId}`,
     }
 };
