@@ -11,13 +11,14 @@ import { userService } from '../../services/user.service'
 
 type Prop = {
     shifts: ShiftResponseDTO[]
-    doctors: UserResponseDTO[]
     doctor: number
+    onClose: () => void
 }
 
-export default function Shift({ shifts, doctors, doctor }: Prop) {
+export default function Shift({ shifts, doctor, onClose }: Prop) {
     const navigate = useNavigate();
     const [doctorShift, setDoctorShift] = useState<UserResponseDTO | null>(null);
+
     const deleteShift = (id: number) => {
         shiftService.delete(id)
             .then(() => {
@@ -41,10 +42,11 @@ export default function Shift({ shifts, doctors, doctor }: Prop) {
                 console.error('Error al obtener los usuarios:', error);
             });
     }, [shifts])
+    
     return (
         <div className={styles.shiftContainer}>
              <h3>Turnos del/la especialista: {doctorShift?.name}</h3>
-            <ShiftInfo shifts={shifts} onDeletelick={deleteShift} />
+            <ShiftInfo shifts={shifts} onDeletelick={deleteShift} onClose={onClose} />
         </div>
     )
 }

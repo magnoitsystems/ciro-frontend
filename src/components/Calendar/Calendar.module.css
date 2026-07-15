@@ -2,6 +2,69 @@ body {
     background-color: #171620;
 }
 
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background-color: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.mainInfoProperties {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mainInfoProperties > span:first-child {
+    font-size: 13px;
+    color: white;
+    font-weight: 500;
+}
+
+.mainInfoProperties > span:nth-child(2) {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.buttonsProperties {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 80%;
+    position: absolute;
+    z-index: 1000;
+}
+
+.buttonsProperties button {
+    background-color: rgba(255,255,255,0.06);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease;
+}
+
+.buttonsProperties button:hover {
+    background-color: rgba(255,255,255,0.12);
+}
+
+.buttonsProperties button img {
+    width: 14px;
+    height: 14px;
+}
+
 :global(.fc-toolbar-title) {
     font-size: 30px;
 }
@@ -26,12 +89,14 @@ body {
 .evento {
     display: flex;
     flex-direction: column;
-    height: 100px;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .barraColor {
     width: 100%;
-    height: 10px;
+    height: 20px;
     border-radius: 3px;
 }
 
@@ -42,8 +107,29 @@ body {
     padding: 10px;
 }
 
+.slotLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.turnosCount {
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  border: none;
+  cursor: pointer;
+}
+
 :global(.fc-timegrid-slot) {
-    height: 60px !important;
+    height: 55px !important;
 }
 
 :global(.fc-event-time) {
@@ -54,7 +140,7 @@ body {
 }
 
 :global(.fc-event) {
-    background-color: transparent !important;
+    background-color: var(--blue-4) !important;
     border: none !important;
 }
 
@@ -68,20 +154,6 @@ body {
 .calendarContainerPropertiess :global(.fc-event) .calendarContainerProperties :global(.fc-toolbar-title) {
     border-color: #292831 !important;
 }
-
-.buttonsProperties {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.buttonsProperties button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    color: white;
-}
-
 
 .calendarAndButtonsContainerProperties {
     display: flex;
@@ -118,17 +190,31 @@ body {
     font-size: 30px;
 }
 
+.headerProperties {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .dropdownProperties {
   position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #1E1D26;
+  top: 6%;
+  background-color: var(--blue-1);
   border: 1px solid #333;
   border-radius: 5px;
   width: 300px;
   max-height: 150px;
   overflow-y: auto;
   z-index: 100;
+}
+
+:global(.fc-timegrid-event) {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+:global(.fc-timegrid-event-harness) {
+    border: none !important;
 }
 
 .dropdownItemProperties {

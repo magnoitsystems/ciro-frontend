@@ -7,18 +7,24 @@ import { userService } from '../../../services/user.service'
 type Prop = {
     shifts: ShiftResponseDTO[]
     onDeletelick: (id: number) => void
+    onClose: () => void
 }
 
-export default function ShiftInfo({ shifts, onDeletelick }: Prop) {
-    const [user, setUser] = useState<UserResponseDTO | null>(null);
+export default function ShiftInfo({ shifts, onDeletelick, onClose }: Prop) {
+    const [user, setUser] = useState<UserResponseDTO[] | null>(null);
 
     useEffect(() => {
         userService.getAllUsers()
             .then(users => {
-                const doctorInfo = users.find(user => user.id === shifts[0].doctorId);
-                if (doctorInfo) {
-                    setUser(doctorInfo);
+                for (const shift of shifts) {
+                    const doctorInfo = users.find(user => user.id === shift.doctorId);
+                     console.log('Doctor info:', doctorInfo);
+                    if (doctorInfo) {
+                        setUser(prev => [...(prev || []), doctorInfo]);
+                    }
                 }
+                
+               
             })
             .catch(error => {
                 console.error('Error al obtener los usuarios:', error);
@@ -26,6 +32,9 @@ export default function ShiftInfo({ shifts, onDeletelick }: Prop) {
     }, [shifts]);
     return (
         <div style={{ height: '100vh', width: '90%' }}>
+            <button className={styles.closeButton} onClick={() => onClose()}>
+                X
+            </button>
             <table className={styles.tableContainerPropeties}>
                 <thead className={styles.tableHeaderProperties}>
                     <tr className={styles.tableTrProperties}>
@@ -37,9 +46,9 @@ export default function ShiftInfo({ shifts, onDeletelick }: Prop) {
                     </tr>
                 </thead>
                 <tbody className={styles.tableBodyProperties}>
-                    {shifts.map(shift => (
+                    {shifts.map((shift, index) => (
                         <tr key={shift.id} className={styles.tableTrPropertiesTbody}>
-                            <td><span style={{ backgroundColor: user?.color, height: '45px', display: 'flex', alignItems: 'center', padding: '10px', margin: '0px', width: '155px', borderTopLeftRadius: '20px', borderBottomLeftRadius: '20px', color: 'black', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{shift.doctorFullName}</span></td>
+                            <td><span style={{ backgroundColor: user?.[index]?.color, height: '45px', display: 'flex', alignItems: 'center', padding: '10px', margin: '0px', width: '155px', borderTopLeftRadius: '5px', borderBottomLeftRadius: '5px', color: 'black', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{shift.doctorFullName}</span></td>
                             <td>{shift.shiftDate.slice(0, 10)}</td>
                             <td>{shift.patientFullName}</td>
                             <td><span className={styles.stateProperties}>{shift.noteDescription}</span></td>
