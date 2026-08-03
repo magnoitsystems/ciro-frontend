@@ -218,7 +218,7 @@
 .detailsContainer {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 30px;
 
     background: var(--blue-4);
     padding: 15px;
@@ -245,20 +245,24 @@
 
 .detailsColumns {
     display: grid;
-    grid-template-columns: 1.5fr 0.6fr 1fr 1.2fr 1fr 0.3fr;
+    grid-template-columns: 1fr 0.6fr 1fr 1.0fr 0.5fr;
+    gap: 8px;
+    padding-inline: 3px;
     font-size: 12px;
     color: var(--neutral-4);
 }
 
 .detailRow {
     display: grid;
-    grid-template-columns: 1.5fr 0.6fr 1fr 1.2fr 1fr 0.3fr;
+    grid-template-columns: 1fr 0.6fr 1fr 1.0fr 0.5fr;
     gap: 8px;
     align-items: center;
 }
 
 .detailRow input {
-    padding: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 3px;
     border-radius: var(--5px);
     border: none;
     background: var(--blue-3);

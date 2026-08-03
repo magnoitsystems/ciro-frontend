@@ -382,7 +382,7 @@ export default function CuentaCorriente() {
                                 </div>
                                 <div className={style.detailsTable}>
                                     <div className={style.detailsColumns}>
-                                        <span>Detalle</span><span>Cant.</span><span>Precio</span><span>Vencimiento</span><span>Total</span><span></span>
+                                        <span>Detalle</span><span>Cant.</span><span>Precio</span><span>Vencimiento</span><span>Total</span>
                                     </div>
                                     {comprobanteData.details.map((d, i) => (
                                         <div key={i} className={style.detailRow}>
